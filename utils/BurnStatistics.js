@@ -8,15 +8,15 @@ const DB          = require('./DB')
  * @param username
  * @param amount
  */
-module.exports.addAmountToRanking = async function (username, amount) {
-    const ranking = await DB.burnRanks.findOne({where: {username: username}});
+exports.addAmountToRanking = async function (username, amount) {
+    const ranking = await DB.burnRanks.findOne({where: {username: username}})
 
     if (ranking) {
         await DB.burnRanks.update({amount: parseFloat(ranking.amount + amount)}, {
             where: {
                 username: username
             }
-        });
+        })
     } else {
         await DB.burnRanks.create({
             username: username,
@@ -30,11 +30,11 @@ module.exports.addAmountToRanking = async function (username, amount) {
  *
  * @return {Promise<Model<TModelAttributes, TCreationAttributes>[]>}
  */
-module.exports.getBurnersTopTen = async function () {
+exports.getBurnersTopTen = async function () {
     return await DB.burnRanks.findAll({
         limit: 10,
         order: [[Sequelize.col('amount'), 'DESC']]
-    });
+    })
 }
 
 /**
@@ -42,13 +42,13 @@ module.exports.getBurnersTopTen = async function () {
  *
  * @return {Promise<string>}
  */
-module.exports.getBurnTotal = async function () {
+exports.getBurnTotal = async function () {
     const result = await DB.burnRanks.findAll({
         attributes: ['amount', [Sequelize.fn('sum', Sequelize.col('amount')), 'total']],
         raw       : true,
-    });
+    })
 
-    return parseFloat(result[0].total).toFixed(2);
+    return parseFloat(result[0].total).toFixed(2)
 }
 
 /**
@@ -56,14 +56,14 @@ module.exports.getBurnTotal = async function () {
  *
  * @return {Promise<string>}
  */
-module.exports.getUserBurnAmount = async function (username) {
+exports.getUserBurnAmount = async function (username) {
     const result = await DB.burnRanks.findAll({
         where: {
             username: username
         },
         raw  : true,
         limit: 1,
-    });
+    })
 
-    return parseFloat(result[0].amount).toFixed(2);
+    return parseFloat(result[0].amount).toFixed(2)
 }

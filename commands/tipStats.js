@@ -19,12 +19,12 @@ class TipstatsCommand extends Command
         const author = await TipStatistics.getUserTipAmount(message.author.username)
 
         const totalRows  = [[
-            total,
+            new Intl.NumberFormat().format(total),
             process.env.SYMBOL
         ]]
         const authorRows = [[
             message.author.username,
-            author,
+            new Intl.NumberFormat().format(author),
             process.env.SYMBOL
         ]]
         let topTenRows   = []
@@ -32,7 +32,7 @@ class TipstatsCommand extends Command
             topTenRows.push([
                 i + 1,
                 topTen[i].username,
-                parseFloat(topTen[i].amount).toFixed(2),
+                new Intl.NumberFormat().format(parseFloat(topTen[i].amount).toFixed(2)),
                 process.env.SYMBOL,
             ])
         }

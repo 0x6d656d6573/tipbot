@@ -1,6 +1,6 @@
 # Freyala (XYA) Discord Bot
 
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Freyala-Crypto/freyala-tipbot.svg?label=version) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Freyala-Crypto/tipbot.svg?label=version) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Requirements
 

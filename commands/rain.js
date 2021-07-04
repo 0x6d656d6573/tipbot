@@ -26,7 +26,7 @@ class RainCommand extends Command
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }
-        const amount = args.amount
+        let amount = args.amount
 
         if (amount === 0) {
             await React.error(this, message, `Tip amount incorrect`, `The tip amount is wrongly formatted or missing`)
@@ -79,6 +79,7 @@ class RainCommand extends Command
         }
 
         const from = wallet.address
+        amount     = (amount / recipients.length)
 
         for (let i = 0; i < recipients.length; i++) {
             const to = await Wallet.recipientAddress(this, message, recipients[i])

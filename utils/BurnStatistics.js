@@ -2,11 +2,11 @@ const {Sequelize} = require('sequelize');
 const DB          = require('./DB')
 
 /**
- * Add amount to burn ranking
+ * Add burned amount to rankings
  *
- * @return {Promise<void>}
  * @param username
  * @param amount
+ * @return {Promise<void>}
  */
 exports.addAmountToRanking = async function (username, amount) {
     const ranking = await DB.burnRanks.findOne({where: {username: username}})

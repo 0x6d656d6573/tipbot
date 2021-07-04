@@ -34,7 +34,7 @@ exports.getTippersTopTen = async function () {
     return await DB.tipRanks.findAll({
         limit: 10,
         order: [[Sequelize.col('amount'), 'DESC']]
-    });
+    })
 }
 
 /**
@@ -46,9 +46,9 @@ exports.getTipTotal = async function () {
     const result = await DB.tipRanks.findAll({
         attributes: ['amount', [Sequelize.fn('sum', Sequelize.col('amount')), 'total']],
         raw       : true,
-    });
+    })
 
-    return parseFloat(result[0].total).toFixed(2);
+    return parseFloat(result[0].total).toFixed(2)
 }
 
 /**
@@ -63,7 +63,7 @@ exports.getUserTipAmount = async function (username) {
         },
         raw  : true,
         limit: 1,
-    });
+    })
 
-    return parseFloat(result[0].amount).toFixed(2);
+    return parseFloat(result[0].amount).toFixed(2)
 }

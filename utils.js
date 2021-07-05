@@ -4,6 +4,6 @@ module.exports = {
     Wallet        : require('./utils/Wallet'),
     Transaction   : require('./utils/Transaction'),
     TipStatistics : require('./utils/TipStatistics'),
-    BurnStatistics: require('./utils/Burnstatistics'),
+    // BurnStatistics: require('./utils/Burnstatistics'),
     XYA           : require('./utils/XYA'),
 }

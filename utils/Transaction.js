@@ -94,7 +94,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                     if (notifyRecipient) {
                         const recipient = await command.client.users.cache.get(queue[i].recipient)
 
-                        const embed = this.client.util.embed()
+                        const embed = command.client.util.embed()
                             .setColor('#1DB151')
                             .setTitle(`You got tipped!`)
                             .setDescription(`@User tipped you 123XYA in <#${message.channel.id}>`)

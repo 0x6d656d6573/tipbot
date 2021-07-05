@@ -97,7 +97,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                         const embed = command.client.util.embed()
                             .setColor('#1DB151')
                             .setTitle(`You got tipped!`)
-                            .setDescription(`@${message.author.username} tipped you ${queue[i].amount}${process.env.SYMBOL} in <#${message.channel.id}>`)
+                            .setDescription(`@${message.author.username} tipped you ${queue[i].amount} ${process.env.SYMBOL} in <#${message.channel.id}>`)
                         await recipient.send(embed)
                     }
 

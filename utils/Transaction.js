@@ -92,7 +92,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                     }
 
                     if (notifyRecipient) {
-                        const recipient = await command.client.users.cache.get(recipient)
+                        const recipient = await command.client.users.cache.get(queue[i].recipient)
 
                         const embed = this.client.util.embed()
                             .setColor('#1DB151')

@@ -49,7 +49,7 @@ class BurnCommand extends Command
         }
 
         Transaction.addToQueue(this, message, from, to, amount).then(() => {
-            Transaction.runQueue(this, message, message.author.id, false, false, null, true)
+            Transaction.runQueue(this, message, message.author.id, false, false, false, true)
         })
     }
 }

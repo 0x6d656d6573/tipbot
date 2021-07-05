@@ -5,9 +5,9 @@ class SuccessCommand extends Command
 {
     constructor()
     {
-        super('success', {
+        super('fake', {
             aliases: [
-                'success',
+                'fake',
                 'burnall',
                 'slurp',
                 'slarp',

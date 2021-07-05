@@ -5,12 +5,13 @@ class PingCommand extends Command
     constructor()
     {
         super('ping', {
-            aliases: ['ping'],
+            aliases: ['ping', 'foo'],
         })
     }
 
     async exec(message)
     {
+        console.log(this.aliases) // REMOVE
         await message.reply(`Pong!`)
     }
 }

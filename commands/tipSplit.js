@@ -81,7 +81,7 @@ class TipsplitCommand extends Command
             await Transaction.addToQueue(this, message, from, recipientsFiltered[i], amount)
         }
 
-        await Transaction.runQueue(this, message, message.author.id)
+        await Transaction.runQueue(this, message, message.author.id, false, true)
     }
 }
 

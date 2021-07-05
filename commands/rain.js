@@ -87,7 +87,7 @@ class RainCommand extends Command
             await Transaction.addToQueue(this, message, from, to, amount)
         }
 
-        await Transaction.runQueue(this, message, message.author.id)
+        await Transaction.runQueue(this, message, message.author.id, false, true)
 
     }
 }

@@ -67,7 +67,7 @@ class TipCommand extends Command
         }
 
         Transaction.addToQueue(this, message, from, to, amount).then(() => {
-            Transaction.runQueue(this, message, message.author.id)
+            Transaction.runQueue(this, message, message.author.id, false, true)
         })
     }
 }

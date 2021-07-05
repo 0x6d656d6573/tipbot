@@ -84,7 +84,7 @@ class RainCommand extends Command
         for (let i = 0; i < recipients.length; i++) {
             const to = await Wallet.recipientAddress(this, message, recipients[i])
 
-            await Transaction.addToQueue(this, message, from, to, amount)
+            await Transaction.addToQueue(this, message, from, to, amount, recipients[i])
         }
 
         await Transaction.runQueue(this, message, message.author.id, false, true)

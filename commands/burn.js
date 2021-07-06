@@ -6,7 +6,7 @@ class BurnCommand extends Command
     constructor()
     {
         super('burn', {
-            aliases  : ['burn', 'destroy', 'kill', 'remove', 'delete'],
+            aliases  : ['burn'],
             channel  : 'guild',
             ratelimit: 2,
             args     : [

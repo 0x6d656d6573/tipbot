@@ -5,7 +5,7 @@ class HelpCommand extends Command
     constructor()
     {
         super('help', {
-            aliases: ['help', 'heelp', 'heeelp', 'heeeelp', 'heeeeelp', 'heeeeeelp'],
+            aliases: ['help'],
         })
     }
 

@@ -66,7 +66,7 @@ class TipCommand extends Command
             return
         }
 
-        Transaction.addToQueue(this, message, from, to, amount).then(() => {
+        Transaction.addToQueue(this, message, from, to, amount, recipient.id).then(() => {
             Transaction.runQueue(this, message, message.author.id, false, true)
         })
     }

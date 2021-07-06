@@ -15,26 +15,42 @@ class PriceCommand extends Command
     {
         await React.processing(message)
 
-        const viperInfo = await XYA.viperInfo()
-        // const onePrice          = await XYA.onePrice()
-        const onePrice  = await XYA.tempPrice() // TEMP
-        // const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
-        const usdPrice          = parseFloat(onePrice) * parseFloat(onePrice) // TEMP
+
+        /* TEMP */
+        const usdPrice          = await XYA.tempPrice()
+        let onePrice            = await XYA.onePrice()
+        onePrice                = usdPrice / onePrice
         const circulatingSupply = await XYA.circulatingSupply()
         const totalSupply       = await XYA.totalSupply()
-        // const volume            = await XYA.volume()
 
         const rows = [
-            // ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
-            ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`], // TEMP
+            ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`],
             ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
             null,
             ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
-            // ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
             null,
             ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
             ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
         ]
+        /* TEMP */
+
+        // const viperInfo         = await XYA.viperInfo()
+        // const onePrice          = await XYA.onePrice()
+        // const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
+        // const circulatingSupply = await XYA.circulatingSupply()
+        // const totalSupply       = await XYA.totalSupply()
+        // const volume            = await XYA.volume()
+        //
+        // const rows = [
+        //     ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
+        //     ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
+        //     null,
+        //     ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
+        //     ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
+        //     null,
+        //     ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
+        //     ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
+        // ]
 
         const tableRows = []
         for (let i = 0; i < rows.length; i++) {
@@ -54,7 +70,7 @@ class PriceCommand extends Command
         const embed = this.client.util.embed()
             .setColor('#1DB151')
             .setTitle(`XYA`)
-            .setThumbnail('https://info.freyala.com/icons/icon-72x72.png')
+            .setThumbnail('https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png')
             .setDescription('```' + table(tableRows) + '```')
             // .setFooter('Source: Viperswap')
             .setFooter('Source: Mochiswap') // TEMP

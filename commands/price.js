@@ -15,19 +15,22 @@ class PriceCommand extends Command
     {
         await React.processing(message)
 
-        const viperInfo         = await XYA.viperInfo()
-        const onePrice          = await XYA.onePrice()
-        const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
+        const viperInfo = await XYA.viperInfo()
+        // const onePrice          = await XYA.onePrice()
+        const onePrice  = await XYA.tempPrice() // TEMP
+        // const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
+        const usdPrice          = parseFloat(onePrice) * parseFloat(onePrice) // TEMP
         const circulatingSupply = await XYA.circulatingSupply()
         const totalSupply       = await XYA.totalSupply()
-        const volume            = await XYA.volume()
+        // const volume            = await XYA.volume()
 
         const rows = [
-            ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
+            // ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
+            ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`], // TEMP
             ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
             null,
             ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
-            ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
+            // ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
             null,
             ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
             ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
@@ -53,7 +56,8 @@ class PriceCommand extends Command
             .setTitle(`XYA`)
             .setThumbnail('https://freyala.com/images/logo.png')
             .setDescription('```' + table(tableRows) + '```')
-            .setFooter('Source: Viperswap')
+            // .setFooter('Source: Viperswap')
+            .setFooter('Source: Mochiswap') // TEMP
         await message.channel.send(embed)
     }
 }

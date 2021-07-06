@@ -54,7 +54,7 @@ class PriceCommand extends Command
         const embed = this.client.util.embed()
             .setColor('#1DB151')
             .setTitle(`XYA`)
-            .setThumbnail('https://freyala.com/images/logo.png')
+            .setThumbnail('https://info.freyala.com/icons/icon-72x72.png')
             .setDescription('```' + table(tableRows) + '```')
             // .setFooter('Source: Viperswap')
             .setFooter('Source: Mochiswap') // TEMP

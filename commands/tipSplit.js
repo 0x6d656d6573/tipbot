@@ -34,7 +34,7 @@ class TipsplitCommand extends Command
             return
         }
         if (amount < 0.01) {
-            await React.error(this, message, `Tip amount incorrect`, `The tip amount is to low`)
+            await React.error(this, message, `Tip amount incorrect`, `The tip amount is too low`)
             return
         }
         if (!message.mentions.users.size) {

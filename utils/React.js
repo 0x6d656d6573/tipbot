@@ -95,28 +95,28 @@ exports.burn = async function (message) {
 exports.seaCreature = async function (message, amount) {
     // Characters: https://unicode-table.com/en/1F1FC/
 
-    if (amount <= 1) {
+    if (parseFloat(amount) <= 1) {
         await message.react('🦐')
     }
-    if (amount > 1 && amount <= 10) {
+    if (parseFloat(amount) > 1 && parseFloat(amount) <= 10) {
         await message.react('🦀')
     }
-    if (amount > 10 && amount <= 50) {
+    if (parseFloat(amount) > 10 && parseFloat(amount) <= 50) {
         await message.react('🐙')
     }
-    if (amount > 50 && amount <= 100) {
+    if (parseFloat(amount) > 50 && parseFloat(amount) <= 100) {
         await message.react('🐟')
     }
-    if (amount > 100 && amount <= 500) {
+    if (parseFloat(amount) > 100 && parseFloat(amount) <= 500) {
         await message.react('🐬')
     }
-    if (amount > 500 && amount <= 1000) {
+    if (parseFloat(amount) > 500 && parseFloat(amount) <= 1000) {
         await message.react('🦈')
     }
-    if (amount > 1000 && amount <= 5000) {
+    if (parseFloat(amount) > 1000 && parseFloat(amount) <= 5000) {
         await message.react('🐳')
     }
-    if (amount > 5000) {
+    if (parseFloat(amount) > 5000) {
         await message.react('🐋')
     }
 }

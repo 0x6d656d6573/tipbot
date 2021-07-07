@@ -69,7 +69,7 @@ class PriceCommand extends Command
 
         const embed = this.client.util.embed()
             .setColor('#1DB151')
-            .setTitle(`XYA`)
+            .setTitle(`Freyala | XYA`)
             .setThumbnail('https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png')
             .setDescription('```' + table(tableRows) + '```')
             // .setFooter('Source: Viperswap')

@@ -6,7 +6,7 @@ class DegenCommand extends Command
     constructor()
     {
         super('degen', {
-            aliases  : ['slarp'],
+            aliases  : ['slarp', 'slurp', 'dip', 'rug', 'rugpull', 'burnall'],
             ratelimit: 2,
         })
     }

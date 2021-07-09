@@ -1,5 +1,7 @@
-const {gitDescribeSync} = require("git-describe")
-const {Command}         = require('discord-akairo')
+const {gitDescribe} = require('git-describe')
+const git = require('git-rev-sync')
+
+const {Command} = require('discord-akairo')
 
 class PingCommand extends Command
 {
@@ -12,16 +14,10 @@ class PingCommand extends Command
 
     async exec(message)
     {
-        const gitInfo = gitDescribeSync()
-
         const embed = this.client.util.embed()
             .setColor('1DB151')
             .setTitle(`${process.env.SYMBOL} Tipbot version`)
-        if (gitInfo.semver === null) {
-            embed.setDescription('```1.0.0-beta-' + gitInfo.raw + '```')
-        } else {
-            embed.setDescription('```' + gitInfo.raw + '```')
-        }
+            .setDescription('```' + git.tag(false) + '```')
         await message.reply(embed)
     }
 }

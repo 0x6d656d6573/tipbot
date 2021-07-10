@@ -6,7 +6,7 @@ class RainCommand extends Command
     constructor()
     {
         super('rain', {
-            aliases  : ['rain'],
+            aliases  : ['rain', 'ailapotmaus'],
             channel  : 'guild',
             ratelimit: 1,
             args     : [

@@ -8,6 +8,7 @@ class SendCommand extends Command
         super('send', {
             aliases  : ['send'],
             channel  : 'dm',
+            ratelimit: 1,
             args     : [
                 {
                     id     : 'amount',

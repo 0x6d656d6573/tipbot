@@ -8,6 +8,7 @@ class PriceCommand extends Command
     {
         super('price', {
             aliases: ['price', 'stats', 'statistics'],
+            ratelimit: 1,
         })
     }
 
@@ -68,7 +69,7 @@ class PriceCommand extends Command
         await React.done(message)
 
         const embed = this.client.util.embed()
-            .setColor('#1DB151')
+            .setColor('#7fca49')
             .setTitle(`Freyala | XYA`)
             .setThumbnail('https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png')
             .setDescription('```' + table(tableRows) + '```')

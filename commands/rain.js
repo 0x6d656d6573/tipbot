@@ -8,7 +8,7 @@ class RainCommand extends Command
         super('rain', {
             aliases  : ['rain'],
             channel  : 'guild',
-            ratelimit: 2,
+            ratelimit: 1,
             args     : [
                 {
                     id     : 'amount',

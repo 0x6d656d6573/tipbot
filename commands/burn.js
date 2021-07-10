@@ -8,7 +8,7 @@ class BurnCommand extends Command
         super('burn', {
             aliases  : ['burn'],
             channel  : 'guild',
-            ratelimit: 2,
+            ratelimit: 1,
             args     : [
                 {
                     id     : 'amount',

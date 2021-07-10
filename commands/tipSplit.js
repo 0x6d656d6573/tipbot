@@ -8,7 +8,7 @@ class TipsplitCommand extends Command
         super('tipsplit', {
             aliases  : ['tipsplit', 'split', 'splitgift', 'divide', 'tipdivide', 'dividetip'],
             channel  : 'guild',
-            ratelimit: 2,
+            ratelimit: 1,
             args     : [
                 {
                     id     : 'amount',

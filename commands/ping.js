@@ -6,6 +6,7 @@ class PingCommand extends Command
     {
         super('ping', {
             aliases: ['ping'],
+            ratelimit: 1,
         })
     }
 

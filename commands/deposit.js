@@ -8,6 +8,7 @@ class DepositCommand extends Command
         super('deposit', {
             aliases: ['deposit'],
             channel: 'dm',
+            ratelimit: 1,
         })
     }
 
@@ -22,7 +23,7 @@ class DepositCommand extends Command
         await message.author.send(warning)
 
         const address = this.client.util.embed()
-            .setColor('#1DB151')
+            .setColor('#7fca49')
             .setTitle(`Your wallet address`)
             .setDescription('```' + wallet.address + '```')
             .addField(`Add ${process.env.SYMBOL}`, `To add funds to this wallet, go to your main wallet and send some ${process.env.SYMBOL} to this address. To confirm the transaction, you can check your balance using the \`${process.env.MESSAGE_PREFIX}balance\` command. Have fun tipping!`)

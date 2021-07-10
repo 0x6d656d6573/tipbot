@@ -6,8 +6,9 @@ class PingCommand extends Command
     constructor()
     {
         super('getgas', {
-            aliases: ['getgas', 'gasmeup'],
-            channel: 'dm',
+            aliases  : ['getgas', 'gasmeup'],
+            ratelimit: 1,
+            channel  : 'dm',
         })
     }
 

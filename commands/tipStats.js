@@ -8,7 +8,7 @@ class TipstatsCommand extends Command
     {
         super('tipstats', {
             aliases  : ['tipstats', 'tipstatistics'],
-            ratelimit: 2,
+            ratelimit: 1,
         })
     }
 
@@ -38,7 +38,7 @@ class TipstatsCommand extends Command
         }
 
         const embed = this.client.util.embed()
-            .setColor('#1DB151')
+            .setColor('#7fca49')
             .setTitle(`💵 Tip Statistics`)
             .addField(`Total tipped`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')

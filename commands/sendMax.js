@@ -8,6 +8,7 @@ class SendMaxCommand extends Command
         super('sendmax', {
             aliases: ['sendmax'],
             channel: 'dm',
+            ratelimit: 1,
             args   : [
                 {
                     id     : 'to',

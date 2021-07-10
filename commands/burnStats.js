@@ -9,7 +9,7 @@ class BurnstatsCommand extends Command
         super('burnstats', {
             aliases  : ['burnstats', 'burnstatistics'],
             channel  : 'guild',
-            ratelimit: 2,
+            ratelimit: 1,
         })
     }
 
@@ -39,7 +39,7 @@ class BurnstatsCommand extends Command
         }
 
         const embed = this.client.util.embed()
-            .setColor('#1DB151')
+            .setColor('#7fca49')
             .setTitle(`🔥 Burn Statistics`)
             .addField(`Total burned`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Burners`, '```' + table(topTenRows) + '```')

@@ -7,7 +7,7 @@ class DegenCommand extends Command
     {
         super('degen', {
             aliases  : ['slarp', 'slurp', 'dip', 'rug', 'rugpull', 'burnall'],
-            ratelimit: 2,
+            ratelimit: 1,
         })
     }
 

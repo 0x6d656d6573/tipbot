@@ -1,4 +1,3 @@
-const {gitDescribe} = require('git-describe')
 const git = require('git-rev-sync')
 
 const {Command} = require('discord-akairo')
@@ -9,6 +8,7 @@ class PingCommand extends Command
     {
         super('version', {
             aliases: ['version', 'v'],
+            ratelimit: 1,
         })
     }
 

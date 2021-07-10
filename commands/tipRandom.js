@@ -8,7 +8,7 @@ class TipRandomCommand extends Command
         super('tiprandom', {
             aliases  : ['tiprandom', 'giftramdom'],
             channel  : 'guild',
-            ratelimit: 2,
+            ratelimit: 1,
             args     : [
                 {
                     id     : 'amount',

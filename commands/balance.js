@@ -8,6 +8,7 @@ class BalanceCommand extends Command
         super('balance', {
             aliases: ['balance'],
             channel  : 'dm',
+            ratelimit: 1,
         })
     }
 
@@ -24,7 +25,7 @@ class BalanceCommand extends Command
         await React.done(message)
 
         const embed = this.client.util.embed()
-            .setColor('#1DB151')
+            .setColor('#7fca49')
             .setTitle(`Your balance`)
             .addField(`${process.env.SYMBOL}`, '```' + balance + ' ' + process.env.SYMBOL + '```')
             .addField(`ONE`, '```' + gasBalance + ' ONE```')

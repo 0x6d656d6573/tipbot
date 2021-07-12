@@ -16,42 +16,23 @@ class PriceCommand extends Command
     {
         await React.processing(message)
 
-
-        /* TEMP */
-        const usdPrice          = await XYA.tempPrice()
-        let onePrice            = await XYA.onePrice()
-        onePrice                = usdPrice / onePrice
+        const viperInfo         = await XYA.viperInfo()
+        const onePrice          = await XYA.onePrice()
+        const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
         const circulatingSupply = await XYA.circulatingSupply()
         const totalSupply       = await XYA.totalSupply()
+        const volume            = await XYA.volume()
 
         const rows = [
-            ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`],
+            ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
             ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
             null,
             ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
+            ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
             null,
             ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
             ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
         ]
-        /* TEMP */
-
-        // const viperInfo         = await XYA.viperInfo()
-        // const onePrice          = await XYA.onePrice()
-        // const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
-        // const circulatingSupply = await XYA.circulatingSupply()
-        // const totalSupply       = await XYA.totalSupply()
-        // const volume            = await XYA.volume()
-        //
-        // const rows = [
-        //     ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
-        //     ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
-        //     null,
-        //     ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
-        //     ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
-        //     null,
-        //     ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
-        //     ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
-        // ]
 
         const tableRows = []
         for (let i = 0; i < rows.length; i++) {
@@ -73,8 +54,9 @@ class PriceCommand extends Command
             .setTitle(`Freyala | XYA`)
             .setThumbnail('https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png')
             .setDescription('```' + table(tableRows) + '```')
-            // .setFooter('Source: Viperswap')
-            .setFooter('Source: Mochiswap') // TEMP
+            .setFooter('Source: Viperswap')
+            .addField(`Chart`, `https://www.freyala.com/chart`)
+            .setURL('https://www.freyala.com/chart')
         await message.channel.send(embed)
     }
 }

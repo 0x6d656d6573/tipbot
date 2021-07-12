@@ -25,7 +25,7 @@ class HelpCommand extends Command
             .addField('`!ftiprandom 100`', 'Tip a random user from the last 20 messages\nAlias: `!fgiftrandom`')
             .addField('`!frain 100`', 'Distribute a tip amongst the users of the last 20 messages')
             .addField('`!ftipstats`', 'Display the tipping stats top 10\nAlias: `!ftipstatistics`')
-            .addField('`!legends`', 'Display the legendary bèta tipping top 10')
+            .addField('`!flegends`', 'Display the legendary bèta tipping top 10')
             .addField('`!fburn 100`', 'Burn tokens')
             .addField('`!fburnstats`', 'Display the burning stats top 10\nAlias: `!fburnstatistics`')
             .addField('`!fprice`', 'Display the current XYA statistics\nAlias: `!fstats` `!fstatistics`')

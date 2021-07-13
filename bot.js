@@ -13,7 +13,7 @@ class BotClient extends AkairoClient
         /* Command handler */
         this.commandHandler = new CommandHandler(this, {
             directory      : './commands/',
-            prefix         : '!f',
+            prefix         : process.env.MESSAGE_PREFIX,
             defaultCooldown: 20000,
         });
 

@@ -95,7 +95,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                         const recipient = await command.client.users.cache.get(queue[i].recipient)
 
                         const embed = command.client.util.embed()
-                            .setColor('#1DB151')
+                            .setColor(process.env.COLOR_PRIMARY)
                             .setTitle(`You got tipped!`)
                             .setDescription(`@${message.author.username} tipped you ${queue[i].amount} ${process.env.SYMBOL} in <#${message.channel.id}>`)
                         await recipient.send(embed)
@@ -162,7 +162,7 @@ exports.make = async function (from, to, amount, privateKey, nonce = null) {
     const contract        = hmy.contracts.createContract(artifact.abi, process.env.CONTRACT_ADDRESS)
     const oneToHexAddress = (address) => hmy.crypto.getAddress(address).basicHex
     const weiAmount       = new BN(
-        new BigNumber(parseFloat(amount)).multipliedBy(Math.pow(10, 18)).toFixed(),
+        new BigNumber(parseFloat(amount)).multipliedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)).toFixed(),
         10
     )
 

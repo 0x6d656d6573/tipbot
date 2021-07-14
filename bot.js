@@ -14,7 +14,7 @@ class BotClient extends AkairoClient
         this.commandHandler = new CommandHandler(this, {
             directory      : './commands/',
             prefix         : process.env.MESSAGE_PREFIX,
-            defaultCooldown: 20000,
+            defaultCooldown: process.env.COOLDOWN,
         });
 
         /* Inhibitor handler */

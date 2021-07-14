@@ -5,5 +5,5 @@ module.exports = {
     Transaction   : require('./utils/Transaction'),
     TipStatistics : require('./utils/TipStatistics'),
     BurnStatistics: require('./utils/BurnStatistics'),
-    XYA           : require('./utils/XYA'),
+    Token         : require('./utils/Token'),
 }

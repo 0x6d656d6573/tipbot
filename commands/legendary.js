@@ -37,7 +37,7 @@ class LegendaryCommand extends Command
         }
 
         const embed = this.client.util.embed()
-            .setColor('#7fca49')
+            .setColor(process.env.COLOR_PRIMARY)
             .setTitle(`🦸 Legendary Bèta Tippers`)
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')
 

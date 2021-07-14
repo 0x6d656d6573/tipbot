@@ -15,7 +15,7 @@ class PingCommand extends Command
     async exec(message)
     {
         const embed = this.client.util.embed()
-            .setColor('1DB151')
+            .setColor(process.env.COLOR_PRIMARY)
             .setTitle(`${process.env.SYMBOL} Tipbot version`)
             .setDescription('```' + git.tag(false) + '```')
         await message.reply(embed)

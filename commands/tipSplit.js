@@ -58,7 +58,7 @@ class TipsplitCommand extends Command
 
             if (!recipientAddress) {
                 const embed = this.client.util.embed()
-                    .setColor('#FF0000')
+                    .setColor(process.env.COLOR_ERROR)
                     .setTitle(`@${message.author.username} tried to tip you some ${process.env.SYMBOL}`)
                     .setDescription(`unfortunately you do not have a ${process.env.SYMBOL} bot wallet yet. If you want to be able to receive tips, you can create a wallet by using the \`${process.env.MESSAGE_PREFIX}deposit\` command.`)
 

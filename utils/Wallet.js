@@ -44,7 +44,7 @@ exports.get = async function (command, message, id) {
 
         return wallet
     }).catch(async error => {
-        this.log(message, error);
+        this.log(message, error)
         await React.error(command, message, `An error has occurred`, `Please contact ${process.env.ERROR_REPORTING_USERS}`)
     })
 }
@@ -87,7 +87,7 @@ exports.balance = async function (wallet) {
     const contract   = hmy.contracts.createContract(artifact.abi, process.env.CONTRACT_ADDRESS)
     const weiBalance = await contract.methods.balanceOf(wallet.address).call()
 
-    return BigNumber(weiBalance).dividedBy(Math.pow(10, 18)).toFixed(4)
+    return BigNumber(weiBalance).dividedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)).toFixed(4)
 }
 
 /**
@@ -107,7 +107,7 @@ exports.gasBalance = async function (wallet) {
     return hmy.blockchain
         .getBalance({address: wallet.address})
         .then((response) => {
-            return parseFloat(fromWei(hexToNumber(response.result), Units.one)).toFixed(4);
+            return parseFloat(fromWei(hexToNumber(response.result), Units.one)).toFixed(4)
         })
 }
 
@@ -119,8 +119,8 @@ exports.gasBalance = async function (wallet) {
  */
 exports.address = async function (id) {
     return DB.wallets.findOne({where: {user: id}}).then(wallet => {
-        return wallet !== null ? wallet.address : false;
-    });
+        return wallet !== null ? wallet.address : false
+    })
 }
 
 /**
@@ -143,7 +143,7 @@ exports.recipientAddress = async function (command, message, id) {
         to = newWallet.address
     }
 
-    return to;
+    return to
 }
 
 /**
@@ -153,5 +153,5 @@ exports.recipientAddress = async function (command, message, id) {
  * @return {*}
  */
 exports.privateKey = function (wallet) {
-    return CryptoJS.AES.decrypt(wallet.privateKey, process.env.CYPHER_SECRET).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.AES.decrypt(wallet.privateKey, process.env.CYPHER_SECRET).toString(CryptoJS.enc.Utf8)
 }

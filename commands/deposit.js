@@ -19,11 +19,11 @@ class DepositCommand extends Command
         const warning = this.client.util.embed()
             .setColor('#e7c000')
             .setTitle(`:warning: Disclaimer`)
-            .setDescription(`Please do not use this as your main wallet, only for tipping on Discord. Do not deposit large amounts of XYA to this wallet. Use this wallet at your own risk!`)
+            .setDescription(`Please do not use this as your main wallet, only for tipping on Discord. Do not deposit large amounts of ${process.env.SYMBOL} to this wallet. Use this wallet at your own risk!`)
         await message.author.send(warning)
 
         const address = this.client.util.embed()
-            .setColor('#7fca49')
+            .setColor(process.env.COLOR_PRIMARY)
             .setTitle(`Your wallet address`)
             .setDescription('```' + wallet.address + '```')
             .addField(`Add ${process.env.SYMBOL}`, `To add funds to this wallet, go to your main wallet and send some ${process.env.SYMBOL} to this address. To confirm the transaction, you can check your balance using the \`${process.env.MESSAGE_PREFIX}balance\` command. Have fun tipping!`)

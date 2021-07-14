@@ -13,7 +13,7 @@ exports.success = async function (command, message, title = null, description = 
 
     if (title !== null) {
         const embed = command.client.util.embed()
-            .setColor('#1DB151')
+            .setColor(process.env.COLOR_PRIMARY)
             .setTitle(title)
 
         if (description !== null) {
@@ -39,7 +39,7 @@ exports.error = async function (command, message, title = null, description = nu
 
     if (title !== null) {
         const embed = command.client.util.embed()
-            .setColor('#FF0000')
+            .setColor(process.env.COLOR_ERROR)
             .setTitle(title)
 
         if (description !== null) {

@@ -38,7 +38,7 @@ class TipstatsCommand extends Command
         }
 
         const embed = this.client.util.embed()
-            .setColor('#7fca49')
+            .setColor(process.env.COLOR_PRIMARY)
             .setTitle(`💵 Tip Statistics`)
             .addField(`Total tipped`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')

@@ -1,5 +1,5 @@
 const {Command}    = require('discord-akairo')
-const {React, XYA} = require('../utils')
+const {React, Token} = require('../utils')
 const table        = require('text-table')
 
 class PriceCommand extends Command
@@ -16,12 +16,12 @@ class PriceCommand extends Command
     {
         await React.processing(message)
 
-        const viperInfo         = await XYA.viperInfo()
-        const onePrice          = await XYA.onePrice()
+        const viperInfo         = await Token.viperInfo()
+        const onePrice          = await Token.onePrice()
         const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
-        const circulatingSupply = await XYA.circulatingSupply()
-        const totalSupply       = await XYA.totalSupply()
-        const volume            = await XYA.volume()
+        const circulatingSupply = await Token.circulatingSupply()
+        const totalSupply       = await Token.totalSupply()
+        const volume            = await Token.volume()
 
         const rows = [
             ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
@@ -50,13 +50,13 @@ class PriceCommand extends Command
         await React.done(message)
 
         const embed = this.client.util.embed()
-            .setColor('#7fca49')
-            .setTitle(`Freyala | XYA`)
-            .setThumbnail('https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png')
+            .setColor(process.env.COLOR_PRIMARY)
+            .setTitle(process.env.PRICE_EMBED_TITLE)
+            .setThumbnail(process.env.PRICE_EMBED_THUMBNAIL)
             .setDescription('```' + table(tableRows) + '```')
-            .setFooter('Source: Viperswap')
-            .addField(`Chart`, `https://www.freyala.com/chart`)
-            .setURL('https://www.freyala.com/chart')
+            .setFooter(process.env.PRICE_EMBED_FOOTER)
+            .addField(`Chart`, process.env.PRICE_EMBED_CHART_LINK)
+            .setURL(process.env.PRICE_EMBED_URL)
         await message.channel.send(embed)
     }
 }

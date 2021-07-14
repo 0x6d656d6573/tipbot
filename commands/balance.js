@@ -25,7 +25,7 @@ class BalanceCommand extends Command
         await React.done(message)
 
         const embed = this.client.util.embed()
-            .setColor('#7fca49')
+            .setColor(process.env.COLOR_PRIMARY)
             .setTitle(`Your balance`)
             .addField(`${process.env.SYMBOL}`, '```' + balance + ' ' + process.env.SYMBOL + '```')
             .addField(`ONE`, '```' + gasBalance + ' ONE```')

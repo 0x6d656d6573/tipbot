@@ -39,7 +39,7 @@ class BurnstatsCommand extends Command
         }
 
         const embed = this.client.util.embed()
-            .setColor('#7fca49')
+            .setColor(process.env.COLOR_PRIMARY)
             .setTitle(`🔥 Burn Statistics`)
             .addField(`Total burned`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Burners`, '```' + table(topTenRows) + '```')

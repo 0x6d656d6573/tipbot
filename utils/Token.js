@@ -99,7 +99,7 @@ exports.circulatingSupply = async function () {
     let graveyardAmount = 0
     for (let i = 0; i < graveyard.length; i++) {
         const weiBalance = await contract.methods.balanceOf(graveyard[i]).call()
-        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, 18)))
+        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)))
     }
 
     return 450000000 - parseFloat(graveyardAmount)
@@ -127,22 +127,8 @@ exports.totalSupply = async function () {
     let graveyardAmount = 0
     for (let i = 0; i < graveyard.length; i++) {
         const weiBalance = await contract.methods.balanceOf(graveyard[i]).call()
-        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, 18)))
+        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)))
     }
 
     return 450000000 - parseFloat(graveyardAmount)
-}
-
-/**
- * Temp price
- *
- * @return {Promise<*>}
- */
-exports.tempPrice = async function () {
-    const response = await axios({
-        url   : 'https://info.freyala.com/api/exchange-rates/xya_1usdc',
-        method: 'get',
-    })
-
-    return response.data.rates.buy_rate
 }

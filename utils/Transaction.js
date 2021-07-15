@@ -1,6 +1,6 @@
 const {Harmony}                         = require('@harmony-js/core')
 const {ChainType, ChainID, hexToNumber} = require('@harmony-js/utils')
-const {BN, toBech32}                              = require('@harmony-js/crypto')
+const {BN, toBech32}                    = require('@harmony-js/crypto')
 const {BigNumber}                       = require('bignumber.js')
 const artifact                          = require('../artifact.json')
 const DB                                = require('./DB')
@@ -230,22 +230,22 @@ exports.make = async function (from, to, amount, privateKey, nonce = null) {
  * @return {Promise<{result: boolean, message: string}>}
  */
 exports.sendGas = async function (command, message, from, to, amount, privateKey = null) {
-    const fromShard  = 0;
-    const toShard    = 0;
-    const gasLimit   = '25000';
-    const gasPrice   = 1;
-    const recipient  = await toBech32(to);
-    const wallet     = await Wallet.get(command, message, from);
+    const fromShard = 0
+    const toShard   = 0
+    const gasLimit  = '25000'
+    const gasPrice  = 1
+    const recipient = await toBech32(to)
+    const wallet    = await Wallet.get(command, message, from)
     if (privateKey === null) {
         privateKey = await Wallet.privateKey(wallet)
     }
-    const hmy    = new Harmony(
+    const hmy = new Harmony(
         process.env.RPC_URL,
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
         },
-    );
+    )
 
     const tx = hmy.transactions.newTx({
         to       : recipient,
@@ -254,14 +254,14 @@ exports.sendGas = async function (command, message, from, to, amount, privateKey
         shardID  : typeof fromShard === 'string' ? Number.parseInt(fromShard, 10) : fromShard,
         toShardID: typeof toShard === 'string' ? Number.parseInt(toShard, 10) : toShard,
         gasPrice : new hmy.utils.Unit(gasPrice).asGwei().toWei().toString(),
-    });
+    })
 
     hmy.utils.address
 
-    await this.getShardInfo(hmy);
+    await this.getShardInfo(hmy)
 
-    const account  = hmy.wallet.addByPrivateKey(privateKey);
-    const signedTx = await account.signTransaction(tx);
+    const account  = hmy.wallet.addByPrivateKey(privateKey)
+    const signedTx = await account.signTransaction(tx)
 
     signedTx
         .observed()
@@ -273,26 +273,26 @@ exports.sendGas = async function (command, message, from, to, amount, privateKey
             return {
                 result : false,
                 message: 'Failed to sign transaction',
-            };
-        });
+            }
+        })
 
-    const [sentTxn, txHash] = await signedTx.sendTransaction();
-    const confirmedTx       = await sentTxn.confirm(txHash);
+    const [sentTxn, txHash] = await signedTx.sendTransaction()
+    const confirmedTx       = await sentTxn.confirm(txHash)
 
-    let explorerLink;
+    let explorerLink
     if (confirmedTx.isConfirmed()) {
         explorerLink = `${process.env.NETWORK_EXPLORER}/tx/${txHash}`
     } else {
         return {
             result : false,
             message: `Can not confirm transaction ${txHash}`,
-        };
+        }
     }
 
     return {
         result : true,
         message: explorerLink,
-    };
+    }
 }
 
 /**
@@ -300,8 +300,8 @@ exports.sendGas = async function (command, message, from, to, amount, privateKey
  * @return {Promise<*>}
  */
 exports.getShardInfo = async function (harmony) {
-    const response = await harmony.blockchain.getShardingStructure();
-    harmony.shardingStructures(response.result);
+    const response = await harmony.blockchain.getShardingStructure()
+    harmony.shardingStructures(response.result)
 
-    return response.result;
+    return response.result
 }

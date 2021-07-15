@@ -1,3 +1,5 @@
+const Config = require('./Config')
+
 /**
  * Success
  *
@@ -13,7 +15,7 @@ exports.success = async function (command, message, title = null, description = 
 
     if (title !== null) {
         const embed = command.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
+            .setColor(Config.get('colors.primary'))
             .setTitle(title)
 
         if (description !== null) {
@@ -39,7 +41,7 @@ exports.error = async function (command, message, title = null, description = nu
 
     if (title !== null) {
         const embed = command.client.util.embed()
-            .setColor(process.env.COLOR_ERROR)
+            .setColor(Config.get('colors.error'))
             .setTitle(title)
 
         if (description !== null) {
@@ -68,7 +70,7 @@ exports.done = async function (message) {
     const reaction = message.reactions.cache.get('⌛')
 
     try {
-        await reaction.remove();
+        await reaction.remove()
     } catch (error) {
         console.error('Failed to remove reaction')
     }

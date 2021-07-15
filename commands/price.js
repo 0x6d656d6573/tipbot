@@ -1,13 +1,13 @@
-const {Command}    = require('discord-akairo')
-const {React, Token} = require('../utils')
-const table        = require('text-table')
+const {Command}              = require('discord-akairo')
+const {Config, React, Token} = require('../utils')
+const table                  = require('text-table')
 
 class PriceCommand extends Command
 {
     constructor()
     {
         super('price', {
-            aliases: ['price', 'stats', 'statistics'],
+            aliases  : ['price', 'stats', 'statistics'],
             ratelimit: 1,
         })
     }
@@ -50,13 +50,13 @@ class PriceCommand extends Command
         await React.done(message)
 
         const embed = this.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
-            .setTitle(process.env.PRICE_EMBED_TITLE)
-            .setThumbnail(process.env.PRICE_EMBED_THUMBNAIL)
+            .setColor(Config.get('colors.primary'))
+            .setTitle(Config.get('price_embed.title'))
+            .setThumbnail(Config.get('price_embed.thumbnail'))
             .setDescription('```' + table(tableRows) + '```')
-            .setFooter(process.env.PRICE_EMBED_FOOTER)
-            .addField(`Chart`, process.env.PRICE_EMBED_CHART_LINK)
-            .setURL(process.env.PRICE_EMBED_URL)
+            .setFooter(Config.get('price_embed.footer'))
+            .addField(`Chart`, Config.get('price_embed.chart_link'))
+            .setURL(Config.get('price_embed.url'))
         await message.channel.send(embed)
     }
 }

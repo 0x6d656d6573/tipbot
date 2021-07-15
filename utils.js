@@ -1,4 +1,5 @@
 module.exports = {
+    Config        : require('./utils/Config'),
     DB            : require('./utils/DB'),
     React         : require('./utils/React'),
     Wallet        : require('./utils/Wallet'),

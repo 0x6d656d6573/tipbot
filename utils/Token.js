@@ -16,7 +16,7 @@ exports.viperInfo = async function () {
         data  : {
             query: `
                 {         
-                    pair(id: "${process.env.VIPER_PAIR_ID}") {
+                    pair(id: "${Config.get('token.viper_pair_id')}") {
                     token0 {
                         id
                         symbol
@@ -88,18 +88,18 @@ exports.circulatingSupply = async function () {
         '0xbb4972a578266e0800d98f4248d057d6f6cde2bf',
     ]
     const hmy       = new Harmony(
-        process.env.RPC_URL,
+        Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
         },
     )
-    const contract  = hmy.contracts.createContract(artifact.abi, process.env.CONTRACT_ADDRESS)
+    const contract  = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
 
     let graveyardAmount = 0
     for (let i = 0; i < graveyard.length; i++) {
         const weiBalance = await contract.methods.balanceOf(graveyard[i]).call()
-        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)))
+        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, Config.get('token.decimals'))))
     }
 
     return 450000000 - parseFloat(graveyardAmount)
@@ -116,18 +116,18 @@ exports.totalSupply = async function () {
         '0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4',
     ]
     const hmy       = new Harmony(
-        process.env.RPC_URL,
+        Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
         },
     )
-    const contract  = hmy.contracts.createContract(artifact.abi, process.env.CONTRACT_ADDRESS)
+    const contract  = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
 
     let graveyardAmount = 0
     for (let i = 0; i < graveyard.length; i++) {
         const weiBalance = await contract.methods.balanceOf(graveyard[i]).call()
-        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)))
+        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, Config.get('token.decimals'))))
     }
 
     return 450000000 - parseFloat(graveyardAmount)

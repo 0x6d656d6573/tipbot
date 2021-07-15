@@ -1,13 +1,14 @@
-const git = require('git-rev-sync')
-
 const {Command} = require('discord-akairo')
+const {Config}  = require('../utils')
+const git       = require('git-rev-sync')
+
 
 class PingCommand extends Command
 {
     constructor()
     {
         super('version', {
-            aliases: ['version', 'v'],
+            aliases  : ['version', 'v'],
             ratelimit: 1,
         })
     }
@@ -15,8 +16,8 @@ class PingCommand extends Command
     async exec(message)
     {
         const embed = this.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
-            .setTitle(`${process.env.SYMBOL} Tipbot version`)
+            .setColor(Config.get('colors.primary'))
+            .setTitle(`${Config.get('token.symbol')} Tipbot version`)
             .setDescription('```' + git.tag(false) + '```')
         await message.reply(embed)
     }

@@ -1,6 +1,6 @@
 const {Command}       = require('discord-akairo')
 const table           = require('text-table')
-const {TipStatistics} = require('../utils')
+const {Config, TipStatistics} = require('../utils')
 
 class TipstatsCommand extends Command
 {
@@ -20,12 +20,12 @@ class TipstatsCommand extends Command
 
         const totalRows  = [[
             new Intl.NumberFormat().format(total),
-            process.env.SYMBOL
+            Config.get('token.symbol')
         ]]
         const authorRows = [[
             message.author.username,
             new Intl.NumberFormat().format(author),
-            process.env.SYMBOL
+            Config.get('token.symbol')
         ]]
         let topTenRows   = []
         for (let i = 0; i < topTen.length; i++) {
@@ -33,12 +33,12 @@ class TipstatsCommand extends Command
                 i + 1,
                 topTen[i].username,
                 new Intl.NumberFormat().format(parseFloat(topTen[i].amount).toFixed(2)),
-                process.env.SYMBOL,
+                Config.get('token.symbol'),
             ])
         }
 
         const embed = this.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
+            .setColor(Config.get('colors.primary'))
             .setTitle(`💵 Tip Statistics`)
             .addField(`Total tipped`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')

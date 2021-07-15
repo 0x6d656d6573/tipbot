@@ -1,5 +1,5 @@
 const {Command} = require('discord-akairo')
-const {React, Wallet}  = require('../utils')
+const {Config, React, Wallet}  = require('../utils')
 
 class BalanceCommand extends Command
 {
@@ -25,9 +25,9 @@ class BalanceCommand extends Command
         await React.done(message)
 
         const embed = this.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
+            .setColor(Config.get('colors.primary'))
             .setTitle(`Your balance`)
-            .addField(`${process.env.SYMBOL}`, '```' + balance + ' ' + process.env.SYMBOL + '```')
+            .addField(`${Config.get('token.symbol')}`, '```' + balance + ' ' + Config.get('token.symbol') + '```')
             .addField(`ONE`, '```' + gasBalance + ' ONE```')
         await message.author.send(embed)
     }

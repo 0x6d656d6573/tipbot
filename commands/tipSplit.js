@@ -1,5 +1,5 @@
-const {Command}                    = require('discord-akairo')
-const {React, Wallet, Transaction} = require('../utils')
+const {Command}                            = require('discord-akairo')
+const {Config, React, Wallet, Transaction} = require('../utils')
 
 class TipsplitCommand extends Command
 {
@@ -46,7 +46,7 @@ class TipsplitCommand extends Command
         const balance = await Wallet.balance(wallet)
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${process.env.SYMBOL}). Use the \`${process.env.MESSAGE_PREFIX}deposit\` command to get your wallet address to send some more ${process.env.SYMBOL}. Or try again with a lower amount`)
+            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get('token.symbol')}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get('token.symbol')}. Or try again with a lower amount`)
             return
         }
 
@@ -58,9 +58,9 @@ class TipsplitCommand extends Command
 
             if (!recipientAddress) {
                 const embed = this.client.util.embed()
-                    .setColor(process.env.COLOR_ERROR)
-                    .setTitle(`@${message.author.username} tried to tip you some ${process.env.SYMBOL}`)
-                    .setDescription(`unfortunately you do not have a ${process.env.SYMBOL} bot wallet yet. If you want to be able to receive tips, you can create a wallet by using the \`${process.env.MESSAGE_PREFIX}deposit\` command.`)
+                    .setColor(Config.get('colors.error'))
+                    .setTitle(`@${message.author.username} tried to tip you some ${Config.get('token.symbol')}`)
+                    .setDescription(`unfortunately you do not have a ${Config.get('token.symbol')} bot wallet yet. If you want to be able to receive tips, you can create a wallet by using the \`${Config.get('prefix')}deposit\` command.`)
 
                 await message.author.send(embed)
             }

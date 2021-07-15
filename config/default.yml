@@ -1,0 +1,53 @@
+# General
+prefix: "!f"
+error_reporting_users: "@Gydo or @Tailchakra"
+owner_ids:
+  - "490122972124938240"
+blacklist:
+cooldown: 20000
+
+# Token
+token:
+  contract_address: "0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4"
+  symbol: "XYA"
+  decimals: 18
+  network_explorer: "https://explorer.harmony.one/#"
+  rpc_url: "https://ams-hmy-rpc.freyala.com"
+  viper_pair_id: "0x1485a496f816f940c510d634e48f8c66b78dc99e"
+
+price_embed:
+  title: "Freyala | XYA"
+  thumbnail: "https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png"
+  chart_link: "https://www.freyala.com/chart"
+  url: "https://www.freyala.com/chart"
+  footer: "Source: Viperswap"
+
+# Colors
+colors:
+  primary: "#7FCA49"
+  info: "#0EA5E9"
+  error: "#FF0000"
+
+# Sea creatures
+shrimp:
+  high:
+crab:
+  low:
+  high:
+octopus:
+  low:
+  high:
+fish:
+  low:
+  high:
+dolphin:
+  low:
+  high:
+shark:
+  low:
+  high:
+whale:
+  low:
+  high:
+whale:
+  low:

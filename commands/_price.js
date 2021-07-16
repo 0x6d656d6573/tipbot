@@ -16,17 +16,19 @@ class PriceCommand extends Command
     {
         await React.processing(message)
 
-        const usdPrice          = await Token.mochiPrice()
-        let onePrice            = await Token.onePrice()
-        onePrice                = usdPrice / onePrice
+        const viperInfo         = await Token.viperInfo()
+        const onePrice          = await Token.onePrice()
+        const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
         const circulatingSupply = await Token.circulatingSupply()
         const totalSupply       = await Token.totalSupply()
+        const volume            = await Token.volume()
 
         const rows = [
-            ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`],
+            ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
             ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
             null,
             ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
+            ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
             null,
             ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
             ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],

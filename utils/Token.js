@@ -132,3 +132,17 @@ exports.totalSupply = async function () {
 
     return 450000000 - parseFloat(graveyardAmount)
 }
+
+/**
+ * Mochi price
+ *
+ * @return {Promise<*>}
+ */
+exports.mochiPrice = async function () {
+    const response = await axios({
+        url   : 'https://info.freyala.com/api/exchange-rates/xya_1usdc',
+        method: 'get',
+    })
+
+    return response.data.rates.buy_rate
+}

@@ -1,6 +1,6 @@
 require('dotenv').config()
 const {AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler} = require('discord-akairo')
-const {Config, DB, Log}                                                      = require('./utils')
+const {Config, Log, DB}                                                 = require('./utils')
 
 class BotClient extends AkairoClient
 {
@@ -45,6 +45,5 @@ const client = new BotClient()
 client.login(process.env.TOKEN)
 
 client.on('ready', () => {
-    Log.error('asdf')
     DB.syncDatabase()
 })

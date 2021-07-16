@@ -1,4 +1,5 @@
 const {Command} = require('discord-akairo')
+const {Log} = require('../utils')
 
 class PingCommand extends Command
 {

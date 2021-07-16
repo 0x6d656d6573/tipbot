@@ -31,7 +31,7 @@ exports.addToQueue = async function (command, message, from, to, amount, recipie
         to       : to,
         amount   : amount,
     }).catch(async error => {
-        Log.debug(message, error)
+        Log.error(error, message)
         await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
     })
 }
@@ -82,7 +82,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                             id: queue[i].id
                         }
                     }).catch(async error => {
-                        Log.debug(message, error)
+                        Log.error(error, message)
                         await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
                     })
 
@@ -132,7 +132,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                     }
                 })
 
-                Log.debug(message, error)
+                Log.error(error, message)
                 await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
             })
     }

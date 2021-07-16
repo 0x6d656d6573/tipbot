@@ -1,19 +1,31 @@
 /**
- * Get private key
+ * Debug
+ *
+ * @return {*}
+ * @param data
+ * @param message
+ */
+exports.debug = function (data, message) {
+    console.log(data)
+}
+
+/**
+ * Error
  *
  * @return {*}
  * @param message
- * @param data
+ * @param error
  */
-exports.error = function (message, data) {
-    console.log(data)
-
+exports.error = function (error, message) {
     const log = require('simple-node-logger').createRollingFileLogger({
         errorEventName : 'error',
-        logDirectory   : '../logs',
+        logDirectory   : `${__dirname}/../logs/`,
         fileNamePattern: 'tipbot-<DATE>.log',
-        dateFormat     : 'YYYY.MM.DD'
+        dateFormat     : 'YYYY-MM-DD',
     })
 
-    log.info(data, new Date().toJSON())
+    log.info({
+        'error'  : error,
+        'message': message,
+    })
 }

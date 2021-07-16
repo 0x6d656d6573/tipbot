@@ -6,6 +6,7 @@ const {ChainType, ChainID, hexToNumber, fromWei, Units} = require('@harmony-js/u
 const {BigNumber}                                       = require('bignumber.js')
 const artifact                                          = require('../artifact.json')
 const CryptoJS                                          = require('crypto-js')
+const Config                                            = require('./Config')
 const DB                                                = require('./DB')
 const React                                             = require('./React')
 
@@ -21,7 +22,7 @@ exports.check = async function (command, message, id) {
     const wallet = await DB.wallets.findOne({where: {user: id}})
 
     if (wallet == null) {
-        await React.error(command, message, `You do not have a ${process.env.SYMBOL} Tip Bot wallet yet`, `Please run the \`${process.env.MESSAGE_PREFIX}deposit\` command to create a new wallet.`)
+        await React.error(command, message, `You do not have a ${Config.get('token.symbol')} Tip Bot wallet yet`, `Please run the \`${Config.get('prefix')}deposit\` command to create a new wallet.`)
 
         return false
     } else {
@@ -45,7 +46,7 @@ exports.get = async function (command, message, id) {
         return wallet
     }).catch(async error => {
         this.log(message, error)
-        await React.error(command, message, `An error has occurred`, `Please contact ${process.env.ERROR_REPORTING_USERS}`)
+        await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
     })
 }
 
@@ -57,7 +58,7 @@ exports.get = async function (command, message, id) {
 exports.create = function (id) {
     const account   = new Account()
     const messenger = new Messenger(
-        new HttpProvider(process.env.RPC_URL),
+        new HttpProvider(Config.get('token.rpc_url')),
         ChainType.Harmony,
         ChainID.HmyMainnet,
     )
@@ -77,17 +78,17 @@ exports.create = function (id) {
  */
 exports.balance = async function (wallet) {
     const hmy = new Harmony(
-        process.env.RPC_URL,
+        Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
         },
     )
 
-    const contract   = hmy.contracts.createContract(artifact.abi, process.env.CONTRACT_ADDRESS)
+    const contract   = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
     const weiBalance = await contract.methods.balanceOf(wallet.address).call()
 
-    return BigNumber(weiBalance).dividedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)).toFixed(4)
+    return BigNumber(weiBalance).dividedBy(Math.pow(10, Config.get('token.decimals'))).toFixed(4)
 }
 
 /**
@@ -97,7 +98,7 @@ exports.balance = async function (wallet) {
  */
 exports.gasBalance = async function (wallet) {
     const hmy = new Harmony(
-        process.env.RPC_URL,
+        Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
@@ -138,7 +139,7 @@ exports.recipientAddress = async function (command, message, id) {
         const newWallet = await this.create(id)
         const recipient = await command.client.users.cache.get(id)
 
-        recipient.send(`@${message.author.username} tipped you some ${process.env.SYMBOL}! You don't have a wallet yet, so I have created one for you! Use the \`${process.env.MESSAGE_PREFIX}help\` command to find out how to make use of my services.`)
+        recipient.send(`@${message.author.username} tipped you some ${Config.get('token.symbol')}! You don't have a wallet yet, so I have created one for you! Use the \`${Config.get('prefix')}help\` command to find out how to make use of my services.`)
 
         to = newWallet.address
     }

@@ -3,6 +3,7 @@ const {ChainType, ChainID, hexToNumber} = require('@harmony-js/utils')
 const {BN, toBech32}                    = require('@harmony-js/crypto')
 const {BigNumber}                       = require('bignumber.js')
 const artifact                          = require('../artifact.json')
+const Config                            = require('./Config')
 const DB                                = require('./DB')
 const React                             = require('./React')
 const Wallet                            = require('./Wallet')
@@ -31,7 +32,7 @@ exports.addToQueue = async function (command, message, from, to, amount, recipie
         amount   : amount,
     }).catch(async error => {
         Log.debug(message, error)
-        await React.error(command, message, `An error has occurred`, `Please contact ${process.env.ERROR_REPORTING_USERS}`)
+        await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
     })
 }
 
@@ -55,7 +56,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
     }
 
     const hmy = new Harmony(
-        process.env.RPC_URL,
+        Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
@@ -82,7 +83,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                         }
                     }).catch(async error => {
                         Log.debug(message, error)
-                        await React.error(command, message, `An error has occurred`, `Please contact ${process.env.ERROR_REPORTING_USERS}`)
+                        await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
                     })
 
                     if (notifyAuthor) {
@@ -95,9 +96,9 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                         const recipient = await command.client.users.cache.get(queue[i].recipient)
 
                         const embed = command.client.util.embed()
-                            .setColor(process.env.COLOR_PRIMARY)
+                            .setColor(Config.get('colors.primary'))
                             .setTitle(`You got tipped!`)
-                            .setDescription(`@${message.author.username} tipped you ${queue[i].amount} ${process.env.SYMBOL} in <#${message.channel.id}>`)
+                            .setDescription(`@${message.author.username} tipped you ${queue[i].amount} ${Config.get('token.symbol')} in <#${message.channel.id}>`)
                         await recipient.send(embed)
                     }
 
@@ -121,7 +122,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                     })
 
                     Log.debug(message, response.message)
-                    await React.error(command, message, `An error has occurred`, `Error: ${response.message}\n\nPlease contact ${process.env.ERROR_REPORTING_USERS}`)
+                    await React.error(command, message, `An error has occurred`, `Error: ${response.message}\n\nPlease contact ${Config.get('error_reporting_users')}`)
                 }
             })
             .catch(async error => {
@@ -132,7 +133,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                 })
 
                 Log.debug(message, error)
-                await React.error(command, message, `An error has occurred`, `Please contact ${process.env.ERROR_REPORTING_USERS}`)
+                await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
             })
     }
 
@@ -153,16 +154,16 @@ exports.make = async function (from, to, amount, privateKey, nonce = null) {
     let txHash, receipt, error
     let confirmation      = null
     const hmy             = new Harmony(
-        process.env.RPC_URL,
+        Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
         },
     )
-    const contract        = hmy.contracts.createContract(artifact.abi, process.env.CONTRACT_ADDRESS)
+    const contract        = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
     const oneToHexAddress = (address) => hmy.crypto.getAddress(address).basicHex
     const weiAmount       = new BN(
-        new BigNumber(parseFloat(amount)).multipliedBy(Math.pow(10, process.env.CURRENCY_DECIMALS)).toFixed(),
+        new BigNumber(parseFloat(amount)).multipliedBy(Math.pow(10, Config.get('token.decimals'))).toFixed(),
         10
     )
 
@@ -214,7 +215,7 @@ exports.make = async function (from, to, amount, privateKey, nonce = null) {
 
     return {
         success: true,
-        message: `${process.env.NETWORK_EXPLORER}/tx/${txHash}`,
+        message: `${Config.get('token.network_explorer')}/tx/${txHash}`,
     }
 }
 
@@ -240,7 +241,7 @@ exports.sendGas = async function (command, message, from, to, amount, privateKey
         privateKey = await Wallet.privateKey(wallet)
     }
     const hmy = new Harmony(
-        process.env.RPC_URL,
+        Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : ChainID.HmyMainnet,
@@ -281,7 +282,7 @@ exports.sendGas = async function (command, message, from, to, amount, privateKey
 
     let explorerLink
     if (confirmedTx.isConfirmed()) {
-        explorerLink = `${process.env.NETWORK_EXPLORER}/tx/${txHash}`
+        explorerLink = `${Config.get('token.network_explorer')}/tx/${txHash}`
     } else {
         return {
             result : false,

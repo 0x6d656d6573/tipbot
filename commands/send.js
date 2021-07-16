@@ -1,5 +1,5 @@
-const {Command}                    = require('discord-akairo')
-const {React, Wallet, Transaction} = require('../utils')
+const {Command}                            = require('discord-akairo')
+const {Config, React, Wallet, Transaction} = require('../utils')
 
 class SendCommand extends Command
 {
@@ -49,7 +49,7 @@ class SendCommand extends Command
         const to      = args.to
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${process.env.SYMBOL}). Use the \`${process.env.MESSAGE_PREFIX}deposit\` command to get your wallet address to send some more ${process.env.SYMBOL}. Or try again with a lower amount`)
+            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get('token.symbol')}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get('token.symbol')}. Or try again with a lower amount`)
             return
         }
 

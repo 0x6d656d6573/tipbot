@@ -1,6 +1,6 @@
-const {Command}        = require('discord-akairo')
-const table            = require('text-table')
-const {BurnStatistics} = require('../utils')
+const {Command}                = require('discord-akairo')
+const table                    = require('text-table')
+const {Config, BurnStatistics} = require('../utils')
 
 class BurnstatsCommand extends Command
 {
@@ -21,12 +21,12 @@ class BurnstatsCommand extends Command
 
         const totalRows  = [[
             total,
-            process.env.SYMBOL
+            Config.get('token.symbol')
         ]]
         const authorRows = [[
             message.author.username,
             author,
-            process.env.SYMBOL
+            Config.get('token.symbol')
         ]]
         let topTenRows   = []
         for (let i = 0; i < topTen.length; i++) {
@@ -34,12 +34,12 @@ class BurnstatsCommand extends Command
                 i + 1,
                 topTen[i].username,
                 parseFloat(topTen[i].amount).toFixed(2),
-                process.env.SYMBOL,
+                Config.get('token.symbol'),
             ])
         }
 
         const embed = this.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
+            .setColor(Config.get('colors.primary'))
             .setTitle(`🔥 Burn Statistics`)
             .addField(`Total burned`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Burners`, '```' + table(topTenRows) + '```')

@@ -1,12 +1,12 @@
-const {Command} = require('discord-akairo')
-const {React, Wallet}  = require('../utils')
+const {Command}               = require('discord-akairo')
+const {Config, React, Wallet} = require('../utils')
 
 class BalanceCommand extends Command
 {
     constructor()
     {
         super('balance', {
-            aliases: ['balance'],
+            aliases  : ['balance'],
             channel  : 'dm',
             ratelimit: 1,
         })
@@ -14,7 +14,7 @@ class BalanceCommand extends Command
 
     async exec(message)
     {
-        await React.processing(message);
+        await React.processing(message)
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }
@@ -25,9 +25,9 @@ class BalanceCommand extends Command
         await React.done(message)
 
         const embed = this.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
+            .setColor(Config.get('colors.primary'))
             .setTitle(`Your balance`)
-            .addField(`${process.env.SYMBOL}`, '```' + balance + ' ' + process.env.SYMBOL + '```')
+            .addField(`${Config.get('token.symbol')}`, '```' + balance + ' ' + Config.get('token.symbol') + '```')
             .addField(`ONE`, '```' + gasBalance + ' ONE```')
         await message.author.send(embed)
     }

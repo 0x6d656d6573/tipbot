@@ -1,12 +1,13 @@
 const {Command} = require('discord-akairo')
-const table = require('text-table')
+const {Config}  = require('../utils')
+const table     = require('text-table')
 
 class LegendaryCommand extends Command
 {
     constructor()
     {
         super('legends', {
-            aliases: ['legends'],
+            aliases  : ['legends'],
             ratelimit: 1,
         })
     }
@@ -26,18 +27,18 @@ class LegendaryCommand extends Command
             {username: 'Gydo', amount: 9111.11},
         ]
 
-        let topTenRows   = []
+        let topTenRows = []
         for (let i = 0; i < topTen.length; i++) {
             topTenRows.push([
                 i + 1,
                 topTen[i].username,
                 new Intl.NumberFormat().format(parseFloat(topTen[i].amount).toFixed(2)),
-                process.env.SYMBOL,
+                Config.get('token.symbol'),
             ])
         }
 
         const embed = this.client.util.embed()
-            .setColor(process.env.COLOR_PRIMARY)
+            .setColor(Config.get('colors.primary'))
             .setTitle(`🦸 Legendary Bèta Tippers`)
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')
 

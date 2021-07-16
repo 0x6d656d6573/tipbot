@@ -35,24 +35,20 @@ cp .env.example .env
 ```
 
 ### Artifact
+
 Replace `artifact.json` with your contract abi JSON
 
 ### Configure dotenv
 
-Update the `.env` values. This table explains what variable is used for what
+Update the `.env` values. These tables explain what variable is used for what
 
 #### Discord
 
 Key | Type | Example | Description
 --- | --- | --- | ---
-TOKEN | string | LKDJI98789dhs8KJNKJYDuuyysdfJ.skJJHjb_33.KJHKjhkjhKJH87JHguIYbBJy-DKkd8db
-MESSAGE_PREFIX | string | !f
-ERROR_REPORTING_USERS | string | @Gydo or @Tailchakra
-OWNER_ID | string (comma seperated) | 234567898765432234
-BLACKLIST | string (comma seperated) | 234567898765432234
-BOT_WALLET_ADDRESS | string | 0x89y92...38jhu283h9
-BOT_WALLET_PRIVATE_KEY | string | 934ccbaec7...45980bf2dae
-COOLDOWN | integer | 20000
+TOKEN | string | LKDJI98789dhs8KJNK...JH87JHguIYbBJy-DKkd8db | This is the bot's Discord token. See [this section](###Create-a-discord-bot) on how to get it
+BOT_WALLET_ADDRESS | string | 0x89y92...38jhu283h9 | This is the address of an externally created wallet. This wallet is used to send gas from
+BOT_WALLET_PRIVATE_KEY | string | 934ccbaec7...45980bf2dae |This is the private key of an externally created wallet
 
 #### Database
 
@@ -68,36 +64,57 @@ DB_NAME | string | xya_bot
 
 Key | Type | Example | Description
 --- | --- | --- | ---
-CYPHER_SECRET | string | foobar
+CYPHER_SECRET | string | !%hX!*i!C8ojryAzPWv*0@ | A password used to encrypt all personal data
+
+### Config
+
+The general non-sensitive or environment specific data is stored in `config/default.yml`. These tables explain what variable is used for what
+
+#### General
+
+Key | Type | Example | Description
+--- | --- | --- | ---
+prefix | string | "!f" | The prefix used before all commands
+error_reporting_users | string | "@Gydo or @Tailchakra" | Text explaining which users to contact for support
+owner_ids | array | - 123456789012345<br> - 123456789012345 | Not in use at the moment but will be used in the future for permissions on restricted commands
+blacklist | array | - 123456789012345<br> - 123456789012345 | Any user ID listed in this array wont be able to use the bot and will receive a notification every time he/she tries
+cooldown | integer | 20000 | Cooldown period in milliseconds
 
 #### Token
 
 Key | Type | Example | Description
 --- | --- | --- | ---
-CONTRACT_ADDRESS | string | 0x89y92...38jhu283h9
-SYMBOL | string | XYA
-CURRENCY_DECIMALS | integer | 18
-NETWORK_EXPLORER | string | https://explorer.harmony.one/#
-RPC_URL | string | https://s0.hmy.com
-VIPER_PAIR_ID | string | 0x89y92...38jhu283h9
-
-#### Colors
-
-Key | Type | Example | Description
---- | --- | --- | ---
-COLOR_PRIMARY | string | #7FCA49
-COLOR_INFO | string | #0EA5E9
-COLOR_ERROR | string | #FF0000
+contract_address | string | "0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4"
+symbol | string | "XYA"
+decimals | integer | 18
+network_explorer | string | "https://explorer.harmony.one/#"
+rpc_url | string | "https://ams-hmy-rpc.freyala.com"
+viper_pair_id | string | "0x1485a496f816f940c510d634e48f8c66b78dc99e"
 
 #### Price embed
 
 Key | Type | Example | Description
 --- | --- | --- | ---
-PRICE_EMBED_TITLE | string | XYA
-PRICE_EMBED_THUMBNAIL | string | https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png
-PRICE_EMBED_CHART_LINK | string | https://www.freyala.com/chart
-PRICE_EMBED_URL | string | https://www.freyala.com/chart
-PRICE_EMBED_FOOTER | string | Source: Viperswap
+title | string | "Freyala | XYA"
+thumbnail | string | "https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png"
+chart_link | string | "https://www.freyala.com/chart"
+url | string | "https://www.freyala.com/chart"
+footer | string | "Source: Viperswap"
+
+### Colors
+
+Key | Type | Example | Description
+--- | --- | --- | ---
+primary | string | "#7FCA49"
+info | string | "#0EA5E9"
+error | string | "#FF0000"
+
+#### Sea creatures
+
+Key | Type | Example | Description
+--- | --- | --- | ---
+sea_creatures.[creature name].low | integer | 10 
+sea_creatures.[creature name].high | integer | 50
 
 ### Start the bot
 

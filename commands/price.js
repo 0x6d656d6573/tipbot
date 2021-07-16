@@ -2,7 +2,7 @@ const {Command}    = require('discord-akairo')
 const {React, Token} = require('../utils')
 const table        = require('text-table')
 
-class PriceCommand extends Command
+class ViperPriceCommand extends Command
 {
     constructor()
     {
@@ -59,4 +59,4 @@ class PriceCommand extends Command
     }
 }
 
-module.exports = PriceCommand
+module.exports = ViperPriceCommand

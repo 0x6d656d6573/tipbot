@@ -54,31 +54,22 @@ class TipsplitCommand extends Command
 
         let recipientsFiltered = []
         for (let [id, recipient] of recipients) {
-            const recipientAddress = await Wallet.recipientAddress(this, message, id)
-
-            if (!recipientAddress) {
-                const embed = this.client.util.embed()
-                    .setColor(Config.get('colors.error'))
-                    .setTitle(`@${message.author.username} tried to tip you some ${Config.get('token.symbol')}`)
-                    .setDescription(`unfortunately you do not have a ${Config.get('token.symbol')} bot wallet yet. If you want to be able to receive tips, you can create a wallet by using the \`${Config.get('prefix')}deposit\` command.`)
-
-                await message.author.send(embed)
-            }
-
             let match = true
-            if (recipientAddress === from) {
+            if (id === message.author.id) {
                 match = false
             }
             if (recipient.bot) {
                 match = false
             }
-            recipientsFiltered.push(recipientAddress)
+            recipientsFiltered.push(id)
         }
 
         amount = (amount / recipientsFiltered.length)
 
         for (let i = 0; i < recipientsFiltered.length; i++) {
-            await Transaction.addToQueue(this, message, from, recipientsFiltered[i], amount)
+            const to = await Wallet.recipientAddress(this, message, recipientsFiltered[i])
+
+            await Transaction.addToQueue(this, message, from, to, amount, recipientsFiltered[i])
         }
 
         await Transaction.runQueue(this, message, message.author.id, false, true)

@@ -72,7 +72,7 @@ class TipRandomCommand extends Command
             return
         }
 
-        const recipient = recipients[Math.floor(Math.random() * recipients.length)]
+        let recipient = recipients[Math.floor(Math.random() * recipients.length)]
         if (typeof recipient == 'undefined') {
             await React.error(this, message, `Sorry`, `I couldn't find any users to tip. Please try again when the chat is a bit more active`)
             await message.channel.send(`Wake up people! @${message.author.username} is trying to tip, but nobody is here!`)
@@ -86,6 +86,14 @@ class TipRandomCommand extends Command
         Transaction.addToQueue(this, message, from, to, amount).then(() => {
             Transaction.runQueue(this, message, message.author.id)
         })
+
+        recipient = this.client.users.cache.get(recipient)
+        const embed = this.client.util.embed()
+            .setColor(Config.get('colors.primary'))
+            .setTitle(`I tipped a random user!`)
+            .setDescription(`@${recipient.username} is the lucky one to receive your ${amount} ${Config.get('token.symbol')}`)
+
+        await message.author.send(embed)
     }
 }
 

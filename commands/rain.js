@@ -1,5 +1,6 @@
-const {Command}                    = require('discord-akairo')
-const {React, Wallet, Transaction} = require('../utils')
+const {Command}                            = require('discord-akairo')
+const table                                = require('text-table')
+const {Config, React, Wallet, Transaction} = require('../utils')
 
 class RainCommand extends Command
 {
@@ -37,7 +38,8 @@ class RainCommand extends Command
             return
         }
 
-        let recipients = []
+        let recipients          = []
+        let recipientsUsernames = []
         await message.channel.messages.fetch({limit: 20})
             .then(async function (lastMessages) {
                 for (let [id, lastMessage] of lastMessages) {
@@ -59,6 +61,7 @@ class RainCommand extends Command
 
                     if (add && !recipients.includes(lastMessage.author.id)) {
                         recipients.push(lastMessage.author.id)
+                        recipientsUsernames.push(lastMessage.author.username)
                     }
                 }
             })
@@ -89,6 +92,19 @@ class RainCommand extends Command
 
         await Transaction.runQueue(this, message, message.author.id, false, true)
 
+        let recipientRows = []
+        for (let i = 0; i < recipientsUsernames.length; i++) {
+            recipientRows.push([
+                `@${recipientsUsernames[i]}`
+            ])
+        }
+
+        const embed = this.client.util.embed()
+            .setColor(Config.get('colors.primary'))
+            .setTitle(`You rained ${amount} ${Config.get('token.symbol')} on each of these users`)
+            .setDescription('```' + table(recipientRows) + '```')
+
+        await message.author.send(embed)
     }
 }
 

@@ -1,5 +1,5 @@
-const {Command}                    = require('discord-akairo')
-const {React, Wallet, Transaction} = require('../utils')
+const {Command}                            = require('discord-akairo')
+const {Config, React, Wallet, Transaction} = require('../utils')
 
 class BurnCommand extends Command
 {

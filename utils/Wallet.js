@@ -6,6 +6,7 @@ const {ChainType, ChainID, hexToNumber, fromWei, Units} = require('@harmony-js/u
 const {BigNumber}                                       = require('bignumber.js')
 const artifact                                          = require('../artifact.json')
 const CryptoJS                                          = require('crypto-js')
+const Config                                            = require('./Config')
 const DB                                                = require('./DB')
 const React                                             = require('./React')
 

@@ -1,13 +1,13 @@
-const {Command} = require('discord-akairo')
-const {Config, Wallet}  = require('../utils')
+const {Command}        = require('discord-akairo')
+const {Config, Wallet} = require('../utils')
 
 class DepositCommand extends Command
 {
     constructor()
     {
         super('deposit', {
-            aliases: ['deposit'],
-            channel: 'dm',
+            aliases  : ['deposit'],
+            channel  : 'dm',
             ratelimit: 1,
         })
     }

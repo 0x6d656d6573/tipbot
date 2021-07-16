@@ -97,28 +97,28 @@ exports.burn = async function (message) {
 exports.seaCreature = async function (message, amount) {
     // Characters: https://unicode-table.com/en/1F1FC/
 
-    if (parseFloat(amount) <= 1) {
+    if (parseFloat(amount) <= parseFloat(Config.get('sea_creatures.shrimp.high'))) {
         await message.react('🦐')
     }
-    if (parseFloat(amount) > 1 && parseFloat(amount) <= 10) {
+    if (parseFloat(amount) > parseFloat(Config.get('sea_creatures.crab.low')) && parseFloat(amount) <= parseFloat(Config.get('sea_creatures.crab.high'))) {
         await message.react('🦀')
     }
-    if (parseFloat(amount) > 10 && parseFloat(amount) <= 50) {
+    if (parseFloat(amount) > parseFloat(Config.get('sea_creatures.octopus.low')) && parseFloat(amount) <= parseFloat(Config.get('sea_creatures.octopus.high'))) {
         await message.react('🐙')
     }
-    if (parseFloat(amount) > 50 && parseFloat(amount) <= 100) {
+    if (parseFloat(amount) > parseFloat(Config.get('sea_creatures.fish.low')) && parseFloat(amount) <= parseFloat(Config.get('sea_creatures.fish.high'))) {
         await message.react('🐟')
     }
-    if (parseFloat(amount) > 100 && parseFloat(amount) <= 500) {
+    if (parseFloat(amount) > parseFloat(Config.get('sea_creatures.dolphin.low')) && parseFloat(amount) <= parseFloat(Config.get('sea_creatures.dolphin.high'))) {
         await message.react('🐬')
     }
-    if (parseFloat(amount) > 500 && parseFloat(amount) <= 1000) {
+    if (parseFloat(amount) > parseFloat(Config.get('sea_creatures.shark.low')) && parseFloat(amount) <= parseFloat(Config.get('sea_creatures.shark.high'))) {
         await message.react('🦈')
     }
-    if (parseFloat(amount) > 1000 && parseFloat(amount) <= 5000) {
+    if (parseFloat(amount) > parseFloat(Config.get('sea_creatures.whale.low')) && parseFloat(amount) <= parseFloat(Config.get('sea_creatures.whale.high'))) {
         await message.react('🐳')
     }
-    if (parseFloat(amount) > 5000) {
+    if (parseFloat(amount) > parseFloat(Config.get('sea_creatures.humpback.low'))) {
         await message.react('🐋')
     }
 }

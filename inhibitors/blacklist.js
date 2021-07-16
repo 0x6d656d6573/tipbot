@@ -1,5 +1,5 @@
-const {Inhibitor} = require('discord-akairo')
-const {React}     = require('../utils');
+const {Inhibitor}     = require('discord-akairo')
+const {Config, React} = require('../utils')
 
 class BlacklistInhibitor extends Inhibitor
 {
@@ -12,7 +12,7 @@ class BlacklistInhibitor extends Inhibitor
 
     exec(message)
     {
-        const blacklist   = process.env.BLACKLIST.split(',')
+        const blacklist   = Config.get('blacklist')
         const blacklisted = blacklist.includes(message.author.id)
 
         if (blacklisted) {

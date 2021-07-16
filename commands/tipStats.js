@@ -1,5 +1,5 @@
-const {Command}       = require('discord-akairo')
-const table           = require('text-table')
+const {Command}               = require('discord-akairo')
+const table                   = require('text-table')
 const {Config, TipStatistics} = require('../utils')
 
 class TipstatsCommand extends Command

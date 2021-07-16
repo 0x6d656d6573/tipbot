@@ -1,12 +1,12 @@
-const {Command} = require('discord-akairo')
-const {Config, React, Wallet}  = require('../utils')
+const {Command}               = require('discord-akairo')
+const {Config, React, Wallet} = require('../utils')
 
 class BalanceCommand extends Command
 {
     constructor()
     {
         super('balance', {
-            aliases: ['balance'],
+            aliases  : ['balance'],
             channel  : 'dm',
             ratelimit: 1,
         })
@@ -14,7 +14,7 @@ class BalanceCommand extends Command
 
     async exec(message)
     {
-        await React.processing(message);
+        await React.processing(message)
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }

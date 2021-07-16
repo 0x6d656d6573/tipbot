@@ -1,5 +1,5 @@
 const {Command} = require('discord-akairo')
-const {Config} = require('../utils')
+const {Config}  = require('../utils')
 
 class HelpCommand extends Command
 {

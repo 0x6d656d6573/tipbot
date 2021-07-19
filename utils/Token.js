@@ -3,7 +3,7 @@ const {ChainType, ChainID} = require('@harmony-js/utils')
 const {BigNumber}          = require('bignumber.js')
 const artifact             = require('../artifact.json')
 const axios                = require('axios')
-const {Config}             = require('./Config')
+const Config               = require('./Config')
 
 /**
  * Get Viper info

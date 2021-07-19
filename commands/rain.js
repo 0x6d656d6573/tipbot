@@ -84,14 +84,6 @@ class RainCommand extends Command
         const from = wallet.address
         amount     = (amount / recipients.length)
 
-        for (let i = 0; i < recipients.length; i++) {
-            const to = await Wallet.recipientAddress(this, message, recipients[i])
-
-            await Transaction.addToQueue(this, message, from, to, amount, recipients[i])
-        }
-
-        await Transaction.runQueue(this, message, message.author.id, false, true)
-
         let recipientRows = []
         for (let i = 0; i < recipientsUsernames.length; i++) {
             recipientRows.push([
@@ -105,6 +97,14 @@ class RainCommand extends Command
             .setDescription('```' + table(recipientRows) + '```')
 
         await message.author.send(embed)
+
+        for (let i = 0; i < recipients.length; i++) {
+            const to = await Wallet.recipientAddress(this, message, recipients[i])
+
+            await Transaction.addToQueue(this, message, from, to, amount, recipients[i])
+        }
+
+        await Transaction.runQueue(this, message, message.author.id, false, true)
     }
 }
 

@@ -2,7 +2,7 @@ const {Command}              = require('discord-akairo')
 const {Config, React, Token} = require('../utils')
 const table                  = require('text-table')
 
-class PriceCommand extends Command
+class ViperPriceCommand extends Command
 {
     constructor()
     {
@@ -16,19 +16,17 @@ class PriceCommand extends Command
     {
         await React.processing(message)
 
-        const viperInfo         = await Token.viperInfo()
-        const onePrice          = await Token.onePrice()
-        const usdPrice          = parseFloat(viperInfo.token1Price) * parseFloat(onePrice)
+        const usdPrice          = await Token.mochiPrice()
+        let onePrice            = await Token.onePrice()
+        onePrice                = usdPrice / onePrice
         const circulatingSupply = await Token.circulatingSupply()
         const totalSupply       = await Token.totalSupply()
-        const volume            = await Token.volume()
 
         const rows = [
-            ['ONE', `${parseFloat(viperInfo.token1Price).toFixed(6)} ONE`],
+            ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`],
             ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
             null,
             ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
-            ['Volume', `$${new Intl.NumberFormat().format(volume)}`],
             null,
             ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
             ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
@@ -61,4 +59,4 @@ class PriceCommand extends Command
     }
 }
 
-module.exports = PriceCommand
+module.exports = ViperPriceCommand

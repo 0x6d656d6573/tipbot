@@ -61,6 +61,10 @@ exports.transactions = sequelize.define('transactions', {
         type     : Sequelize.FLOAT,
         allowNull: false,
     },
+    token    : {
+        type     : Sequelize.STRING,
+        allowNull: false,
+    },
     processing: {
         type     : Sequelize.BOOLEAN,
         allowNull: true,

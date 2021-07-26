@@ -14,6 +14,11 @@ class TipRandomCommand extends Command
                     id     : 'amount',
                     type   : 'number',
                     default: 0
+                },
+                {
+                    id       : 'token',
+                    type     : Config.get('alternative_tokens'),
+                    unordered: true
                 }
             ]
         })
@@ -63,12 +68,12 @@ class TipRandomCommand extends Command
                 }
             })
 
-
         const wallet  = await Wallet.get(this, message, message.author.id)
-        const balance = await Wallet.balance(wallet)
+        const token   = args.token ?? Config.get('token.default')
+        const balance = await Wallet.balance(wallet, token)
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get('token.symbol')}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get('token.symbol')}. Or try again with a lower amount`)
+            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
             return
         }
 
@@ -83,15 +88,15 @@ class TipRandomCommand extends Command
         const from = wallet.address
         const to   = await Wallet.recipientAddress(this, message, recipient)
 
-        Transaction.addToQueue(this, message, from, to, amount).then(() => {
+        Transaction.addToQueue(this, message, from, to, amount, token).then(() => {
             Transaction.runQueue(this, message, message.author.id)
         })
 
-        recipient = this.client.users.cache.get(recipient)
+        recipient   = this.client.users.cache.get(recipient)
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
             .setTitle(`I tipped a random user!`)
-            .setDescription(`@${recipient.username} is the lucky one to receive your ${amount} ${Config.get('token.symbol')}`)
+            .setDescription(`@${recipient.username} is the lucky one to receive your ${amount} ${Config.get(`tokens.${token}.symbol`)}`)
 
         await message.author.send(embed)
     }

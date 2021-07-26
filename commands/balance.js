@@ -19,7 +19,6 @@ class BalanceCommand extends Command
             return
         }
         const wallet     = await Wallet.get(this, message, message.author.id)
-        const balance    = await Wallet.balance(wallet)
         const gasBalance = await Wallet.gasBalance(wallet)
 
         await React.done(message)
@@ -27,8 +26,14 @@ class BalanceCommand extends Command
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
             .setTitle(`Your balance`)
-            .addField(`${Config.get('token.symbol')}`, '```' + balance + ' ' + Config.get('token.symbol') + '```')
-            .addField(`ONE`, '```' + gasBalance + ' ONE```')
+
+        for (const key in Config.get('tokens')) {
+            const balance = await Wallet.balance(wallet, key)
+            embed.addField(`${Config.get(`tokens.${key}.symbol`)}`, '```' + balance + ' ' + Config.get(`tokens.${key}.symbol`) + '```')
+        }
+
+        embed.addField(`ONE`, '```' + gasBalance + ' ONE```')
+
         await message.author.send(embed)
     }
 }

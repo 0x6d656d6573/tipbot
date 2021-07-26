@@ -16,6 +16,16 @@ class DepositCommand extends Command
     {
         const wallet = await Wallet.get(this, message, message.author.id)
 
+        let tokensSummary = '';
+        let i = 1;
+        for (const [key, token] of Object.entries(Config.get('tokens'))) {
+            if (i++ === Object.entries(Config.get('tokens')).length) {
+                tokensSummary += ` or ${token.symbol}`
+            } else {
+                tokensSummary += ` ${token.symbol},`
+            }
+        }
+
         const warning = this.client.util.embed()
             .setColor('#e7c000')
             .setTitle(`:warning: Disclaimer`)
@@ -26,7 +36,7 @@ class DepositCommand extends Command
             .setColor(Config.get('colors.primary'))
             .setTitle(`Your wallet address`)
             .setDescription('```' + wallet.address + '```')
-            .addField(`Add ${Config.get('token.symbol')}`, `To add funds to this wallet, go to your main wallet and send some ${Config.get('token.symbol')} to this address. To confirm the transaction, you can check your balance using the \`${Config.get('prefix')}balance\` command. Have fun tipping!`)
+            .addField(`Add funds`, `To add funds to this wallet, go to your main wallet and send some ${tokensSummary} to this address. To confirm the transaction, you can check your balance using the \`${Config.get('prefix')}balance\` command. Have fun tipping!`)
             .addField(`Gas`, `In order to pay network fee you need to deposit a small amount of ONE too. 1 ONE should last you 4000 transactions. \n\n Don't have 1 ONE? Don't worry, you can use the \`${Config.get('prefix')}getgas\` command and get some gas on the house to get you started!`)
         await message.author.send(address)
     }

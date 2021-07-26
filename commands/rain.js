@@ -15,6 +15,11 @@ class RainCommand extends Command
                     id     : 'amount',
                     type   : 'number',
                     default: 0
+                },
+                {
+                    id       : 'token',
+                    type     : Config.get('alternative_tokens'),
+                    unordered: true
                 }
             ]
         })
@@ -74,10 +79,11 @@ class RainCommand extends Command
         }
 
         const wallet  = await Wallet.get(this, message, message.author.id)
-        const balance = await Wallet.balance(wallet)
+        const token   = args.token ?? Config.get('token.default')
+        const balance = await Wallet.balance(wallet, token)
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get('token.symbol')}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get('token.symbol')}. Or try again with a lower amount`)
+            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
             return
         }
 
@@ -93,7 +99,7 @@ class RainCommand extends Command
 
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
-            .setTitle(`You rained ${amount} ${Config.get('token.symbol')} on each of these users`)
+            .setTitle(`You rained ${amount} ${Config.get(`tokens.${token}.symbol`)} on each of these users`)
             .setDescription('```' + table(recipientRows) + '```')
 
         await message.author.send(embed)
@@ -101,7 +107,7 @@ class RainCommand extends Command
         for (let i = 0; i < recipients.length; i++) {
             const to = await Wallet.recipientAddress(this, message, recipients[i])
 
-            await Transaction.addToQueue(this, message, from, to, amount, recipients[i])
+            await Transaction.addToQueue(this, message, from, to, amount, token, recipients[i])
         }
 
         await Transaction.runQueue(this, message, message.author.id, false, true)

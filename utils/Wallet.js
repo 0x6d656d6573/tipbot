@@ -75,8 +75,9 @@ exports.create = function (id) {
  * Get balance
  *
  * @param wallet
+ * @param token
  */
-exports.balance = async function (wallet) {
+exports.balance = async function (wallet, token) {
     const hmy = new Harmony(
         Config.get('token.rpc_url'),
         {
@@ -84,11 +85,11 @@ exports.balance = async function (wallet) {
             chainId  : ChainID.HmyMainnet,
         },
     )
-
-    const contract   = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
+    
+    const contract   = hmy.contracts.createContract(artifact.abi, Config.get(`tokens.${token}.contract_address`))
     const weiBalance = await contract.methods.balanceOf(wallet.address).call()
 
-    return BigNumber(weiBalance).dividedBy(Math.pow(10, Config.get('token.decimals'))).toFixed(4)
+    return BigNumber(weiBalance).dividedBy(Math.pow(10, Config.get(`tokens.${token}.decimals`))).toFixed(4)
 }
 
 /**

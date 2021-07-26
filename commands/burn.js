@@ -14,6 +14,11 @@ class BurnCommand extends Command
                     id     : 'amount',
                     type   : 'number',
                     default: 0
+                },
+                {
+                    id       : 'token',
+                    type     : Config.get('alternative_tokens'),
+                    unordered: true
                 }
             ]
         })
@@ -39,16 +44,17 @@ class BurnCommand extends Command
         }
 
         const wallet  = await Wallet.get(this, message, message.author.id)
-        const balance = await Wallet.balance(wallet)
+        const token   = args.token ?? Config.get('token.default')
+        const balance = await Wallet.balance(wallet, token)
         const from    = wallet.address
         const to      = '0x000000000000000000000000000000000000dead'
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get('token.symbol')}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get('token.symbol')}. Or try again with a lower amount`)
+            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
             return
         }
 
-        Transaction.addToQueue(this, message, from, to, amount).then(() => {
+        Transaction.addToQueue(this, message, from, to, amount, token).then(() => {
             Transaction.runQueue(this, message, message.author.id, false, false, false, true)
         })
     }

@@ -19,10 +19,11 @@ const Log                               = require('./Log')
  * @param from
  * @param to
  * @param amount
+ * @param token
  * @param recipient
  * @return {Promise<void>}
  */
-exports.addToQueue = async function (command, message, from, to, amount, recipient = null) {
+exports.addToQueue = async function (command, message, from, to, amount, token, recipient = null) {
     await DB.transactions.create({
         message  : message.id,
         author   : message.author.id,
@@ -30,6 +31,7 @@ exports.addToQueue = async function (command, message, from, to, amount, recipie
         from     : from,
         to       : to,
         amount   : amount,
+        token    : token,
     }).catch(async error => {
         Log.error(error, message)
         await React.error(command, message, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
@@ -66,15 +68,13 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
     const wallet     = await Wallet.get(command, message, author)
     const privateKey = await Wallet.privateKey(wallet)
     const queue      = await DB.transactions.findAll({where: {message: message.id}})
-    const lastNonce  = await hmy.blockchain.getTransactionCount({address: wallet.address}, 'latest')
+    const lastNonce  = await hmy.blockchain.getTransactionCount({address: wallet.address}, 'pending')
     let nonce        = null
 
     for (let i = 0; i < queue.length; i++) {
-        if (queue.length > 1) {
-            nonce = '0x' + (parseInt(hexToNumber(lastNonce.result)) + i).toString(16)
-        }
+        nonce = '0x' + (parseInt(hexToNumber(lastNonce.result)) + i).toString(16)
 
-        await this.make(queue[i].from, queue[i].to, queue[i].amount, privateKey, nonce)
+        await this.make(queue[i].from, queue[i].to, queue[i].amount, queue[i].token, privateKey, nonce)
             .then(async response => {
                 if (response.success) {
                     DB.transactions.destroy({
@@ -121,7 +121,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                         }
                     })
 
-                    Log.debug(message, response.message)
+                    Log.debug(response.message, message)
                     await React.error(command, message, `An error has occurred`, `Error: ${response.message}\n\nPlease contact ${Config.get('error_reporting_users')}`)
                 }
             })
@@ -146,11 +146,12 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
  * @param from
  * @param to
  * @param amount
+ * @param token
  * @param privateKey
  * @param nonce
  * @return {Promise<{success: boolean, message: string}>}
  */
-exports.make = async function (from, to, amount, privateKey, nonce = null) {
+exports.make = async function (from, to, amount, token, privateKey, nonce = null) {
     let txHash, receipt, error
     let confirmation      = null
     const hmy             = new Harmony(
@@ -160,10 +161,10 @@ exports.make = async function (from, to, amount, privateKey, nonce = null) {
             chainId  : ChainID.HmyMainnet,
         },
     )
-    const contract        = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
+    const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`tokens.${token}.contract_address`))
     const oneToHexAddress = (address) => hmy.crypto.getAddress(address).basicHex
     const weiAmount       = new BN(
-        new BigNumber(parseFloat(amount)).multipliedBy(Math.pow(10, Config.get('token.decimals'))).toFixed(),
+        new BigNumber(parseFloat(amount)).multipliedBy(Math.pow(10, Config.get(`tokens.${token}.decimals`))).toFixed(),
         10
     )
 

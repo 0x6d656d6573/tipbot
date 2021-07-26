@@ -13,14 +13,24 @@ class HelpCommand extends Command
 
     async exec(message)
     {
+        let tokensSummary = '';
+        let i = 1;
+        for (const [key, token] of Object.entries(Config.get('tokens'))) {
+            if (i++ === Object.entries(Config.get('tokens')).length) {
+                tokensSummary += ` or ${token.symbol}`
+            } else {
+                tokensSummary += ` ${token.symbol},`
+            }
+        }
+
         const commands = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
             .setTitle(`${Config.get('token.symbol')} Tip Bot Commands`)
             .addField(`${Config.get('prefix')}deposit`, `Shows your wallet address. If you have no wallet yet a new one will be created for you`)
             .addField(`${Config.get('prefix')}balance`, `Shows your wallet\'s balance`)
             .addField(`${Config.get('prefix')}getgas`, `The bot will send you some gas. This command only works if your gas balance is below 0.01 \nAlias: ${Config.get('prefix')}gasmeup`)
-            .addField(`${Config.get('prefix')}send 100 0x89y92...38jhu283h9`, `Send ${Config.get('token.symbol')} to an external address`)
-            .addField(`${Config.get('prefix')}sendmax 0x89y92...38jhu283h9`, `Send all of your ${Config.get('token.symbol')} to an external address`)
+            .addField(`${Config.get('prefix')}send 100 0x89y92...38jhu283h9`, `Send ${tokensSummary} to an external address`)
+            .addField(`${Config.get('prefix')}sendmax 0x89y92...38jhu283h9`, `Send all of your ${tokensSummary} to an external address`)
             .addField(`${Config.get('prefix')}tip 100 @user1`, `Send a tip to mentioned user\nAlias: ${Config.get('prefix')}gift ${Config.get('prefix')}give`)
             .addField(`${Config.get('prefix')}tipsplit 100 @user1 @user2`, `Split a tip among mentioned users\nAlias: ${Config.get('prefix')}split ${Config.get('prefix')}splitgift ${Config.get('prefix')}divide ${Config.get('prefix')}tipdivide ${Config.get('prefix')}dividetip`)
             .addField(`${Config.get('prefix')}tiprandom 100`, `Tip a random user from the last 20 messages\nAlias: ${Config.get('prefix')}giftrandom`)
@@ -34,6 +44,12 @@ class HelpCommand extends Command
             .addField(`${Config.get('prefix')}ping`, `Responds with "pong!" when the bot is online`)
             .addField(`${Config.get('prefix')}degen`, `Fake command the bot will react to with a ✅ \n These commands are only available in #🤪degen-chat\nAlias: ${Config.get('prefix')}slarp ${Config.get('prefix')}slurp ${Config.get('prefix')}dip ${Config.get('prefix')}rug ${Config.get('prefix')}rugpull ${Config.get('prefix')}burnall`)
         await message.author.send(commands)
+
+        const multiToken = this.client.util.embed()
+            .setColor(Config.get('colors.primary'))
+            .setTitle(`Multi token`)
+            .setDescription(`You can use either ${tokensSummary} for tipping. To tip with a different token use this format: \`${Config.get('prefix')}[command] [amount] [token] [optional: address]\`. If no token is defined, the bot will use it's default token (${Config.get('token.symbol')})`)
+        await message.author.send(multiToken)
 
         const info = this.client.util.embed()
             .setColor(Config.get('colors.info'))

@@ -14,6 +14,16 @@ class TipCommand extends Command
                     id     : 'amount',
                     type   : 'number',
                     default: 0
+                },
+                {
+                    id       : 'token',
+                    type     : Config.get('alternative_tokens'),
+                    unordered: true
+                },
+                {
+                    id       : 'member',
+                    type     : 'member',
+                    unordered: true
                 }
             ]
         })
@@ -21,12 +31,12 @@ class TipCommand extends Command
 
     async exec(message, args)
     {
-        await React.processing(message)
-
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }
+
         const amount    = args.amount
+        const token     = args.token ?? Config.get('token.default')
         const recipient = message.mentions.users.first()
 
         if (amount === 0) {
@@ -51,10 +61,10 @@ class TipCommand extends Command
         }
 
         const wallet  = await Wallet.get(this, message, message.author.id)
-        const balance = await Wallet.balance(wallet)
+        const balance = await Wallet.balance(wallet, token)
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get('token.symbol')}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get('token.symbol')}. Or try again with a lower amount`)
+            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
             return
         }
 
@@ -66,7 +76,7 @@ class TipCommand extends Command
             return
         }
 
-        Transaction.addToQueue(this, message, from, to, amount, recipient.id).then(() => {
+        Transaction.addToQueue(this, message, from, to, amount, token, recipient.id).then(() => {
             Transaction.runQueue(this, message, message.author.id, false, true)
         })
     }

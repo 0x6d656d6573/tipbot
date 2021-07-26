@@ -14,6 +14,11 @@ class TipsplitCommand extends Command
                     id     : 'amount',
                     type   : 'number',
                     default: 0
+                },
+                {
+                    id       : 'token',
+                    type     : Config.get('alternative_tokens'),
+                    unordered: true
                 }
             ]
         })
@@ -43,10 +48,11 @@ class TipsplitCommand extends Command
         }
 
         const wallet  = await Wallet.get(this, message, message.author.id)
-        const balance = await Wallet.balance(wallet)
+        const token     = args.token ?? Config.get('token.default')
+        const balance = await Wallet.balance(wallet, token)
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get('token.symbol')}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get('token.symbol')}. Or try again with a lower amount`)
+            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
             return
         }
 
@@ -69,7 +75,7 @@ class TipsplitCommand extends Command
         for (let i = 0; i < recipientsFiltered.length; i++) {
             const to = await Wallet.recipientAddress(this, message, recipientsFiltered[i])
 
-            await Transaction.addToQueue(this, message, from, to, amount, recipientsFiltered[i])
+            await Transaction.addToQueue(this, message, from, to, amount, token, recipientsFiltered[i])
         }
 
         await Transaction.runQueue(this, message, message.author.id, false, true)

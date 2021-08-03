@@ -25,8 +25,8 @@ class SendCommand extends Command
                     type  : [Config.get('token.default')].concat(Config.get('alternative_tokens')),
                     prompt: {
                         start  : 'Which token would you like to send?',
-                        retry  : 'That\'s not a valid token please try again',
-                        cancel : 'The command has been cancelled',
+                        retry  : 'That\'s not a valid token. Please try again.',
+                        cancel : 'The command has been cancelled.',
                         retries: 4,
                         time   : 30000
                     }

@@ -21,6 +21,7 @@
         "discord-akairo": "^8.1.0",
         "discord.js": "^12.5.3",
         "dotenv": "^10.0.0",
+        "from-exponential": "^1.1.1",
         "git-rev-sync": "^3.0.1",
         "mariadb": "^2.5.4",
         "sequelize": "^6.6.4",

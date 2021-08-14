@@ -28,7 +28,7 @@ const gasLimit             = '250000'
 exports.balance = async function (address) {
     const balance = await stakingContract.methods.stakes(address).call()
 
-    return BigNumber(balance.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(6)
+    return BigNumber(balance.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
 }
 
 /**
@@ -42,7 +42,7 @@ exports.rewardBalance = async function (address) {
     const recorded = parseInt(await stakingContract.methods.stakeRewards(address).call())
     const referral = parseInt(await stakingContract.methods.referralRewards(address).call())
 
-    return BigNumber(parseFloat(owing + referral + recorded)).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(6)
+    return BigNumber(parseFloat(owing + referral + recorded)).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
 }
 
 /**

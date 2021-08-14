@@ -7,17 +7,6 @@ const Log                  = require('./Log')
 const {Harmony}            = require('@harmony-js/core')
 const {ChainType, ChainID} = require('@harmony-js/utils')
 const {BigNumber}          = require('bignumber.js')
-const hmy                  = new Harmony(
-    Config.get('token.rpc_url'),
-    {
-        chainType: ChainType.Harmony,
-        chainId  : ChainID.HmyMainnet,
-    },
-)
-const contract             = hmy.contracts.createContract(artifact.abi, Config.get(`token.contract_address`))
-const stakingContract      = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
-const gasPrice             = new hmy.utils.Unit(1).asGwei().toWei()
-const gasLimit             = '250000'
 
 /**
  * Get stakes of user
@@ -26,7 +15,15 @@ const gasLimit             = '250000'
  * @return {Promise<string>}
  */
 exports.balance = async function (address) {
-    const balance = await stakingContract.methods.stakes(address).call()
+    const hmy             = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : ChainID.HmyMainnet,
+        },
+    )
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+    const balance         = await stakingContract.methods.stakes(address).call()
 
     return BigNumber(balance.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
 }
@@ -38,6 +35,15 @@ exports.balance = async function (address) {
  * @return {Promise<string>}
  */
 exports.rewardBalance = async function (address) {
+    const hmy             = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : ChainID.HmyMainnet,
+        },
+    )
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+
     const owing    = parseInt(await stakingContract.methods.calculateEarnings(address).call())
     const recorded = parseInt(await stakingContract.methods.stakeRewards(address).call())
     const referral = parseInt(await stakingContract.methods.referralRewards(address).call())
@@ -52,6 +58,15 @@ exports.rewardBalance = async function (address) {
  * @return {Promise<*>}
  */
 exports.status = async function (address) {
+    const hmy             = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : ChainID.HmyMainnet,
+        },
+    )
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+
     return await stakingContract.methods.registered(address).call()
 }
 
@@ -64,9 +79,20 @@ exports.status = async function (address) {
  * @return {Promise<void>}
  */
 exports.registerAndStake = async function (message, wallet, amount) {
-    const actual     = amount * (10 ** 18)
-    const arg        = fromExponential(actual)
-    const privateKey = await Wallet.privateKey(wallet)
+    const actual          = amount * (10 ** 18)
+    const arg             = fromExponential(actual)
+    const hmy             = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : ChainID.HmyMainnet,
+        },
+    )
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasLimit        = '250000'
+    const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`token.contract_address`))
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+    const privateKey      = await Wallet.privateKey(wallet)
     hmy.wallet.addByPrivateKey(privateKey)
 
     try {
@@ -98,9 +124,20 @@ exports.registerAndStake = async function (message, wallet, amount) {
  * @return {Promise<void>}
  */
 exports.stake = async function (message, wallet, amount) {
-    const actual     = amount * (10 ** 18)
-    const arg        = fromExponential(actual)
-    const privateKey = await Wallet.privateKey(wallet)
+    const actual          = amount * (10 ** 18)
+    const arg             = fromExponential(actual)
+    const hmy             = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : ChainID.HmyMainnet,
+        },
+    )
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasLimit        = '250000'
+    const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`token.contract_address`))
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+    const privateKey      = await Wallet.privateKey(wallet)
     hmy.wallet.addByPrivateKey(privateKey)
 
     try {
@@ -130,9 +167,19 @@ exports.stake = async function (message, wallet, amount) {
  * @return {Promise<void>}
  */
 exports.unstake = async function (message, wallet, amount) {
-    const actual     = amount * (10 ** 18)
-    const arg        = fromExponential(actual)
-    const privateKey = await Wallet.privateKey(wallet)
+    const actual          = amount * (10 ** 18)
+    const arg             = fromExponential(actual)
+    const hmy             = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : ChainID.HmyMainnet,
+        },
+    )
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasLimit        = '250000'
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+    const privateKey      = await Wallet.privateKey(wallet)
     hmy.wallet.addByPrivateKey(privateKey)
 
     try {
@@ -155,7 +202,17 @@ exports.unstake = async function (message, wallet, amount) {
  * @return {Promise<void>}
  */
 exports.claimRewards = async function (message, wallet) {
-    const privateKey = await Wallet.privateKey(wallet)
+    const hmy             = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : ChainID.HmyMainnet,
+        },
+    )
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasLimit        = '250000'
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+    const privateKey      = await Wallet.privateKey(wallet)
     hmy.wallet.addByPrivateKey(privateKey)
 
     try {

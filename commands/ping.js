@@ -6,7 +6,7 @@ class PingCommand extends Command
     constructor()
     {
         super('ping', {
-            aliases  : ['ping', 'marco', 'marko', 'tick', 'yin', 'ding'],
+            aliases  : ['ping', 'marco', 'marko', 'tick', 'yin', 'yang', 'ding'],
             ratelimit: 1,
         })
     }
@@ -22,6 +22,7 @@ class PingCommand extends Command
                 await message.reply(`Tock!`)
                 break
             case 'yin' :
+            case 'yang' :
                 await message.reply(`Yang!`)
                 break
             case 'ding' :

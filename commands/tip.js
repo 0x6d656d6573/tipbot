@@ -31,15 +31,16 @@ class TipCommand extends Command
 
     async exec(message, args)
     {
-        console.log(args.member, message.mentions.users, message.mentions.users.first()); // REMOVE
-
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }
 
         const amount    = args.amount
         const token     = args.token ?? Config.get('token.default')
-        const recipient = message.mentions.users.first()
+        const users     = message.mentions.users.filter(function (user) {
+            return !user.bot
+        })
+        const recipient = users.first()
 
         if (amount === 0) {
             await React.error(this, message, `Tip amount incorrect`, `The tip amount is wrongly formatted or missing`)

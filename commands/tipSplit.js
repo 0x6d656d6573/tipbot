@@ -33,7 +33,9 @@ class TipsplitCommand extends Command
         }
         let amount        = args.amount
         const totalAmount = amount
-        const recipients  = message.mentions.users
+        const recipients  = message.mentions.users.filter(function (user) {
+            return !user.bot
+        })
 
         if (amount === 0) {
             await React.error(this, message, `Tip amount incorrect`, `The tip amount is wrongly formatted or missing`)

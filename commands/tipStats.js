@@ -1,6 +1,6 @@
-const {Command}               = require('discord-akairo')
-const table                   = require('text-table')
-const {Config, TipStatistics} = require('../utils')
+const {Command}                      = require('discord-akairo')
+const table                          = require('text-table')
+const {Config, TipStatistics, React} = require('../utils')
 
 class TipstatsCommand extends Command
 {
@@ -45,6 +45,8 @@ class TipstatsCommand extends Command
             .addField(`You`, '```' + table(authorRows) + '```')
 
         await message.channel.send(embed)
+
+        await React.message(message, 'stats')
     }
 }
 

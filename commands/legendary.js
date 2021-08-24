@@ -1,6 +1,6 @@
-const {Command} = require('discord-akairo')
-const {Config}  = require('../utils')
-const table     = require('text-table')
+const {Command}       = require('discord-akairo')
+const {Config, React} = require('../utils')
+const table           = require('text-table')
 
 class LegendaryCommand extends Command
 {
@@ -43,6 +43,8 @@ class LegendaryCommand extends Command
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')
 
         await message.channel.send(embed)
+
+        await React.message(message, 'legends')
     }
 }
 

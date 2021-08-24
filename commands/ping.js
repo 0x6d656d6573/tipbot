@@ -1,5 +1,5 @@
 const {Command} = require('discord-akairo')
-const {Config}  = require('../utils')
+const {Config, React}  = require('../utils')
 
 class PingCommand extends Command
 {
@@ -32,6 +32,8 @@ class PingCommand extends Command
                 await message.reply(`Pong!`)
                 break
         }
+
+        await React.message(message, 'small_tip')
     }
 }
 

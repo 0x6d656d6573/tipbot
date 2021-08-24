@@ -99,6 +99,8 @@ class TipRandomCommand extends Command
             .setDescription(`@${recipient.username} is the lucky one to receive your ${amount} ${Config.get(`tokens.${token}.symbol`)}`)
 
         await message.author.send(embed)
+
+        await React.message(message, 'tip', amount)
     }
 }
 

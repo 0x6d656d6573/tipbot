@@ -32,7 +32,8 @@ class RainCommand extends Command
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }
-        let amount = args.amount
+        let amount        = args.amount
+        const totalAmount = amount
 
         if (amount === 0) {
             await React.error(this, message, `Tip amount incorrect`, `The tip amount is wrongly formatted or missing`)
@@ -111,6 +112,8 @@ class RainCommand extends Command
         }
 
         await Transaction.runQueue(this, message, message.author.id, false, true)
+
+        await React.message(message, 'tip', totalAmount)
     }
 }
 

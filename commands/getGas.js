@@ -29,6 +29,8 @@ class PingCommand extends Command
 
             await React.success(this, message)
         }
+
+        await React.message(message, 'get_gas')
     }
 }
 

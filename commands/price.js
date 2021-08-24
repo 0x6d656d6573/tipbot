@@ -56,6 +56,8 @@ class ViperPriceCommand extends Command
             .addField(`Chart`, Config.get('price_embed.chart_link'))
             .setURL(Config.get('price_embed.url'))
         await message.channel.send(embed)
+
+        await React.message(message, 'price')
     }
 }
 

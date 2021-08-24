@@ -31,8 +31,9 @@ class TipsplitCommand extends Command
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }
-        let amount       = args.amount
-        const recipients = message.mentions.users
+        let amount        = args.amount
+        const totalAmount = amount
+        const recipients  = message.mentions.users
 
         if (amount === 0) {
             await React.error(this, message, `Tip amount incorrect`, `The tip amount is wrongly formatted or missing`)
@@ -48,7 +49,7 @@ class TipsplitCommand extends Command
         }
 
         const wallet  = await Wallet.get(this, message, message.author.id)
-        const token     = args.token ?? Config.get('token.default')
+        const token   = args.token ?? Config.get('token.default')
         const balance = await Wallet.balance(wallet, token)
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
@@ -79,6 +80,8 @@ class TipsplitCommand extends Command
         }
 
         await Transaction.runQueue(this, message, message.author.id, false, true)
+
+        await React.message(message, 'tip', totalAmount)
     }
 }
 

@@ -122,3 +122,30 @@ exports.seaCreature = async function (message, amount) {
         await message.react('🐋')
     }
 }
+
+/**
+ * Message
+ *
+ * @param message
+ * @param type
+ * @param amount
+ * @return {Promise<void>}
+ */
+exports.message = async function (message, type, amount = null) {
+    if (Math.floor(Math.random() * 20) === 1) {
+        if (type === 'tip') {
+            if (parseFloat(amount) >= parseFloat(Config.get('sea_creatures.dolphin.low'))) {
+                type = 'large_tip'
+            } else {
+                type = 'small_tip'
+            }
+        }
+        const titleArray   = await Config.get(`response.titles`)
+        const messageArray = await Config.get(`response.${type}`)
+        const randomTitle  = titleArray[Math.floor(Math.random() * titleArray.length)]
+        let randomMessage  = messageArray[Math.floor(Math.random() * messageArray.length)]
+        randomMessage      = randomMessage.replace('%title%', randomTitle)
+
+        await message.reply(randomMessage)
+    }
+}

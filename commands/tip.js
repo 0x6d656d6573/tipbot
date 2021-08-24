@@ -31,6 +31,8 @@ class TipCommand extends Command
 
     async exec(message, args)
     {
+        console.log(args.member, message.mentions.users, message.mentions.users.first()); // REMOVE
+
         if (!await Wallet.check(this, message, message.author.id)) {
             return
         }
@@ -79,6 +81,8 @@ class TipCommand extends Command
         Transaction.addToQueue(this, message, from, to, amount, token, recipient.id).then(() => {
             Transaction.runQueue(this, message, message.author.id, false, true)
         })
+
+        await React.message(message, 'tip', amount)
     }
 }
 

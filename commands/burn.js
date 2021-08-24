@@ -57,6 +57,8 @@ class BurnCommand extends Command
         Transaction.addToQueue(this, message, from, to, amount, token).then(() => {
             Transaction.runQueue(this, message, message.author.id, false, false, false, true)
         })
+
+        await React.message(message, 'burn')
     }
 }
 

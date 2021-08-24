@@ -33,8 +33,6 @@ class PingCommand extends Command
                 await message.reply(`Pong!`)
                 break
         }
-
-        await React.message(message, 'small_tip')
     }
 }
 

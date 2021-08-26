@@ -50,7 +50,7 @@ exports.addToQueue = async function (command, message, from, to, amount, token, 
  * @param send
  * @param burn
  */
-exports.runQueue = async function (command, message, author, notifyAuthor = false, notifyRecipient = false, send = false, burn = false) {
+exports.runQueue = async function (command, message, author, notifyAuthor = false, notifyRecipient = false, send = false, burn = false, win = false) {
     const processing = await DB.transactions.count({where: {author: author, processing: true}}) > 0
     const hasQueue   = await DB.transactions.count({where: {author: author}}) > 0
     if (processing || !hasQueue) {
@@ -97,8 +97,18 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
 
                         const embed = command.client.util.embed()
                             .setColor(Config.get('colors.primary'))
-                            .setTitle(`You got tipped!`)
-                            .setDescription(`@${message.author.username} tipped you ${queue[i].amount} ${Config.get('token.symbol')} in <#${message.channel.id}>`)
+                        if (!win) {
+                            embed
+                                .setTitle(`You got tipped!`)
+                                .setDescription(`@${message.author.username} tipped you ${queue[i].amount} ${Config.get('token.symbol')} in <#${message.channel.id}>`)
+                        } else {
+                            const titleArray   = await Config.get(`response.trivia_win_titles`)
+                            const randomTitle  = titleArray[Math.floor(Math.random() * titleArray.length)]
+
+                            embed
+                                .setTitle(randomTitle)
+                                .setDescription(`You received your prize of ${queue[i].amount} ${Config.get('token.symbol')}`)
+                        }
                         await recipient.send(embed)
                     }
 

@@ -6,6 +6,10 @@ owner_ids:
 blacklist: [ ]
 cooldown: 20000
 
+# Discord
+channels:
+  trivia: '868080405646037013'
+
 # Token
 token:
   default: "xya"
@@ -153,3 +157,8 @@ response:
     - Here are your beans, %title%.
     - Complementary, my dear.
     - I’ve been told this ONE is on the house, %title%.
+  trivia_win_titles:
+    - You were victorious!
+    - You are beyond wise.
+    - You have secured victory.
+    - You are deserving of your title, my liege.

@@ -61,6 +61,11 @@ class HelpCommand extends Command
             .addField(`${Config.get('prefix')}claim`, `Claim your earned rewards. Your total reward balance will be sent to your wallet`)
             .addField(`${Config.get('prefix')}stakebalance`, `Shows your staked ${Config.get('token.symbol')} and reward balance \nAlias: ${Config.get('prefix')}staked`)
 
+        const trivia = this.client.util.embed()
+            .setColor(Config.get('colors.primary'))
+            .setTitle(`Trivia Commands`)
+            .addField(`${Config.get('prefix')}trivia`, `This command will start a quiz question in #📚trivia-games. I will ask you for some information that I need to set it up. When we're done I will place the question and start a countdown. When it ends I will reward all of the winning answers`)
+
         const misc = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
             .setTitle(`Miscellaneous Commands`)
@@ -83,6 +88,7 @@ class HelpCommand extends Command
         await message.author.send(tip)
         await message.author.send(burn)
         await message.author.send(stake)
+        await message.author.send(trivia)
         await message.author.send(misc)
         await message.author.send(multiToken)
         await message.author.send(info)

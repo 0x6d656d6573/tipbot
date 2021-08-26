@@ -1,5 +1,5 @@
-const {Command} = require('discord-akairo')
-const {Config, React}  = require('../utils')
+const {Command}       = require('discord-akairo')
+const {Config, React} = require('../utils')
 
 class PingCommand extends Command
 {

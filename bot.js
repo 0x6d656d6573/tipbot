@@ -1,6 +1,6 @@
 require('dotenv').config()
 const {AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler} = require('discord-akairo')
-const {Config, Log, DB}                                                 = require('./utils')
+const {Config, DB}                                                      = require('./utils')
 
 class BotClient extends AkairoClient
 {
@@ -8,7 +8,7 @@ class BotClient extends AkairoClient
     {
         super({
             ownerID: Config.get('owner_ids')
-        }, {})
+        })
 
         /* Command handler */
         this.commandHandler = new CommandHandler(this, {

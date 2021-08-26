@@ -105,7 +105,7 @@ class TriviaCommand extends Command
             return
         }
 
-        const amount  = args.amount
+        let amount    = args.amount
         const command = this
 
         if (!await Wallet.check(this, message, message.author.id)) {
@@ -242,9 +242,11 @@ class TriviaCommand extends Command
                             return user.username
                         }).join(', '))
 
+                        amount = amount / winners.size
+
                         for (let i = 0; i < winners.size; i++) {
                             winners = winners.array()
-                            
+
                             const to = await Wallet.recipientAddress(command, message, winners[i].id)
 
                             await Transaction.addToQueue(command, message, from, to, amount, 'xya', winners[i].id)

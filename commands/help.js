@@ -69,6 +69,8 @@ class HelpCommand extends Command
         const misc = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
             .setTitle(`Miscellaneous Commands`)
+            .addField(`${Config.get('prefix')}optin`, `A wai to opt-in to the Degen or Trivia role\nAlias: ${Config.get('prefix')}opt-in ${Config.get('prefix')}countmein`)
+            .addField(`${Config.get('prefix')}optout`, `A wai to opt-out of the Degen or Trivia role\nAlias: ${Config.get('prefix')}opt-out ${Config.get('prefix')}imout`)
             .addField(`${Config.get('prefix')}version`, `Show the current tipbot version\nAlias: ${Config.get('prefix')}v`)
             .addField(`${Config.get('prefix')}ping`, `Responds with "pong!" when the bot is online`)
             .addField(`${Config.get('prefix')}degen`, `Fake command the bot will react to with a ✅ \n These commands are only available in #🤪degen-chat\nAlias: ${Config.get('prefix')}slarp ${Config.get('prefix')}slurp ${Config.get('prefix')}dip ${Config.get('prefix')}rug ${Config.get('prefix')}rugpull ${Config.get('prefix')}burnall`)

@@ -140,7 +140,7 @@ class TriviaCommand extends Command
                 .setDescription(args.question)
                 .setFooter(`Play by sending your answer`)
 
-            await triviaChannel.send('@trivia')
+            await triviaChannel.send('<@&864013236508164118>')
             await triviaChannel.send(question).then(() => {
                 let seconds = 30
                 triviaChannel.send(`You have 30 seconds left to answer`).then(() => {
@@ -196,7 +196,7 @@ class TriviaCommand extends Command
                 question.addField(`Answer ${answerReactions[i]}`, args.answers[i])
             }
 
-            await triviaChannel.send('@trivia')
+            await triviaChannel.send('<@&864013236508164118>')
             await triviaChannel.send(question).then(sentQuestion => {
                 for (let i = 0; i < args.answers.length; i++) {
                     sentQuestion.react(answerReactions[i])

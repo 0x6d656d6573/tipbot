@@ -94,7 +94,7 @@ class TriviaCommand extends Command
             answer  = answers.indexOf(answer)
         }
 
-        message.channel.send(`Thanks you! I will now send the question in <#${Config.get('channels.trivia')}>!`)
+        message.channel.send(`Thank you! I will now send the question in <#${Config.get('channels.trivia')}>!`)
 
         return {amount, question, type, answer, answers, failed}
     }

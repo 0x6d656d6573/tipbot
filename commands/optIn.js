@@ -8,7 +8,7 @@ class OptInCommand extends Command
         super('optout', {
             aliases  : ['optout', 'opt-out', 'imout'],
             ratelimit: 1,
-            channel  : 'dm',
+            channel  : 'guild',
             args     : [
                 {
                     id       : 'role',

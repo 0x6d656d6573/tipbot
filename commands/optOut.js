@@ -8,7 +8,7 @@ class OptInCommand extends Command
         super('optin', {
             aliases  : ['optin', 'opt-in', 'countmein'],
             ratelimit: 1,
-            channel  : 'dm',
+            channel  : 'guild',
             args     : [
                 {
                     id       : 'role',

@@ -244,9 +244,9 @@ class TriviaCommand extends Command
 
                         amount = amount / winners.size
 
-                        for (let i = 0; i < winners.size; i++) {
-                            winners = winners.array()
+                        winners = winners.array()
 
+                        for (let i = 0; i < winners.length; i++) {
                             const to = await Wallet.recipientAddress(command, message, winners[i].id)
                             
                             await Transaction.addToQueue(command, message, from, to, amount, 'xya', winners[i].id)

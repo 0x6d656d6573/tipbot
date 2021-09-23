@@ -55,5 +55,5 @@ async function setPresence()
 {
     const price = parseFloat(await Token.mochiPrice()).toFixed(3)
 
-    await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} $${price}`, type: 3}})
+    await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} at $${price}`, type: 3}})
 }

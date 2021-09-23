@@ -1,6 +1,6 @@
 require('dotenv').config()
 const {AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler} = require('discord-akairo')
-const {Config, DB}                                                      = require('./utils')
+const {Config, DB, Token}                                               = require('./utils')
 
 class BotClient extends AkairoClient
 {
@@ -46,4 +46,14 @@ client.login(process.env.TOKEN)
 
 client.on('ready', () => {
     DB.syncDatabase()
+
+    setPresence()
+    setInterval(setPresence, 60000)
 })
+
+async function setPresence()
+{
+    const price = parseFloat(await Token.mochiPrice()).toFixed(3)
+
+    await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} $${price}`, type: 3}})
+}

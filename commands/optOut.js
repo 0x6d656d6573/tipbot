@@ -5,8 +5,8 @@ class OptInCommand extends Command
 {
     constructor()
     {
-        super('optin', {
-            aliases  : ['optin', 'opt-in', 'countmein'],
+        super('optout', {
+            aliases  : ['optout', 'opt-out', 'imout'],
             ratelimit: 1,
             channel  : 'guild',
             args     : [
@@ -28,12 +28,12 @@ class OptInCommand extends Command
 
         const role   = message.guild.roles.cache.find(role => role.name === roles[args.role])
         const member = message.guild.members.cache.get(message.author.id)
-        await member.roles.add(role)
+        await member.roles.remove(role)
 
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
-            .setTitle(`Welcome to ${roles[args.role]}`)
-            .setDescription(`You are now officially one of us!`)
+            .setTitle(`Sorry to see you go`)
+            .setDescription(`You are no longer a member of ${roles[args.role]}`)
 
         await message.channel.send(embed)
     }

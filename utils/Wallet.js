@@ -60,7 +60,7 @@ exports.create = function (id) {
     const messenger = new Messenger(
         new HttpProvider(Config.get('token.rpc_url')),
         ChainType.Harmony,
-        ChainID.HmyMainnet,
+        Config.get('chain_id'),
     )
     account.setMessenger(messenger)
 
@@ -82,7 +82,7 @@ exports.balance = async function (wallet, token) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     
@@ -102,7 +102,7 @@ exports.gasBalance = async function (wallet) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
 

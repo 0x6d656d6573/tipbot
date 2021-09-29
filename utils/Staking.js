@@ -19,7 +19,7 @@ exports.balance = async function (address) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
@@ -39,7 +39,7 @@ exports.rewardBalance = async function (address) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
@@ -62,7 +62,7 @@ exports.status = async function (address) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
@@ -85,7 +85,7 @@ exports.registerAndStake = async function (message, wallet, amount) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
@@ -130,7 +130,7 @@ exports.stake = async function (message, wallet, amount) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
@@ -173,7 +173,7 @@ exports.unstake = async function (message, wallet, amount) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
@@ -206,7 +206,7 @@ exports.claimRewards = async function (message, wallet) {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()

@@ -118,7 +118,7 @@ class TriviaCommand extends Command
             return
         }
         const wallet  = await Wallet.get(this, message, message.author.id)
-        const balance = await Wallet.balance(wallet, 'xya')
+        const balance = await Wallet.balance(wallet, Config.get('token.default'))
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
             await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`token.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`token.symbol`)}. Or try again with a lower amount`)
             return
@@ -166,7 +166,7 @@ class TriviaCommand extends Command
                         triviaChannel.send(answer)
 
                         Wallet.recipientAddress(command, message, collected.first().author.id).then(to => {
-                            Transaction.addToQueue(command, message, from, to, amount, 'xya', collected.first().author.id).then(() => {
+                            Transaction.addToQueue(command, message, from, to, amount, Config.get('token.default'), collected.first().author.id).then(() => {
                                 Transaction.runQueue(command, message, message.author.id, false, true, false, false, true)
                             })
                         })
@@ -249,7 +249,7 @@ class TriviaCommand extends Command
                         for (let i = 0; i < winners.length; i++) {
                             const to = await Wallet.recipientAddress(command, message, winners[i].id)
                             
-                            await Transaction.addToQueue(command, message, from, to, amount, 'xya', winners[i].id)
+                            await Transaction.addToQueue(command, message, from, to, amount, Config.get('token.default'), winners[i].id)
                         }
 
                         await Transaction.runQueue(command, message, message.author.id, false, true, false, false, true)

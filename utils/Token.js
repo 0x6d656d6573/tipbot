@@ -98,7 +98,7 @@ exports.circulatingSupply = async function () {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const contract  = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
@@ -126,7 +126,7 @@ exports.totalSupply = async function () {
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const contract  = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))

@@ -61,7 +61,7 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
 
@@ -168,7 +168,7 @@ exports.make = async function (from, to, amount, token, privateKey, nonce = null
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
     const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`tokens.${token}.contract_address`))
@@ -255,7 +255,7 @@ exports.sendGas = async function (command, message, from, to, amount, privateKey
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
-            chainId  : ChainID.HmyMainnet,
+            chainId  : Config.get('chain_id'),
         },
     )
 

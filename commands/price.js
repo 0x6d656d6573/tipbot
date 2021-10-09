@@ -20,16 +20,19 @@ class ViperPriceCommand extends Command
         let onePrice            = await Token.onePrice()
         onePrice                = usdPrice / onePrice
         const circulatingSupply = await Token.circulatingSupply()
-        const totalSupply       = await Token.totalSupply()
+        const stakedSupply      = await Token.stakedSupply()
+        const rewardPool     = await Token.rewardPool()
+        const totalSupply = await Token.totalSupply()
 
         const rows = [
             ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`],
             ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
             null,
-            ['Mkt Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * usdPrice).toFixed(6))}`],
+            ['Market Cap', `$${new Intl.NumberFormat().format(parseFloat((circulatingSupply - rewardPool) * usdPrice).toFixed(6))}`],
             null,
-            ['Cir Sup', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(6))}`],
-            ['Tot Sup', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
+            ['Circulating Supply', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply - rewardPool).toFixed(6))}`],
+            ['Staked Supply', `${new Intl.NumberFormat().format(parseFloat(stakedSupply).toFixed(6))}`],
+            ['Total Supply', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
         ]
 
         const tableRows = []

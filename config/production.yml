@@ -12,7 +12,7 @@ token:
   symbol: "XYA"
   decimals: 18
   network_explorer: "https://explorer.harmony.one/#"
-  rpc_url: "https://api.s0.t.hmny.io"
+  rpc_url: "https://api.harmony.one"
   viper_pair_id: "0x1485a496f816f940c510d634e48f8c66b78dc99e"
 alternative_tokens:
   - yin

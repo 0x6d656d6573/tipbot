@@ -2,6 +2,7 @@ const {Harmony}            = require('@harmony-js/core')
 const {ChainType, ChainID} = require('@harmony-js/utils')
 const {BigNumber}          = require('bignumber.js')
 const artifact             = require('../artifact.json')
+const stakingArtifact      = require('../staking-artifact.json')
 const axios                = require('axios')
 const Config               = require('./Config')
 
@@ -17,7 +18,7 @@ exports.viperInfo = async function () {
         data  : {
             query: `
                 {         
-                    pair(id: "${Config.get('token.viper_pair_id')}") {
+                    pair(id: "${Config.get('token.viper_pair_id')}") { 
                     token0 {
                         id
                         symbol
@@ -110,6 +111,46 @@ exports.circulatingSupply = async function () {
     }
 
     return 450000000 - parseFloat(graveyardAmount)
+}
+
+/**
+ * Get staked supply
+ *
+ * @return {Promise<string>}
+ */
+exports.stakedSupply = async function () {
+    const hmy      = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : Config.get('chain_id'),
+        }, 
+    )
+    const contract = hmy.contracts.createContract(stakingArtifact.abi, stakingArtifact.address)
+    const totalStaked = await contract.methods.totalStaked().call()
+    
+    return BigNumber(totalStaked.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
+}
+
+/**
+ * Get staking rewards
+ *
+ * @return {Promise<number>}
+ */
+exports.rewardPool = async function () {
+    const hmy      = new Harmony(
+        Config.get('token.rpc_url'),
+        {
+            chainType: ChainType.Harmony,
+            chainId  : Config.get('chain_id'),
+        },
+    )
+    const contract = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
+    let stakingBalance = await contract.methods.balanceOf(stakingArtifact.address).call()
+    stakingBalance = BigNumber(stakingBalance.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
+    const stakedSupply = await this.stakedSupply()
+
+    return parseFloat(stakingBalance) - parseFloat(stakedSupply)
 }
 
 /**

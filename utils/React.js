@@ -132,7 +132,7 @@ exports.seaCreature = async function (message, amount) {
  * @return {Promise<void>}
  */
 exports.message = async function (message, type, amount = null) {
-    if (Math.floor(Math.random() * 20) === 1) {
+    if (Math.floor(Math.random() * 10) === 1) {
         if (type === 'tip') {
             if (parseFloat(amount) >= parseFloat(Config.get('sea_creatures.dolphin.low'))) {
                 type = 'large_tip'

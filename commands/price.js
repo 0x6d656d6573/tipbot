@@ -21,8 +21,8 @@ class ViperPriceCommand extends Command
         onePrice                = usdPrice / onePrice
         const circulatingSupply = await Token.circulatingSupply()
         const stakedSupply      = await Token.stakedSupply()
-        const rewardPool     = await Token.rewardPool()
-        const totalSupply = await Token.totalSupply()
+        const rewardPool        = await Token.rewardPool()
+        const totalSupply       = await Token.totalSupply()
 
         const rows = [
             ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`],

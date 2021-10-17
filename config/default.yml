@@ -56,7 +56,6 @@ response:
     - Please, allow me.
     - I’ll let the servants know, %title%.
     - I’ll see what I can do.
-    - I’ll be on my way.
     - Will do, %title%.
     - Yes, %title%.
     - Are you sure?
@@ -68,14 +67,12 @@ response:
     - Good day, %title%.
     - Can I help you?
   large_tip:
-    - Spreading the wealth, I see. Perhaps… I can make a suggestion for another recipient?
+    - Spreading the wealth, I see!
     - Very generous!
     - Most gracious.
-    - More than a slight drizzle, I see.
-    - Shall I bring the umbrella, %title%?
-    - People will speak of your gift for a long time.
+    - People will speak of your gift for a long time, %title%.
     - It would be my honor.
-    - Your generosity remind me of the monarch — before, well, you know.
+    - Your generosity reminds me of the monarch before... well, you know.
     - A grand gesture, %title%.
   burn:
     - What?!
@@ -84,10 +81,10 @@ response:
     - Hm, as you wish.
     - Weren’t there better options for this, %title%?
     - Was this XYA ill-received, perchance?
-    - …If only I could’ve gotten that…
+    - …I wish I could have gotten that...
     - A bit wasteful, if you ask me.
-    - You know the supply is limited, do you %title%?
-    - XYA burns with the briggest shimmer. Beautiful.
+    - You do know the supply is limited, %title%?
+    - XYA burns with the brightest shimmer. Beautiful.
   stats:
     - Hmpf, someone must have taken Luderion donations…
     - The riches of some people, incredible.
@@ -95,14 +92,14 @@ response:
     - There’s always bigger fish.
     - Do not compare yourself to others.
     - How do you rank, %title%?
-    - I’ve heard a great story about number — oh, but I’d best not tell.
+    - I’ve heard a great story abo- Hm. I best not tell.
   legends:
     - Feeling sentimental, %title%?
     - Look back, look forward.
     - Remembering better times? I know the feeling too well…
     - Oh, how times have changed.
     - I still hear stories of these greats in town.
-    - I’ve heard rumours that Carroway was planning statues for this lot.
+    - I’ve heard rumors that Carroway was planning statues for this lot.
   price:
     - This bids well.
     - Someone must have bought.
@@ -130,4 +127,3 @@ response:
     - What ho! how fare thee %emoji% people?
     - Good morrow %emoji% people!
     - Well met %emoji% people!
-    - How met %emoji% people of Freyala!

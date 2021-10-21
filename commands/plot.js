@@ -18,9 +18,10 @@ class PlotCommand extends Command
                     default: 'xya'
                 },
                 {
-                    id     : 'id',
-                    type   : 'number',
-                    default: 1
+                    id       : 'id',
+                    type     : 'number',
+                    default  : 1,
+                    unordered: true
                 },
             ]
         })

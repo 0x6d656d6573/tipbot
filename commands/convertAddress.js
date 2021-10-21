@@ -26,7 +26,7 @@ class ConvertAddressCommand extends Command
             const embed = this.client.util.embed()
                 .setColor(Config.get('colors.primary'))
                 .attachFiles('images/logo.png')
-                .setThumbnail("attachment://logo.png")
+                .setThumbnail('attachment://logo.png')
                 .addField(`ETH`, '```' + hmyAddress.basicHex + '```')
                 .addField(`Harmony`, '```' + hmyAddress.bech32 + '```')
 

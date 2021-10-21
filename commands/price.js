@@ -54,7 +54,7 @@ class ViperPriceCommand extends Command
             .setColor(Config.get('colors.primary'))
             .setTitle(Config.get('price_embed.title'))
             .attachFiles('images/logo.png')
-            .setThumbnail("attachment://logo.png")
+            .setThumbnail('attachment://logo.png')
             .setDescription('```' + table(tableRows) + '```')
             .setFooter(Config.get('price_embed.footer'))
             .addField(`Chart`, Config.get('price_embed.chart_link'))

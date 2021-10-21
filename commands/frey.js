@@ -48,7 +48,7 @@ class FreyCommand extends Command
             const embed = this.client.util.embed()
                 .setColor(Config.get('colors.primary'))
                 .attachFiles('images/logo.png')
-                .setThumbnail("attachment://logo.png")
+                .setThumbnail('attachment://logo.png')
                 .setTitle(frey.name)
                 .setDescription(frey.description)
                 .addField(`Owner`, `${freyInfo[4].substr(0, 6)}...${freyInfo[4].substr(-6, 6)}`)

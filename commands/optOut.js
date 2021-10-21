@@ -32,8 +32,8 @@ class OptInCommand extends Command
 
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
-            .attachFiles('images/logo.png')
-            .setThumbnail('attachment://logo.png')
+            // .attachFiles('images/logo.png')
+            // .setThumbnail('attachment://logo.png')
             .setTitle(`Sorry to see you go`)
             .setDescription(`You are no longer a member of ${roles[args.role]}`)
 

@@ -1,7 +1,7 @@
 const {Command}                    = require('discord-akairo')
 const {React, Wallet, Transaction} = require('../utils')
 
-class PingCommand extends Command
+class GetGasCommand extends Command
 {
     constructor()
     {
@@ -34,4 +34,4 @@ class PingCommand extends Command
     }
 }
 
-module.exports = PingCommand
+module.exports = GetGasCommand

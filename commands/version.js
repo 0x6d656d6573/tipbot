@@ -3,7 +3,7 @@ const {Config}  = require('../utils')
 const git       = require('git-rev-sync')
 
 
-class PingCommand extends Command
+class VersionCommand extends Command
 {
     constructor()
     {
@@ -17,12 +17,12 @@ class PingCommand extends Command
     {
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
-            .attachFiles('images/logo.png')
-            .setThumbnail('attachment://logo.png')
+            // .attachFiles('images/logo.png')
+            // .setThumbnail('attachment://logo.png')
             .setTitle(`${Config.get('token.symbol')} Tipbot version`)
             .setDescription('```' + git.tag(false) + '```')
         await message.reply(embed)
     }
 }
 
-module.exports = PingCommand
+module.exports = VersionCommand

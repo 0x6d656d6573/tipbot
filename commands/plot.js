@@ -76,13 +76,13 @@ class PlotCommand extends Command
         const contract = hmy.contracts.createContract(artifact.abi, addresses[args.token])
         const plot     = await contract.methods.plots(args.id).call()
 
-        const logo = args.token === 'xya' ? 'logo' : args.token
+        // const logo = args.token === 'xya' ? 'logo' : args.token
 
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
             .setTitle(`Plot #${plot[4]}`)
-            .attachFiles(`images/${logo}.png`)
-            .setThumbnail(`attachment://${logo}.png`)
+            // .attachFiles(`images/${logo}.png`)
+            // .setThumbnail(`attachment://${logo}.png`)
             .setImage('https://world.freyala.com/images/map/worldmap.png')
             .addFields(
                 {name: `Neighbourhood`, value: neighbourhoods[plot[5]], inline: true},

@@ -93,7 +93,6 @@ class PlotCommand extends Command
                 {name: `Level`, value: plot[8], inline: true},
                 {name: `Crime rate`, value: plot[9], inline: true},
             )
-            .addField('\u200b', '\u200b')
             .addField(`Owner`, `${plot[1].substr(0, 6)}...${plot[1].substr(-6, 6)}`)
 
         await message.channel.send(embed)

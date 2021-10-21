@@ -36,7 +36,7 @@ cp .env.example .env
 
 ### Artifact
 
-Replace `artifact.json` with your contract abi JSON
+Replace `artifacts/token.json` with your contract abi JSON
 
 ### Configure dotenv
 

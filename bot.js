@@ -47,13 +47,35 @@ client.login(process.env.TOKEN)
 client.on('ready', () => {
     DB.syncDatabase()
 
+    getPrice()
     setPresence()
-    setInterval(setPresence, 60000)
+    setInterval(getPrice, 60000)
+    setInterval(setPresence, 5000)
 })
 
+let priceUsd = 0
+let priceOne = 0
+let presence = 'usd';
 async function setPresence()
 {
-    const price = parseFloat(await Token.mochiPrice()).toFixed(3)
+    if (presence === 'usd') {
+        await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} at ${priceOne} ONE`, type: 3}})
 
-    await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} at $${price}`, type: 3}})
+        presence = 'one'
+    } else {
+        await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} at $${priceUsd}`, type: 3}})
+
+        presence = 'usd'
+    }
 }
+
+async function getPrice()
+{
+    const usdPrice          = await Token.mochiPrice()
+    let onePrice            = await Token.onePrice()
+    onePrice                = usdPrice / onePrice
+
+    priceUsd = parseFloat(usdPrice).toFixed(3)
+    priceOne = parseFloat(onePrice).toFixed(3)
+}
+

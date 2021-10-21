@@ -17,6 +17,8 @@ class PingCommand extends Command
     {
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
+            .attachFiles('images/logo.png')
+            .setThumbnail("attachment://logo.png")
             .setTitle(`${Config.get('token.symbol')} Tipbot version`)
             .setDescription('```' + git.tag(false) + '```')
         await message.reply(embed)

@@ -34,7 +34,10 @@ tokens:
 # Price embed
 price_embed:
   title: "Freyala | XYA"
-  thumbnail: "https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png"
   chart_link: "https://www.freyala.com/chart"
   url: "https://www.freyala.com/chart"
   footer: "Source: Viperswap"
+
+# Embed
+embed:
+  thumbnail: "https://world.freyala.com/images/XYA.png"

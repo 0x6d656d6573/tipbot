@@ -1,8 +1,8 @@
 const {Harmony}            = require('@harmony-js/core')
 const {ChainType, ChainID} = require('@harmony-js/utils')
 const {BigNumber}          = require('bignumber.js')
-const artifact             = require('../artifact.json')
-const stakingArtifact      = require('../staking-artifact.json')
+const artifact             = require('../artifacts/token.json')
+const stakingArtifact      = require('../artifacts/staking.json')
 const axios                = require('axios')
 const Config               = require('./Config')
 

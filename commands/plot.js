@@ -84,7 +84,7 @@ class PlotCommand extends Command
             .setTitle(`Plot #${plot[4]}`)
             // .attachFiles(`images/${logo}.png`)
             // .setThumbnail(`attachment://${logo}.png`)
-            .setImage('https://world.freyala.com/images/map/worldmap.png')
+            // .setImage('https://world.freyala.com/images/map/worldmap.png')
             .addFields(
                 {name: `Neighbourhood`, value: neighbourhoods[plot[5]], inline: true},
                 {name: `Chest`, value: `${(plot[3] / Math.pow(10, Config.get(`token.decimals`))).toFixed(2)} XYA`, inline: true},

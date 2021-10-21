@@ -60,8 +60,8 @@ class FreyCommand extends Command
                 .addField(`Age`, `${age.years()}y ${age.months()}m ${age.days()}d ${age.hours()}h`)
                 .setImage(frey.image)
 
-            await React.done(message)
             await message.channel.send(embed)
+            await React.done(message)
         })
 
     }

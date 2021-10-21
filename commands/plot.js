@@ -98,8 +98,8 @@ class PlotCommand extends Command
             .addField('\u200b', '\u200b')
             .addField(`Owner`, `${plot[1].substr(0, 6)}...${plot[1].substr(-6, 6)}`)
 
-        await React.done(message)
         await message.channel.send(embed)
+        await React.done(message)
     }
 }
 

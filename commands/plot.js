@@ -81,7 +81,7 @@ class PlotCommand extends Command
 
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
-            .setTitle(`Plot #${plot[4]}`)
+            .setTitle(`Plot #${args.id}`)
             // .attachFiles(`images/${logo}.png`)
             // .setThumbnail(`attachment://${logo}.png`)
             // .setImage('https://world.freyala.com/images/map/worldmap.png')

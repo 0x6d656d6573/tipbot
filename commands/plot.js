@@ -1,13 +1,8 @@
 const {Command}       = require('discord-akairo')
 const {Config, React} = require('../utils')
 const artifact        = require('../artifacts/plot.json')
-const axios           = require("axios")
-const {hexToNumber}   = require("@harmony-js/utils")
-const {numberToHex}   = require("@harmony-js/utils")
 const {ChainType}     = require("@harmony-js/utils")
 const {Harmony}       = require("@harmony-js/core")
-const moment          = require('moment')
-const Discord         = require("discord.js")
 
 class PlotCommand extends Command
 {

@@ -77,6 +77,12 @@ class PlotCommand extends Command
         const contract = hmy.contracts.createContract(artifact.abi, addresses[args.token])
         const plot     = await contract.methods.plots(args.id).call()
 
+        if (plot[0] === '0x0000000000000000000000000000000000000000') {
+            await React.error(this, message, `Plot not found`, `The plot ID is wrongly formatted or does not exist`)
+
+            return
+        }
+
         // const logo = args.token === 'xya' ? 'logo' : args.token
 
         const embed = this.client.util.embed()

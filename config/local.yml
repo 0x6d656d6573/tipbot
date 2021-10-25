@@ -20,11 +20,3 @@ tokens:
     contract_address: "0xD3f5650b4bE6f791B07cfdc8D6D3449abfefa4F4"
     symbol: "REGI"
     decimals: 18
-
-# Price embed
-price_embed:
-  title: "Freyala | XYA"
-  thumbnail: "https://freyala.com/_nuxt/icons/icon_64x64.5f6a36.png"
-  chart_link: "https://www.freyala.com/chart"
-  url: "https://www.freyala.com/chart"
-  footer: "Source: Viperswap"

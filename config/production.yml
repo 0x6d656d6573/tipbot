@@ -30,14 +30,3 @@ tokens:
     contract_address: "0x340042552D19211795dbe55d84FA2E63bc49B890"
     symbol: "YANG"
     decimals: 18
-
-# Price embed
-price_embed:
-  title: "Freyala | XYA"
-  chart_link: "https://www.freyala.com/chart"
-  url: "https://www.freyala.com/chart"
-  footer: "Source: Viperswap"
-
-# Embed
-embed:
-  thumbnail: "https://world.freyala.com/images/XYA.png"

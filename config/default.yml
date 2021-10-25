@@ -12,6 +12,17 @@ colors:
   info: "#0EA5E9"
   error: "#FF0000"
 
+# Price embed
+price_embed:
+  title: "Freyala | XYA"
+  chart_link: "https://www.freyala.com/chart"
+  url: "https://www.freyala.com/chart"
+  footer: "Source: CoinGecko"
+
+# Embed
+embed:
+  thumbnail: "https://world.freyala.com/images/XYA.png"
+
 # Sea creatures
 sea_creatures:
   shrimp:

@@ -55,7 +55,8 @@ client.on('ready', () => {
 
 let priceUsd = 0
 let priceOne = 0
-let presence = 'usd';
+let presence = 'usd'
+
 async function setPresence()
 {
     if (presence === 'usd') {
@@ -71,11 +72,11 @@ async function setPresence()
 
 async function getPrice()
 {
-    const usdPrice          = await Token.mochiPrice()
-    let onePrice            = await Token.onePrice()
-    onePrice                = usdPrice / onePrice
+    const tokenPrice = await Token.tokenPrice()
+    const onePrice   = await Token.onePrice()
+    const priceInOne = tokenPrice.usd / onePrice
 
-    priceUsd = parseFloat(usdPrice).toFixed(3)
-    priceOne = parseFloat(onePrice).toFixed(3)
+    priceUsd = parseFloat(tokenPrice.usd).toFixed(3)
+    priceOne = parseFloat(priceInOne).toFixed(3)
 }
 

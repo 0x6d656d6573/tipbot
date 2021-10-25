@@ -1,8 +1,9 @@
 const {Command}              = require('discord-akairo')
 const {Config, React, Token} = require('../utils')
 const table                  = require('text-table')
+const moment                 = require('moment')
 
-class ViperPriceCommand extends Command
+class PriceCommand extends Command
 {
     constructor()
     {
@@ -16,23 +17,28 @@ class ViperPriceCommand extends Command
     {
         await React.processing(message)
 
-        const usdPrice          = await Token.mochiPrice()
-        let onePrice            = await Token.onePrice()
-        onePrice                = usdPrice / onePrice
-        const circulatingSupply = await Token.circulatingSupply()
-        const stakedSupply      = await Token.stakedSupply()
-        const rewardPool        = await Token.rewardPool()
-        const totalSupply       = await Token.totalSupply()
+        const tokenPrice        = await Token.tokenPrice()
+        const onePrice          = await Token.onePrice()
+        const priceInOne        = tokenPrice.usd / onePrice
+        // const circulatingSupply = await Token.circulatingSupply()
+        // const stakedSupply      = await Token.stakedSupply()
+        // const rewardPool        = await Token.rewardPool()
+        // const totalSupply       = await Token.totalSupply()
+
+        console.log(tokenPrice) // REMOVE
 
         const rows = [
-            ['ONE', `${parseFloat(onePrice).toFixed(6)} ONE`],
-            ['USD', `$${parseFloat(usdPrice).toFixed(6)}`],
+            ['ONE', `${parseFloat(priceInOne).toFixed(6)} ONE`],
+            ['USD', `$${parseFloat(tokenPrice.usd).toFixed(6)}`],
             null,
-            ['Market Cap', `$${new Intl.NumberFormat().format(parseFloat((circulatingSupply - rewardPool) * usdPrice).toFixed(6))}`],
-            null,
-            ['Circulating Supply', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply - rewardPool).toFixed(6))}`],
-            ['Staked Supply', `${new Intl.NumberFormat().format(parseFloat(stakedSupply).toFixed(6))}`],
-            ['Total Supply', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
+            ['24h Change', `%${parseFloat(tokenPrice.usd_24h_change).toFixed(3)}`],
+            ['24h Volume', parseFloat(tokenPrice.usd_24h_vol).toFixed(3)],
+            // null,
+            // ['Market Cap', `$${new Intl.NumberFormat().format(parseFloat((circulatingSupply - rewardPool) * tokenPrice.usd).toFixed(6))}`],
+            // null,
+            // ['Circulating Supply', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply - rewardPool).toFixed(6))}`],
+            // ['Staked Supply', `${new Intl.NumberFormat().format(parseFloat(stakedSupply).toFixed(6))}`],
+            // ['Total Supply', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
         ]
 
         const tableRows = []
@@ -49,6 +55,7 @@ class ViperPriceCommand extends Command
         }
 
         await React.done(message)
+        const lastUpdated = moment.duration(moment().diff(moment.unix(tokenPrice.last_updated_at)), 'milliseconds');
 
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))
@@ -57,6 +64,7 @@ class ViperPriceCommand extends Command
             // .setThumbnail('attachment://logo.png')
             .setDescription('```' + table(tableRows) + '```')
             .setFooter(Config.get('price_embed.footer'))
+            .addField(`Last updated`, `${lastUpdated.minutes()}m ${lastUpdated.seconds()}s ago`)
             .addField(`Chart`, Config.get('price_embed.chart_link'))
             .setURL(Config.get('price_embed.url'))
         await message.channel.send(embed)
@@ -65,4 +73,4 @@ class ViperPriceCommand extends Command
     }
 }
 
-module.exports = ViperPriceCommand
+module.exports = PriceCommand

@@ -119,16 +119,16 @@ exports.circulatingSupply = async function () {
  * @return {Promise<string>}
  */
 exports.stakedSupply = async function () {
-    const hmy      = new Harmony(
+    const hmy         = new Harmony(
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : Config.get('chain_id'),
-        }, 
+        },
     )
-    const contract = hmy.contracts.createContract(stakingArtifact.abi, stakingArtifact.address)
+    const contract    = hmy.contracts.createContract(stakingArtifact.abi, stakingArtifact.address)
     const totalStaked = await contract.methods.totalStaked().call()
-    
+
     return BigNumber(totalStaked.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
 }
 
@@ -138,16 +138,17 @@ exports.stakedSupply = async function () {
  * @return {Promise<number>}
  */
 exports.rewardPool = async function () {
-    const hmy      = new Harmony(
+    const hmy          = new Harmony(
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : Config.get('chain_id'),
         },
     )
-    const contract = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
+    const contract     = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
     let stakingBalance = await contract.methods.balanceOf(stakingArtifact.address).call()
-    stakingBalance = BigNumber(stakingBalance.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
+
+    stakingBalance     = BigNumber(stakingBalance.toString()).dividedBy(Math.pow(10, Config.get(`token.decimals`))).toFixed(4)
     const stakedSupply = await this.stakedSupply()
 
     return parseFloat(stakingBalance) - parseFloat(stakedSupply)
@@ -182,15 +183,15 @@ exports.totalSupply = async function () {
 }
 
 /**
- * Mochi price
+ * Token price
  *
  * @return {Promise<*>}
  */
-exports.mochiPrice = async function () {
+exports.tokenPrice = async function () {
     const response = await axios({
-        url   : 'https://info.freyala.com/api/exchange-rates/xya_1usdc',
+        url   : 'https://api.coingecko.com/api/v3/simple/token_price/harmony-shard-0?contract_addresses=0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true',
         method: 'get',
     })
 
-    return response.data.rates.buy_rate
+    return response.data['0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4']
 }

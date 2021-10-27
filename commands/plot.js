@@ -76,6 +76,7 @@ class PlotCommand extends Command
         )
         const contract = hmy.contracts.createContract(artifact.abi, addresses[args.token])
         const plot     = await contract.methods.plots(args.id).call()
+        const owner    = await contract.methods.ownerOf(args.id).call()
 
         if (plot[0] === '0x0000000000000000000000000000000000000000') {
             await React.error(this, message, `Plot not found`, `The plot ID is wrongly formatted or does not exist`)
@@ -99,7 +100,7 @@ class PlotCommand extends Command
                 {name: `Level`, value: plot[8], inline: true},
                 {name: `Crime rate`, value: plot[9], inline: true},
             )
-            .addField(`Owner`, `${plot[1].substr(0, 6)}...${plot[1].substr(-6, 6)}`)
+            .addField(`Owner`, `${owner.substr(0, 6)}...${owner.substr(-6, 6)}`)
 
         await message.channel.send(embed)
         await React.done(message)

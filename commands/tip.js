@@ -31,7 +31,10 @@ class TipCommand extends Command
 
     async exec(message, args)
     {
+        await React.processing(message)
+
         if (!await Wallet.check(this, message, message.author.id)) {
+            await React.error(this, message, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
             return
         }
 

@@ -109,7 +109,12 @@ exports.runQueue = async function (command, message, author, notifyAuthor = fals
                                 .setTitle(randomTitle)
                                 .setDescription(`You received your prize of ${queue[i].amount} ${Config.get('token.symbol')}`)
                         }
-                        await recipient.send(embed)
+
+                        await recipient.send(embed).catch(async error => {
+                            if (error.code === 50007) {
+                                await React.error(command, message, `Cannot send messages to this user`, `This user has either blocked me, or is not a member of this server.`)
+                            }
+                        });
                     }
 
                     if (!send && !burn) {

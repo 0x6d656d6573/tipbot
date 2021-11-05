@@ -112,7 +112,7 @@ exports.circulatingSupply = async function () {
         circulatingSupply -= parseInt(balance) / 1000000000000000000
     }
 
-    return circulatingSupply
+    return circulatingSupply - await this.rewardPool()
 }
 
 /**

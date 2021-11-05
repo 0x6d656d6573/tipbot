@@ -1,10 +1,10 @@
-const {Harmony}            = require('@harmony-js/core')
-const {ChainType, ChainID} = require('@harmony-js/utils')
-const {BigNumber}          = require('bignumber.js')
-const artifact             = require('../artifacts/token.json')
-const stakingArtifact      = require('../artifacts/staking.json')
-const axios                = require('axios')
-const Config               = require('./Config')
+const {Harmony}       = require('@harmony-js/core')
+const {ChainType}     = require('@harmony-js/utils')
+const {BigNumber}     = require('bignumber.js')
+const artifact        = require('../artifacts/token.json')
+const stakingArtifact = require('../artifacts/staking.json')
+const axios           = require('axios')
+const Config          = require('./Config')
 
 /**
  * Get Viper info
@@ -83,7 +83,7 @@ exports.volume = async function () {
  * @return {Promise<number>}
  */
 exports.circulatingSupply = async function () {
-    const graveyard = [
+    const walletsToCheck = [
         '0x28d9475f6354091a49e20a897f6405a02ffd6836',
         '0x328983c8331a8ad6f08036f2983a8268f9e0f46d',
         '0xfef8bd2e06d8117e51ce7b960992e4055997d9fe',
@@ -93,24 +93,26 @@ exports.circulatingSupply = async function () {
         '0x000000000000000000000000000000000000dead',
         '0x48a30b33ebd0afac1d8023e06e17372c21c0fb18',
         '0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4',
-        '0xbb4972a578266e0800d98f4248d057d6f6cde2bf',
+        '0xbb4972a578266e0800d98f4248d057d6f6cde2bf'
     ]
-    const hmy       = new Harmony(
+
+    let circulatingSupply = 450000000
+
+    const hmy      = new Harmony(
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : Config.get('chain_id'),
         },
     )
-    const contract  = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
+    const contract = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
 
-    let graveyardAmount = 0
-    for (let i = 0; i < graveyard.length; i++) {
-        const weiBalance = await contract.methods.balanceOf(graveyard[i]).call()
-        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, Config.get('token.decimals'))))
+    for (let i = 0; i < walletsToCheck.length; i++) {
+        const balance = await contract.methods.balanceOf(walletsToCheck[i]).call()
+        circulatingSupply -= parseInt(balance) / 1000000000000000000
     }
 
-    return 450000000 - parseFloat(graveyardAmount)
+    return circulatingSupply
 }
 
 /**
@@ -160,26 +162,28 @@ exports.rewardPool = async function () {
  * @return {Promise<number>}
  */
 exports.totalSupply = async function () {
-    const graveyard = [
+    const burnt = [
         '0x000000000000000000000000000000000000dead',
-        '0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4',
+        '0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4'
     ]
-    const hmy       = new Harmony(
+
+    let totalSupply = 450000000
+
+    const hmy      = new Harmony(
         Config.get('token.rpc_url'),
         {
             chainType: ChainType.Harmony,
             chainId  : Config.get('chain_id'),
         },
     )
-    const contract  = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
+    const contract = hmy.contracts.createContract(artifact.abi, Config.get('token.contract_address'))
 
-    let graveyardAmount = 0
-    for (let i = 0; i < graveyard.length; i++) {
-        const weiBalance = await contract.methods.balanceOf(graveyard[i]).call()
-        graveyardAmount  = parseFloat(graveyardAmount) + parseFloat(BigNumber(weiBalance).dividedBy(Math.pow(10, Config.get('token.decimals'))))
+    for (let i = 0; i < burnt.length; i++) {
+        const balance = await contract.methods.balanceOf(burnt[i]).call()
+        totalSupply -= parseInt(balance) / 1000000000000000000
     }
 
-    return 450000000 - parseFloat(graveyardAmount)
+    return totalSupply
 }
 
 /**

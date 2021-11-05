@@ -20,25 +20,22 @@ class PriceCommand extends Command
         const tokenPrice        = await Token.tokenPrice()
         const onePrice          = await Token.onePrice()
         const priceInOne        = tokenPrice.usd / onePrice
-        // const circulatingSupply = await Token.circulatingSupply()
-        // const stakedSupply      = await Token.stakedSupply()
-        // const rewardPool        = await Token.rewardPool()
-        // const totalSupply       = await Token.totalSupply()
-
-        console.log(tokenPrice) // REMOVE
+        const circulatingSupply = await Token.circulatingSupply()
+        const stakedSupply      = await Token.stakedSupply()
+        const totalSupply       = await Token.totalSupply()
 
         const rows = [
             ['ONE', `${parseFloat(priceInOne).toFixed(6)} ONE`],
             ['USD', `$${parseFloat(tokenPrice.usd).toFixed(6)}`],
             null,
-            ['24h Change', `%${parseFloat(tokenPrice.usd_24h_change).toFixed(3)}`],
+            ['24h Change', `${parseFloat(tokenPrice.usd_24h_change).toFixed(3)}%`],
             ['24h Volume', parseFloat(tokenPrice.usd_24h_vol).toFixed(3)],
-            // null,
-            // ['Market Cap', `$${new Intl.NumberFormat().format(parseFloat((circulatingSupply - rewardPool) * tokenPrice.usd).toFixed(6))}`],
-            // null,
-            // ['Circulating Supply', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply - rewardPool).toFixed(6))}`],
-            // ['Staked Supply', `${new Intl.NumberFormat().format(parseFloat(stakedSupply).toFixed(6))}`],
-            // ['Total Supply', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(6))}`],
+            null,
+            ['Market Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * tokenPrice.usd).toFixed(0))}`],
+            null,
+            ['Fully Diluted', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(0))}`],
+            ['Circulating Supply', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(0))}`],
+            ['Staked Supply', `${new Intl.NumberFormat().format(parseFloat(stakedSupply).toFixed(0))}`],
         ]
 
         const tableRows = []
@@ -55,7 +52,7 @@ class PriceCommand extends Command
         }
 
         await React.done(message)
-        const lastUpdated = moment.duration(moment().diff(moment.unix(tokenPrice.last_updated_at)), 'milliseconds');
+        const lastUpdated = moment.duration(moment().diff(moment.unix(tokenPrice.last_updated_at)), 'milliseconds')
 
         const embed = this.client.util.embed()
             .setColor(Config.get('colors.primary'))

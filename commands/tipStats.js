@@ -1,6 +1,6 @@
-const {Command}                      = require('discord-akairo')
-const table                          = require('text-table')
-const {Config, TipStatistics, React} = require('../utils')
+const {Command}                             = require('discord-akairo')
+const table                                 = require('text-table')
+const {Config, TipStatistics, React, Token} = require('../utils')
 
 class TipstatsCommand extends Command
 {
@@ -14,14 +14,19 @@ class TipstatsCommand extends Command
 
     async exec(message, args)
     {
-        const topTen = await TipStatistics.getTippersTopTen()
-        const total  = await TipStatistics.getTipTotal()
-        const author = await TipStatistics.getUserTipAmount(message.author.username)
+        const topTen     = await TipStatistics.getTippersTopTen()
+        const total      = await TipStatistics.getTipTotal()
+        const tokenPrice = await Token.tokenPrice()
+        const author     = await TipStatistics.getUserTipAmount(message.author.username)
 
-        const totalRows  = [[
-            new Intl.NumberFormat().format(total),
-            Config.get('token.symbol')
-        ]]
+        const totalRows  = [
+            [
+                new Intl.NumberFormat().format(total) + ' '  + Config.get('token.symbol')
+            ],
+            [
+                '$' + new Intl.NumberFormat().format(total * tokenPrice.usd),
+            ]
+        ]
         const authorRows = [[
             message.author.username,
             new Intl.NumberFormat().format(author),

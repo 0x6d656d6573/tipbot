@@ -19,7 +19,7 @@ class VersionCommand extends Command
             .setColor(Config.get('colors.primary'))
             // .attachFiles('images/logo.png')
             // .setThumbnail('attachment://logo.png')
-            .setTitle(`${Config.get('token.symbol')} Tipbot version`)
+            .setTitle(`Sir Reginald version`)
             .setDescription('```' + git.tag(false) + '```')
         await message.reply(embed)
     }

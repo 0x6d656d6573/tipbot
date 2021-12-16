@@ -17,6 +17,7 @@ token:
 alternative_tokens:
   - yin
   - yang
+  - coink
 tokens:
   xya:
     contract_address: "0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4"
@@ -29,4 +30,8 @@ tokens:
   yang:
     contract_address: "0x340042552D19211795dbe55d84FA2E63bc49B890"
     symbol: "YANG"
+    decimals: 18
+  coink:
+    contract_address: "0x7ca9C1D0bb11F1b7C31ee5538D7a75aAF2d8E2FC"
+    symbol: "COINKx"
     decimals: 18

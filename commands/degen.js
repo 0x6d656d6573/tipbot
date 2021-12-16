@@ -13,7 +13,7 @@ class DegenCommand extends Command
 
     async exec(message)
     {
-        if (message.channel.name === '🤪degen-chat') {
+        if (message.channel.id === '855335818155917325') {
             await React.success(this, message)
         }
     }

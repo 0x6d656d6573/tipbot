@@ -4,7 +4,7 @@ imports:
 # Discord
 channels:
   trivia: '868080405646037013'
-  verification: '919301734218747924' # 919314404565188638
+  verification: '919314404565188638'
 
 # Token
 token:

@@ -92,7 +92,7 @@ client.on("guildMemberAdd", async (member) => {
         .setColor(Config.get('colors.primary'))
         .setTitle(`Welcome to Freyala!`)
         .setDescription(`Hi <@${member.user.id}>! Please answer the following question to gain access to the server.`)
-        .setImage(`http://placehold.it/500x100/7FCA49/FFFFFF?text=${intOne}%2B${intTwo}=%3F`)
+        .setImage(`http://placehold.it/500x100/374151/FFFFFF?text=${intOne}%2B${intTwo}=%3F`)
 
     const msg = await verificationChannel.send(embed)
 

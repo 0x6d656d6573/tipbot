@@ -81,8 +81,6 @@ async function getPrice()
 }
 
 client.on("guildMemberAdd", async (member) => {
-    console.log(member.user.username); // REMOVE
-
     const intOne              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
     const intTwo              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
     const answer              = parseInt(intOne) + parseInt(intTwo)
@@ -110,6 +108,8 @@ client.on("guildMemberAdd", async (member) => {
                 .setTitle(`Thank you ${member.user.username}!`)
                 .setDescription(`You are now officially one of us! Introduce yourself to the other Freyfolk and have an amazing time.`)
             await member.user.send(embed)
+
+            msg.delete()
         })
         .catch(async () => {
             const embed = client.util.embed()
@@ -119,5 +119,7 @@ client.on("guildMemberAdd", async (member) => {
             await member.user.send(embed)
 
             await member.kick('Kicked by Sir reginald')
+
+            msg.delete()
         })
 })

@@ -81,6 +81,8 @@ async function getPrice()
 }
 
 client.on("guildMemberAdd", async (member) => {
+    console.log(member.user.username); // REMOVE
+
     const intOne              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
     const intTwo              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
     const answer              = parseInt(intOne) + parseInt(intTwo)
@@ -106,7 +108,7 @@ client.on("guildMemberAdd", async (member) => {
             const embed = client.util.embed()
                 .setColor(Config.get('colors.primary'))
                 .setTitle(`Thank you ${member.user.username}!`)
-                .setDescription(`You are now officially one of us! Introduce yourself to the other Freyfolk and have an amazing time`)
+                .setDescription(`You are now officially one of us! Introduce yourself to the other Freyfolk and have an amazing time.`)
             await member.user.send(embed)
         })
         .catch(async () => {

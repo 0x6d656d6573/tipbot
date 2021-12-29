@@ -12,6 +12,8 @@ class RoleCommand extends Command
 
     async exec(message)
     {
+        console.log(message.guild.members.cache.size); // REMOVE
+        
         const role    = message.guild.roles.cache.find(role => role.id === '917325119603507240')
         const members = message.guild.members.cache.filter(member => !member.roles.cache.has(role.id))
 

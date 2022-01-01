@@ -80,46 +80,51 @@ async function getPrice()
     priceOne = parseFloat(priceInOne).toFixed(3)
 }
 
-client.on("guildMemberAdd", async (member) => {
-    const intOne              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
-    const intTwo              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
-    const answer              = parseInt(intOne) + parseInt(intTwo)
-    const verificationChannel = client.channels.cache.get(Config.get('channels.verification'))
+// client.on("guildMemberAdd", async (member) => {
+//     const intOne              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
+//     const intTwo              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
+//     const answer              = parseInt(intOne) + parseInt(intTwo)
+//     const verificationChannel = client.channels.cache.get(Config.get('channels.verification'))
 
-    const embed = client.util.embed()
-        .setColor(Config.get('colors.primary'))
-        .setTitle(`Welcome to Freyala!`)
-        .setDescription(`Hi <@${member.user.id}>! Please answer the following question to gain access to the server.`)
-        .setImage(`http://placehold.it/500x100/374151/FFFFFF?text=${intOne}%2B${intTwo}=%3F`)
+//     const embed = client.util.embed()
+//         .setColor(Config.get('colors.primary'))
+//         .setTitle(`Welcome to Freyala!`)
+//         .setDescription(`Hi <@${member.user.id}>! Please answer the following question to gain access to the server.`)
+//         .setImage(`http://placehold.it/500x100/374151/FFFFFF?text=${intOne}%2B${intTwo}=%3F`)
 
-    const msg = await verificationChannel.send(embed)
+//     const msg = await verificationChannel.send(embed)
 
-    const filter = function (response) {
-        return response.author.id === member.user.id && parseInt(response.content) === answer
-    }
+//     const filter = function (response) {
+//         return response.author.id === member.user.id && parseInt(response.content) === answer
+//     }
 
-    msg.channel.awaitMessages(filter, {max: 1, time: 30000, errors: ['time']})
-        .then(async collected => {
-            const role = member.guild.roles.cache.find(role => role.name === 'Freyfolk')
-            await member.roles.add(role)
+//     msg.channel.awaitMessages(filter, {max: 1, time: 300000, errors: ['time']})
+//         .then(async collected => {
+//             const role = member.guild.roles.cache.find(role => role.name === 'Freyfolk')
+//             await member.roles.add(role)
 
-            const embed = client.util.embed()
-                .setColor(Config.get('colors.primary'))
-                .setTitle(`Thank you ${member.user.username}!`)
-                .setDescription(`You are now officially one of us! Introduce yourself to the other Freyfolk and have an amazing time.`)
-            await member.user.send(embed)
+//             const embed = client.util.embed()
+//                 .setColor(Config.get('colors.primary'))
+//                 .setTitle(`Thank you ${member.user.username}!`)
+//                 .setDescription(`You are now officially one of us! Introduce yourself to the other Freyfolk and have an amazing time.`)
+//             await member.user.send(embed)
 
-            msg.delete()
-        })
-        .catch(async () => {
-            const embed = client.util.embed()
-                .setColor(Config.get('colors.error'))
-                .setTitle(`You were kicked!`)
-                .setDescription(`Because a correct answer was not given or not given on time, you have been kicked from the Freyala server.`)
-            await member.user.send(embed)
+//             for (response of collected) {
+//                 console.log(response[0]); // REMOVE
+//                 response.delete()
+//             }
 
-            await member.kick('Kicked by Sir reginald')
+//             await msg.delete()
+//         })
+//         .catch(async () => {
+//             const embed = client.util.embed()
+//                 .setColor(Config.get('colors.error'))
+//                 .setTitle(`You were kicked!`)
+//                 .setDescription(`Because a correct answer was not given or not given on time, you have been kicked from the Freyala server.`)
+//             await member.user.send(embed)
 
-            msg.delete()
-        })
-})
+//             await member.kick('Kicked by Sir reginald')
+
+//             await msg.delete()
+//         })
+// })

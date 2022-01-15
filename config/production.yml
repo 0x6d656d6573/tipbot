@@ -4,7 +4,7 @@ imports:
 # Discord
 channels:
   trivia: '868080405646037013'
-  verification: '919314404565188638'
+  verification: '919301734218747924' # 919314404565188638
 
 # Token
 token:
@@ -13,7 +13,7 @@ token:
   symbol: "XYA"
   decimals: 18
   network_explorer: "https://explorer.harmony.one/#"
-  rpc_url: "https://api.harmony.one"
+  rpc_url: "https://api.fuzz.fi"
   viper_pair_id: "0x1485a496f816f940c510d634e48f8c66b78dc99e"
 alternative_tokens:
   - yin

@@ -2,7 +2,6 @@ const {Command} = require('discord-akairo')
 const {Config}  = require('../utils')
 const git       = require('git-rev-sync')
 
-
 class VersionCommand extends Command
 {
     constructor()

@@ -56,6 +56,7 @@ class RainCommand extends Command
             }
             if (amount < 0.01) {
                 await React.error(this, message, `Tip amount incorrect`, `The tip amount is too low`)
+
                 return
             }
         }

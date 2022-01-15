@@ -88,7 +88,7 @@ exports.registerAndStake = async function (message, wallet, amount) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
     const gasLimit        = '250000'
     const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`token.contract_address`))
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
@@ -133,7 +133,7 @@ exports.stake = async function (message, wallet, amount) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
     const gasLimit        = '250000'
     const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`token.contract_address`))
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
@@ -176,7 +176,7 @@ exports.unstake = async function (message, wallet, amount) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
     const gasLimit        = '250000'
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
     const privateKey      = await Wallet.privateKey(wallet)
@@ -209,7 +209,7 @@ exports.claimRewards = async function (message, wallet) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
     const gasLimit        = '250000'
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
     const privateKey      = await Wallet.privateKey(wallet)

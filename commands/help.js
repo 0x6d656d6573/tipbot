@@ -62,8 +62,8 @@ class HelpCommand extends Command
                 {name: `${Config.get('prefix')}pig 123`, value: `Coink! Coink! Show of your bacon to your friends using this command!`},
 
                 // .addField(`Miscellaneous Commands`, '\u200b')
-                {name: `${Config.get('prefix')}optin`, value: `A wai to opt-in to the Degen or Trivia role\nAlias: ${Config.get('prefix')}opt-in ${Config.get('prefix')}countmein`},
-                {name: `${Config.get('prefix')}optout`, value: `A wai to opt-out of the Degen or Trivia role\nAlias: ${Config.get('prefix')}opt-out ${Config.get('prefix')}imout`},
+                {name: `${Config.get('prefix')}optin`, value: `A way to opt-in to the Degen or Trivia role\nAlias: ${Config.get('prefix')}opt-in ${Config.get('prefix')}countmein`},
+                {name: `${Config.get('prefix')}optout`, value: `A way to opt-out of the Degen or Trivia role\nAlias: ${Config.get('prefix')}opt-out ${Config.get('prefix')}imout`},
                 {name: `${Config.get('prefix')}version`, value: `Show the current tipbot version\nAlias: ${Config.get('prefix')}v`},
                 {name: `${Config.get('prefix')}ping`, value: `Responds with "pong!" when the bot is online`},
                 {name: `${Config.get('prefix')}degen`, value: `Fake command the bot will react to with a ✅ \n These commands are only available in #🤪degen-chat\nAlias: ${Config.get('prefix')}slarp ${Config.get('prefix')}slurp ${Config.get('prefix')}dip ${Config.get('prefix')}rug ${Config.get('prefix')}rugpull ${Config.get('prefix')}burnall`},

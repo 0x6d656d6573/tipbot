@@ -93,7 +93,8 @@ exports.circulatingSupply = async function () {
         '0x000000000000000000000000000000000000dead',
         '0x48a30b33ebd0afac1d8023e06e17372c21c0fb18',
         '0x9b68bf4bf89c115c721105eaf6bd5164afcc51e4',
-        '0xbb4972a578266e0800d98f4248d057d6f6cde2bf'
+        '0xbb4972a578266e0800d98f4248d057d6f6cde2bf',
+        '0x0fac0cE62af67E6DB9cEb623aBB1De9943EDF79a'
     ]
 
     let circulatingSupply = 450000000

@@ -25,17 +25,17 @@ class PriceCommand extends Command
         const totalSupply       = await Token.totalSupply()
 
         const rows = [
-            ['ONE', `${parseFloat(priceInOne).toFixed(6)} ONE`],
-            ['USD', `$${parseFloat(tokenPrice.usd).toFixed(6)}`],
+            ['ONE', `${parseFloat(priceInOne).toFixed(2)} ONE`],
+            ['USD', `$${parseFloat(tokenPrice.usd).toFixed(2)}`],
             null,
-            ['24h Change', `${parseFloat(tokenPrice.usd_24h_change).toFixed(3)}%`],
-            ['24h Volume', parseFloat(tokenPrice.usd_24h_vol).toFixed(3)],
+            ['24h Change', `${parseFloat(tokenPrice.usd_24h_change).toFixed()}%`],
+            ['24h Volume', new Intl.NumberFormat().format(parseFloat(tokenPrice.usd_24h_vol).toFixed())],
             null,
-            ['Market Cap', `$${new Intl.NumberFormat().format(parseFloat(circulatingSupply * tokenPrice.usd).toFixed(0))}`],
+            ['Market Cap', `$${new Intl.NumberFormat().format(parseFloat((circulatingSupply * tokenPrice.usd) / 1000000).toFixed(2))}m`],
             null,
-            ['Fully Diluted', `${new Intl.NumberFormat().format(parseFloat(totalSupply).toFixed(0))}`],
-            ['Circulating Supply', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply).toFixed(0))}`],
-            ['Staked Supply', `${new Intl.NumberFormat().format(parseFloat(stakedSupply).toFixed(0))}`],
+            ['Fully Diluted', `${new Intl.NumberFormat().format(parseFloat(totalSupply / 1000000).toFixed(2))}m`],
+            ['Circulating Supply', `${new Intl.NumberFormat().format(parseFloat(circulatingSupply / 1000000).toFixed(2))}m`],
+            ['Staked Supply', `${new Intl.NumberFormat().format(parseFloat(stakedSupply / 1000000).toFixed(2))}m`],
         ]
 
         const tableRows = []

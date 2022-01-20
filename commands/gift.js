@@ -1,7 +1,6 @@
 const {SlashCommandBuilder}                           = require('@discordjs/builders')
 const {MessageEmbed, MessageActionRow, MessageButton} = require("discord.js")
 const {Config, Transaction, Wallet, React}            = require("../utils")
-const table                                           = require("text-table")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -36,14 +35,15 @@ module.exports = {
         }
 
         // Send embed and button
-        const embed = new MessageEmbed()
+        const timestamp = Date.now()
+        const embed     = new MessageEmbed()
             .setColor(Config.get('colors.primary'))
             .setTitle(`@${interaction.user.username} sent a gift of ${amount} ${Config.get('token.symbol')}`)
             .setDescription(`Be the first to click the button below and claim this gift!`)
 
         const button = new MessageActionRow()
             .addComponents(new MessageButton()
-                .setCustomId('claim')
+                .setCustomId(`claim_${timestamp}`)
                 .setLabel('Claim this gift!')
                 .setStyle('SUCCESS')
                 .setEmoji('🎁'),
@@ -54,14 +54,14 @@ module.exports = {
         const collector = interaction.channel.createMessageComponentCollector()
 
         collector.on('collect', async i => {
-            if (i.customId === 'claim') {
+            if (i.customId === `claimed_${timestamp}`) {
                 const claimedEmbed = new MessageEmbed()
                     .setTitle(`@${interaction.user.username} sent a gift of ${amount} ${Config.get('token.symbol')}`)
                     .setDescription(`Be the first to click the button below and claim this gift!`)
 
                 const claimedButton = new MessageActionRow()
                     .addComponents(new MessageButton()
-                        .setCustomId('claimed')
+                        .setCustomId(`claimed_${timestamp}`)
                         .setLabel(`This gift was claimed by @${i.user.username}`)
                         .setStyle('SECONDARY')
                         .setEmoji('🎁')
@@ -69,7 +69,7 @@ module.exports = {
                     )
                 await i.update({embeds: [claimedEmbed], components: [claimedButton]})
 
-                const to   = await Wallet.recipientAddress(i, i.member.user.id, i.member)
+                const to = await Wallet.recipientAddress(i, i.member.user.id, i.member)
 
                 Transaction.addToQueue(interaction, from, to, amount, Config.get('token.default')).then(() => {
                     Transaction.runQueue(interaction, interaction.user.id, {transactionType: 'gift'}, {reply: false, react: false, ephemeral: false})

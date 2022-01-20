@@ -54,7 +54,7 @@ module.exports = {
         wallets     = wallets.filter(wallet => wallet.user !== process.env.BOT_WALLET_ADDRESS).map(wallet => wallet.user)
 
         let members = []
-
+        
         // Tip last 10 active members
         if (type === 'active') {
             const messages = await interaction.channel.messages.fetch()
@@ -102,11 +102,18 @@ module.exports = {
             members     = members.filter(member => {
                 wallets.includes(member.user.id.toString()) && member.user.id !== interaction.user.id
             }).map(member => member.user.id)
+
+            // We only need max 10
+            members = members.slice(0, 10)
         }
 
         // Tip all wallet owners
         if (type === 'storm') {
             members = wallets.filter(wallet => wallet !== interaction.user.id)
+        }
+
+        if (members.length === 0) {
+            return await React.error(interaction, `Nobody to rain on`, `I'm sorry but I could not find any members to rain on`, true)
         }
 
         // Make transaction

@@ -61,11 +61,11 @@ exports.runQueue = async function (interaction, author, options, notification) {
     const transactionOptions = {gasPrice: await provider.getGasPrice(), gasLimit: 250000}
     const signer             = new ethers.Wallet(privateKey, provider)
     const lastNonce          = await signer.getTransactionCount()
-    let nonce                = null
 
     for (let i = 0; i < queue.length; i++) {
-        const contract = new ethers.Contract(Config.get(`tokens.${queue[i].token}.contract_address`), artifact.abi, provider).connect(signer)
-        nonce          = '0x' + (parseInt(lastNonce) + i).toString(16)
+        console.log(`Transaction #${i}`); // REMOVE
+        const contract           = new ethers.Contract(Config.get(`tokens.${queue[i].token}.contract_address`), artifact.abi, provider).connect(signer)
+        transactionOptions.nonce = '0x' + (parseInt(lastNonce) + i).toString(16)
 
         try {
             // Transaction
@@ -121,15 +121,17 @@ exports.runQueue = async function (interaction, author, options, notification) {
                 const reply = await interaction.editReply({content: replyContent, ephemeral: notification.ephemeral})
 
                 if (options.transactionType === 'tip' || options.transactionType === 'rain') {
-                    const embed = new MessageEmbed()
-                        .setColor(Config.get('colors.primary'))
-                        .setTitle(recipientNotificationTitle)
-                        .setDescription(`@${interaction.user.username} tipped you ${queue[i].amount} ${Config.get('token.symbol')} in <#${interaction.channel.id}>`)
-                    await recipient.send(embed).catch(async error => {
-                        if (error.code === 50007) {
-                            console.warn(`Cannot send DM to ${recipient.username}`)
-                        }
-                    })
+                    if (typeof recipient !== 'undefined' ) {
+                        const embed = new MessageEmbed()
+                            .setColor(Config.get('colors.primary'))
+                            .setTitle(recipientNotificationTitle)
+                            .setDescription(`@${interaction.user.username} tipped you ${queue[i].amount} ${Config.get('token.symbol')} in <#${interaction.channel.id}>`)
+                        await recipient.send(embed).catch(async error => {
+                            if (error.code === 50007) {
+                                console.warn(`Cannot send DM to ${recipient.username}`)
+                            }
+                        })
+                    }
                 }
 
                 // Reactions

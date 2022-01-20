@@ -1,37 +1,35 @@
-const {Command}                    = require('discord-akairo')
-const {React, Wallet, Transaction} = require('../utils')
+const {SlashCommandBuilder}                = require('@discordjs/builders')
+const {Wallet, React, Config, Transaction} = require("../utils")
 
-class GetGasCommand extends Command
-{
-    constructor()
-    {
-        super('getgas', {
-            aliases  : ['getgas', 'gasmeup'],
-            ratelimit: 1,
-            channel  : 'dm',
-        })
-    }
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(`get-gas`)
+        .setDescription(`Reginald will send you some gas. This only works if your gas balance is below 0.01`),
 
-    async exec(message)
+    async execute(interaction)
     {
-        await React.processing(message)
-        if (!await Wallet.check(this, message, message.author.id)) {
-            return
+        // Defer reply
+        await interaction.deferReply({ephemeral: true});
+
+        // Checks
+        if (!await Wallet.check(interaction)) {
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`, true)
         }
-        const wallet  = await Wallet.get(this, message, message.author.id)
+
+        // Gather data
+        const wallet  = await Wallet.get(interaction, interaction.user.id)
         const balance = await Wallet.gasBalance(wallet)
 
-        if (parseFloat(balance) >= 0.01) {
-            await message.react('👀')
-            await React.error(this, message, `Are you trying to scam me?`, `You have ${balance} ONE!`)
-        } else {
-            await Transaction.sendGas(this, message, process.env.BOT_WALLET_ADDRESS, wallet.address, 0.01, process.env.BOT_WALLET_PRIVATE_KEY)
-
-            await React.success(this, message)
+        // Check for exploits
+        if (parseFloat(balance) >= 0.1) {
+            return await React.error(interaction, `Are you trying to scam me?`, `You have ${balance} ONE!`, true)
         }
 
-        await React.message(message, 'get_gas')
-    }
-}
+        // Send gas
+        await Transaction.sendGas(interaction, process.env.BOT_WALLET_ADDRESS, wallet.address, 0.1, process.env.BOT_WALLET_PRIVATE_KEY)
 
-module.exports = GetGasCommand
+        await React.success(interaction, `Success!`, 'Some gas was sent to your wallet', true)
+
+        await React.message(interaction, 'get_gas')
+    },
+}

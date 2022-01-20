@@ -1,27 +1,23 @@
-const {Command} = require('discord-akairo')
-const {Config}  = require('../utils')
-const git       = require('git-rev-sync')
+const {SlashCommandBuilder} = require('@discordjs/builders')
+const git                   = require('git-rev-sync')
+const {MessageEmbed}        = require("discord.js")
+const {Config}              = require("../utils")
+const table                 = require("text-table")
 
-class VersionCommand extends Command
-{
-    constructor()
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('version')
+        .setDescription(`Shows the current version`),
+    
+    async execute(interaction)
     {
-        super('version', {
-            aliases  : ['version', 'v'],
-            ratelimit: 1,
-        })
-    }
-
-    async exec(message)
-    {
-        const embed = this.client.util.embed()
+        // Send embed
+        const embed = new MessageEmbed()
             .setColor(Config.get('colors.primary'))
-            // .attachFiles('images/logo.png')
-            // .setThumbnail('attachment://logo.png')
+            .setThumbnail(Config.get('token.thumbnail'))
             .setTitle(`Sir Reginald version`)
             .setDescription('```' + git.tag(false) + '```')
-        await message.reply(embed)
-    }
-}
 
-module.exports = VersionCommand
+        await interaction.reply({embeds: [embed], ephemeral: true}) 
+    },
+}

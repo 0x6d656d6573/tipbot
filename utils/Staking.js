@@ -65,7 +65,7 @@ exports.status = async function (address) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, stakingArtifact.address)
 
     return await stakingContract.methods.registered(address).call()
 }
@@ -73,12 +73,12 @@ exports.status = async function (address) {
 /**
  * First time user is staking, user needs to register too
  *
- * @param message
+ * @param interaction
  * @param wallet
  * @param amount
  * @return {Promise<void>}
  */
-exports.registerAndStake = async function (message, wallet, amount) {
+exports.registerAndStake = async function (interaction, wallet, amount) {
     const actual          = amount * (10 ** 18)
     const arg             = fromExponential(actual)
     const hmy             = new Harmony(
@@ -88,10 +88,10 @@ exports.registerAndStake = async function (message, wallet, amount) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
     const gasLimit        = '250000'
     const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`token.contract_address`))
-    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
+    const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, stakingArtifact.address)
     const privateKey      = await Wallet.privateKey(wallet)
     hmy.wallet.addByPrivateKey(privateKey)
 
@@ -111,19 +111,19 @@ exports.registerAndStake = async function (message, wallet, amount) {
             gas     : parseFloat((gasPrice * gasLimit) / Math.pow(10, 9))
         })
     } catch (error) {
-        Log.error(error, message)
+        Log.error(error, interaction)
     }
 }
 
 /**
  * Staking function if user is already staking (already registered)
  *
- * @param message
+ * @param interaction
  * @param wallet
  * @param amount
  * @return {Promise<void>}
  */
-exports.stake = async function (message, wallet, amount) {
+exports.stake = async function (interaction, wallet, amount) {
     const actual          = amount * (10 ** 18)
     const arg             = fromExponential(actual)
     const hmy             = new Harmony(
@@ -133,7 +133,7 @@ exports.stake = async function (message, wallet, amount) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
     const gasLimit        = '250000'
     const contract        = hmy.contracts.createContract(artifact.abi, Config.get(`token.contract_address`))
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
@@ -154,19 +154,19 @@ exports.stake = async function (message, wallet, amount) {
             gas     : parseFloat((gasPrice * gasLimit) / Math.pow(10, 9))
         })
     } catch (error) {
-        Log.error(error, message)
+        Log.error(error, interaction)
     }
 }
 
 /**
  * Unstake
  *
- * @param message
+ * @param interaction
  * @param wallet
  * @param amount
  * @return {Promise<void>}
  */
-exports.unstake = async function (message, wallet, amount) {
+exports.unstake = async function (interaction, wallet, amount) {
     const actual          = amount * (10 ** 18)
     const arg             = fromExponential(actual)
     const hmy             = new Harmony(
@@ -176,7 +176,7 @@ exports.unstake = async function (message, wallet, amount) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
     const gasLimit        = '250000'
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
     const privateKey      = await Wallet.privateKey(wallet)
@@ -190,7 +190,7 @@ exports.unstake = async function (message, wallet, amount) {
             gas     : parseFloat((gasLimit * gasPrice) / Math.pow(10, 9))
         })
     } catch (error) {
-        Log.error(error, message)
+        Log.error(error, interaction)
     }
 }
 
@@ -209,7 +209,7 @@ exports.claimRewards = async function (message, wallet) {
             chainId  : Config.get('chain_id'),
         },
     )
-    const gasPrice        = new hmy.utils.Unit(30).asGwei().toWei()
+    const gasPrice        = new hmy.utils.Unit(1).asGwei().toWei()
     const gasLimit        = '250000'
     const stakingContract = hmy.contracts.createContract(stakingArtifact.abi, '0x861ef0CaB3ab4a1372E7eDa936668C8967F70110')
     const privateKey      = await Wallet.privateKey(wallet)

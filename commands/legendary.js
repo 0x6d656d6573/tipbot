@@ -1,19 +1,16 @@
-const {Command}       = require('discord-akairo')
-const {Config, React} = require('../utils')
-const table           = require('text-table')
+const {SlashCommandBuilder} = require('@discordjs/builders')
+const {Config, React}       = require('../utils')
+const table                 = require('text-table')
+const {MessageEmbed}        = require("discord.js")
 
-class LegendaryCommand extends Command
-{
-    constructor()
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('legends')
+        .setDescription(`Display the legendary bèta tipping top 10`),
+    
+    async execute(interaction)
     {
-        super('legends', {
-            aliases  : ['legends'],
-            ratelimit: 1,
-        })
-    }
-
-    async exec(message)
-    {
+        // Gather data
         const topTen = [
             {username: 'Failapotmaus', amount: 176925.00},
             {username: '||`__TheerapakG__||', amount: 69696.90},
@@ -24,7 +21,7 @@ class LegendaryCommand extends Command
             {username: 'Prozex', amount: 11507.70},
             {username: 'Bourbin', amount: 10610.40},
             {username: 'ArtMom', amount: 10296.40},
-            {username: 'Gydo', amount: 9111.11},
+            {username: 'Gyd0x', amount: 9111.11},
         ]
 
         let topTenRows = []
@@ -37,17 +34,13 @@ class LegendaryCommand extends Command
             ])
         }
 
-        const embed = this.client.util.embed()
+        // Send embed
+        const embed = new MessageEmbed()
             .setColor(Config.get('colors.primary'))
-            // .attachFiles('images/logo.png')
-            // .setThumbnail('attachment://logo.png')
+            .setThumbnail(Config.get('token.thumbnail'))
             .setTitle(`🦸 Legendary Bèta Tippers`)
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')
 
-        await message.channel.send(embed)
-
-        await React.message(message, 'legends')
-    }
+        await interaction.reply({embeds: [embed], ephemeral: false})
+    },
 }
-
-module.exports = LegendaryCommand

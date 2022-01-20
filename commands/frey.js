@@ -1,54 +1,47 @@
-const {Command}       = require('discord-akairo')
-const {Config, React} = require('../utils')
-const artifact        = require('../artifacts/frey.json')
-const axios           = require("axios")
-const {hexToNumber}   = require("@harmony-js/utils")
-const {numberToHex}   = require("@harmony-js/utils")
-const {ChainType}     = require("@harmony-js/utils")
-const {Harmony}       = require("@harmony-js/core")
-const moment          = require('moment')
+const {SlashCommandBuilder, time} = require('@discordjs/builders')
+const {ethers}                    = require('ethers')
+const Config                      = require('../utils/Config')
+const artifact                    = require('../artifacts/frey.json')
 
-class FreyCommand extends Command
-{
-    constructor()
+const {hexToNumber}  = require('@harmony-js/utils')
+const {MessageEmbed} = require('discord.js')
+const axios          = require('axios')
+const {numberToHex}  = require("@harmony-js/utils")
+const moment         = require('moment')
+const {Wallet}       = require("../utils")
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(`frey`)
+        .setDescription(`This command is a way to show off your Frey. It will show an image and all it's statistics`)
+        .addNumberOption(option => option.setRequired(true).setName('id').setDescription(`Enter the Frey ID`)),
+
+    async execute(interaction)
     {
-        super('frey', {
-            aliases  : ['frey'],
-            ratelimit: 1,
-            args     : [
-                {
-                    id     : 'number',
-                    type   : 'number',
-                    default: 1
-                },
-            ]
-        })
-    }
+        // Defer reply
+        await interaction.deferReply({ephemeral: false})
 
-    async exec(message, args)
-    {
-        await React.processing(message)
+        // Options
+        const id = interaction.options.getNumber('id')
 
-        const hmy      = new Harmony(
-            Config.get('token.rpc_url'),
-            {
-                chainType: ChainType.Harmony,
-                chainId  : Config.get('chain_id'),
-            },
-        )
-        const contract = hmy.contracts.createContract(artifact.abi, artifact.address)
-        const freyInfo = await contract.methods.nfts(args.number).call()
+        // Get data
+        const wallet     = await Wallet.get(interaction, interaction.id)
+        const privateKey = await Wallet.privateKey(wallet)
+        const provider   = new ethers.providers.JsonRpcProvider(Config.get('token.rpc_url'))
+        const options    = {gasPrice: await provider.getGasPrice(), gasLimit: 250000}
+        const signer     = new ethers.Wallet(privateKey, provider)
+        const contract   = new ethers.Contract(artifact.address, artifact.abi, provider).connect(signer)
+        const freyInfo   = await contract.nfts(id, options)
 
-        axios.get(`https://frey.freyala.com/meta?meta=${args.number}`).then(async response => {
+        axios.get(`https://frey.freyala.com/meta?meta=${id}`).then(async response => {
             const frey      = response.data
-            const block     = await hmy.blockchain.getBlockByNumber({blockNumber: numberToHex(freyInfo[2])})
-            const timestamp = hexToNumber(block.result.timestamp)
+            const block     = await provider.getBlock(freyInfo.blockBorn.toNumber())
+            const timestamp = block.timestamp
             const age       = moment.duration(moment().diff(moment.unix(timestamp)), 'milliseconds')
 
-            const embed = this.client.util.embed()
+            const embed = new MessageEmbed()
                 .setColor(Config.get('colors.primary'))
-                // .attachFiles('images/logo.png')
-                // .setThumbnail('attachment://logo.png')
+                .setThumbnail(Config.get('token.thumbnail'))
                 .setTitle(frey.name)
                 .setDescription(frey.description)
                 .addField(`Owner`, `${freyInfo[4].substr(0, 6)}...${freyInfo[4].substr(-6, 6)}`)
@@ -60,11 +53,7 @@ class FreyCommand extends Command
                 .addField(`Age`, `${age.years()}y ${age.months()}m ${age.days()}d ${age.hours()}h`)
                 .setImage(frey.image)
 
-            await message.channel.send(embed)
-            await React.done(message)
+            await interaction.editReply({embeds: [embed]})
         })
-
-    }
+    },
 }
-
-module.exports = FreyCommand

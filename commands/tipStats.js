@@ -1,24 +1,25 @@
-const {Command}                             = require('discord-akairo')
-const table                                 = require('text-table')
-const {Config, TipStatistics, React, Token} = require('../utils')
+const {SlashCommandBuilder}    = require('@discordjs/builders')
+const table                                          = require('text-table')
+const {Config, BurnStatistics, TipStatistics, Token} = require('../utils')
+const {MessageEmbed}                                 = require("discord.js")
 
-class TipstatsCommand extends Command
-{
-    constructor()
-    {
-        super('tipstats', {
-            aliases  : ['tipstats', 'tipstatistics'],
-            ratelimit: 1,
-        })
-    }
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(`tip-statistics`)
+        .setDescription(`Display the tipping stats top 10`),
 
-    async exec(message, args)
+    async execute(interaction)
     {
+        // Defer reply
+        await interaction.deferReply({ephemeral: false});
+
+        // Gather data
         const topTen     = await TipStatistics.getTippersTopTen()
         const total      = await TipStatistics.getTipTotal()
         const tokenPrice = await Token.tokenPrice()
-        const author     = await TipStatistics.getUserTipAmount(message.author.username)
+        const author     = await TipStatistics.getUserTipAmount(interaction.user.username)
 
+        // Build table
         const totalRows  = [
             [
                 new Intl.NumberFormat().format(total) + ' '  + Config.get('token.symbol')
@@ -28,7 +29,7 @@ class TipstatsCommand extends Command
             ]
         ]
         const authorRows = [[
-            message.author.username,
+            interaction.user.username,
             new Intl.NumberFormat().format(author),
             Config.get('token.symbol')
         ]]
@@ -42,17 +43,15 @@ class TipstatsCommand extends Command
             ])
         }
 
-        const embed = this.client.util.embed()
+        // Send embed
+        const embed = new MessageEmbed()
             .setColor(Config.get('colors.primary'))
+            .setThumbnail(Config.get('token.thumbnail'))
             .setTitle(`💵 Tip Statistics`)
             .addField(`Total tipped`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Tippers`, '```' + table(topTenRows) + '```')
             .addField(`You`, '```' + table(authorRows) + '```')
-
-        await message.channel.send(embed)
-
-        await React.message(message, 'stats')
-    }
+        await interaction.editReply({embeds: [embed], ephemeral: false})
+    },
 }
 
-module.exports = TipstatsCommand

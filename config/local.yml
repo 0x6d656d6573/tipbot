@@ -15,6 +15,7 @@ token:
   network_explorer: "https://explorer.pops.one/#"
   rpc_url: "https://api.s0.b.hmny.io"
   viper_pair_id: "0x1485a496f816f940c510d634e48f8c66b78dc99e"
+  thumbnail: "https://gateway.pinata.cloud/ipfs/QmTkCj1JBRqXE9Jp1B3irqggQRzEvgxWTnyM19wLovaFGD"
 alternative_tokens: [ ]
 tokens:
   regi:

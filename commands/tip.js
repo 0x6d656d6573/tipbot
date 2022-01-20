@@ -1,93 +1,65 @@
-const {Command}                            = require('discord-akairo')
+const {SlashCommandBuilder}                = require('@discordjs/builders')
 const {Config, React, Wallet, Transaction} = require('../utils')
 
-class TipCommand extends Command
-{
-    constructor()
-    {
-        super('tip', {
-            aliases  : ['tip', 'gift', 'give'],
-            channel  : 'guild',
-            ratelimit: 1,
-            args     : [
-                {
-                    id     : 'amount',
-                    type   : 'number',
-                    default: 0
-                },
-                {
-                    id       : 'token',
-                    type     : Config.get('alternative_tokens'),
-                    unordered: true
-                },
-                {
-                    id       : 'member',
-                    type     : 'member',
-                    unordered: true
-                }
-            ]
-        })
-    }
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('tip')
+        .setDescription(`Send a tip to the mentioned user`)
+        .addNumberOption(option => option.setRequired(true).setName('amount').setDescription(`Enter the amount to tip`))
+        .addMentionableOption(option => option.setRequired(true).setName('recipient').setDescription(`Select the recipient`))
+        .addStringOption(option => option.setRequired(false).setName('token').setDescription(`Change the token`).addChoices([
+            ["COINKx", "coinkx"]
+        ])),
 
-    async exec(message, args)
+    async execute(interaction)
     {
-        await React.processing(message)
+        // Defer reply
+        await interaction.deferReply({ephemeral: false})
 
-        if (!await Wallet.check(this, message, message.author.id)) {
-            await React.error(this, message, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
-            return
+        // Options
+        const amount    = interaction.options.getNumber('amount')
+        const recipient = interaction.options.getMentionable('recipient')
+        const token     = interaction.options.getString('token') ?? 'xya'
+
+        // Checks
+        if (!await Wallet.check(interaction)) {
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
         }
-
-        const amount    = args.amount
-        const token     = args.token ?? Config.get('token.default')
-        const users     = message.mentions.users.filter(function (user) {
-            return !user.bot
-        })
-        const recipient = users.first()
 
         if (amount === 0) {
-            await React.error(this, message, `Tip amount incorrect`, `The tip amount is wrongly formatted or missing`)
-            return
-        }
-        if (amount < 0.01) {
-            await React.error(this, message, `Tip amount incorrect`, `The tip amount is too low`)
-            return
-        }
-        if (!message.mentions.users.size) {
-            await React.error(this, message, `Missing user`, `Please mention a valid user`)
-            return
-        }
-        if (recipient.bot) {
-            await React.error(this, message, `Invalid user`, `You are not allowed to tip bots`)
-            return
-        }
-        if (recipient.id === message.author.id) {
-            await React.error(this, message, `Invalid user`, `You are not allowed to tip yourself`)
-            return
+            return await React.error(interaction, `Incorrect amount`, `The tip amount should be larger than 0`)
         }
 
-        const wallet  = await Wallet.get(this, message, message.author.id)
+        if (amount < 0.01) {
+            return await React.error(interaction, `Incorrect amount`, `The tip amount is too low`)
+        }
+
+        if (recipient.user.id === process.env.BOT_ID) {
+            return await React.error(interaction, `Invalid user`, `I am flattered but I cannot take this from you`)
+        }
+
+        if (recipient.user.bot) {
+            return await React.error(interaction, `Invalid user`, `You are not allowed to tip bots`)
+        }
+
+        if (recipient.user.id === interaction.user.id) {
+            return await React.error(interaction, `Invalid user`, `That's you, you moron!`)
+        }
+
+        const wallet  = await Wallet.get(interaction, interaction.user.id)
         const balance = await Wallet.balance(wallet, token)
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
-            return
+            return await React.error(interaction, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
         }
 
         const from = wallet.address
-        const to   = await Wallet.recipientAddress(this, message, recipient.id)
+        const to   = await Wallet.recipientAddress(interaction, recipient.user.id, recipient)
 
-        if (from === to) {
-            await React.error(this, message, `Invalid user`, `That's you, you moron!`)
-            return
-        }
-
-        Transaction.addToQueue(this, message, from, to, amount, token, recipient.id).then(() => {
-            Transaction.runQueue(this, message, message.author.id, false, true)
+        Transaction.addToQueue(interaction, from, to, amount, token, recipient.user.id).then(() => {
+            Transaction.runQueue(interaction, interaction.user.id, {transactionType: 'tip'}, {reply: true, react: true, ephemeral: false})
         })
 
-        await React.message(message, 'tip', amount)
-    }
+        await React.message(interaction, 'tip', amount)
+    },
 }
-
-module.exports = TipCommand

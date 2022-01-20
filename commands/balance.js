@@ -1,25 +1,25 @@
-const {Command}                        = require('discord-akairo')
-const {Config, React, Wallet, Staking} = require('../utils')
+const {SlashCommandBuilder}            = require('@discordjs/builders')
+const {Wallet, React, Config, Staking} = require("../utils")
 const table                            = require('text-table')
+const {MessageEmbed}                   = require("discord.js")
 
-class BalanceCommand extends Command
-{
-    constructor()
-    {
-        super('balance', {
-            aliases  : ['balance'],
-            channel  : 'dm',
-            ratelimit: 1,
-        })
-    }
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('balance')
+        .setDescription(`Shows your wallet's balance`),
 
-    async exec(message)
+    async execute(interaction)
     {
-        await React.processing(message)
-        if (!await Wallet.check(this, message, message.author.id)) {
-            return
+        // Defer reply
+        await interaction.deferReply({ephemeral: true})
+
+        // Checks
+        if (!await Wallet.check(interaction)) {
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
         }
-        const wallet     = await Wallet.get(this, message, message.author.id)
+
+        // Get balances and create table rows
+        const wallet     = await Wallet.get(interaction, interaction.user.id)
         const gasBalance = await Wallet.gasBalance(wallet)
 
         let rows = []
@@ -32,7 +32,7 @@ class BalanceCommand extends Command
         rows.push(null)
         rows.push([`ONE`, `${gasBalance} ONE`])
         rows.push(null)
-        
+
         if (process.env.ENVIRONMENT === 'production') {
             if (await Staking.status(wallet.address)) {
                 const balance       = await Staking.balance(wallet.address)
@@ -48,23 +48,17 @@ class BalanceCommand extends Command
             if (rows[i] === null) {
                 tableRows.push([])
             } else {
-                tableRows.push([
-                    rows[i][0],
-                    ':',
-                    rows[i][1],
-                ])
+                tableRows.push([rows[i][0], ':', rows[i][1]])
             }
         }
 
-        const embed = this.client.util.embed()
+        // Send embed
+        const embed = new MessageEmbed()
             .setColor(Config.get('colors.primary'))
+            .setThumbnail(Config.get('token.thumbnail'))
             .setTitle(`Your balances`)
             .setDescription('```' + table(tableRows) + '```')
 
-        await React.done(message)
-
-        await message.author.send(embed)
-    }
+        await interaction.editReply({embeds: [embed], ephemeral: true})
+    },
 }
-
-module.exports = BalanceCommand

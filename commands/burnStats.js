@@ -1,30 +1,30 @@
-const {Command}                = require('discord-akairo')
+const {SlashCommandBuilder}    = require('@discordjs/builders')
 const table                    = require('text-table')
 const {Config, BurnStatistics} = require('../utils')
+const {MessageEmbed}           = require("discord.js")
 
-class BurnstatsCommand extends Command
-{
-    constructor()
-    {
-        super('burnstats', {
-            aliases  : ['burnstats', 'burnstatistics'],
-            channel  : 'guild',
-            ratelimit: 1,
-        })
-    }
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(`burn-statistics`)
+        .setDescription(`Displays the burning stats top 10`),
 
-    async exec(message, args)
+    async execute(interaction)
     {
+        // Defer reply
+        await interaction.deferReply({ephemeral: false});
+
+        // Gather data
         const topTen = await BurnStatistics.getBurnersTopTen()
         const total  = await BurnStatistics.getBurnTotal()
-        const author = await BurnStatistics.getUserBurnAmount(message.author.username)
+        const author = await BurnStatistics.getUserBurnAmount(interaction.user.username)
 
+        // Build table
         const totalRows  = [[
             total,
             Config.get('token.symbol')
         ]]
         const authorRows = [[
-            message.author.username,
+            interaction.user.username,
             author,
             Config.get('token.symbol')
         ]]
@@ -38,17 +38,14 @@ class BurnstatsCommand extends Command
             ])
         }
 
-        const embed = this.client.util.embed()
+        // Send embed
+        const embed = new MessageEmbed()
             .setColor(Config.get('colors.primary'))
-            // .attachFiles('images/logo.png')
-            // .setThumbnail('attachment://logo.png')
+            .setThumbnail(Config.get('token.thumbnail'))
             .setTitle(`🔥 Burn Statistics`)
             .addField(`Total burned`, '```' + table(totalRows) + '```')
             .addField(`Top Ten Burners`, '```' + table(topTenRows) + '```')
             .addField(`You`, '```' + table(authorRows) + '```')
-
-        await message.channel.send(embed)
-    }
+        await interaction.editReply({embeds: [embed], ephemeral: false})
+    },
 }
-
-module.exports = BurnstatsCommand

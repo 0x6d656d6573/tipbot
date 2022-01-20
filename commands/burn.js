@@ -1,65 +1,46 @@
-const {Command}                            = require('discord-akairo')
+const {SlashCommandBuilder}                = require('@discordjs/builders')
 const {Config, React, Wallet, Transaction} = require('../utils')
 
-class BurnCommand extends Command
-{
-    constructor()
-    {
-        super('burn', {
-            aliases  : ['burn'],
-            channel  : 'guild',
-            ratelimit: 1,
-            args     : [
-                {
-                    id     : 'amount',
-                    type   : 'number',
-                    default: 0
-                },
-                {
-                    id       : 'token',
-                    type     : Config.get('alternative_tokens'),
-                    unordered: true
-                }
-            ]
-        })
-    }
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('burn')
+        .setDescription(`Burn tokens`)
+        .addNumberOption(option => option.setRequired(true).setName('amount').setDescription(`Enter the amount to burn`)),
 
-    async exec(message, args)
+    async execute(interaction)
     {
-        await React.processing(message)
+        // Defer reply
+        await interaction.deferReply({ephemeral: false});
 
-        if (!await Wallet.check(this, message, message.author.id)) {
-            return
+        // Options
+        const amount = interaction.options.getNumber('amount')
+
+        // Checks
+        if (!await Wallet.check(interaction)) {
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
         }
-
-        const amount = args.amount
 
         if (amount === 0) {
-            await React.error(this, message, `Burn amount incorrect`, `The burn amount is wrongly formatted or missing`)
-            return
-        }
-        if (amount < 0.01) {
-            await React.error(this, message, `Burn amount incorrect`, `The burn amount is to low`)
-            return
+            return await React.error(interaction, `Incorrect amount`, `The tip amount should be larger than 0`)
         }
 
-        const wallet  = await Wallet.get(this, message, message.author.id)
-        const token   = args.token ?? Config.get('token.default')
-        const balance = await Wallet.balance(wallet, token)
+        if (amount < 0.01) {
+            return await React.error(interaction, `Incorrect amount`, `The tip amount is too low`)
+        }
+
+        const wallet  = await Wallet.get(interaction, interaction.user.id)
+        const balance = await Wallet.balance(wallet, Config.get(`token.default`))
         const from    = wallet.address
         const to      = '0x000000000000000000000000000000000000dead'
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
-            return
+            return await React.error(interaction, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`token.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`token.symbol`)}. Or try again with a lower amount`)
         }
 
-        Transaction.addToQueue(this, message, from, to, amount, token).then(() => {
-            Transaction.runQueue(this, message, message.author.id, false, false, false, true)
+        Transaction.addToQueue(interaction, from, to, amount, Config.get(`token.default`)).then(() => {
+            Transaction.runQueue(interaction, interaction.user.id, {transactionType: 'burn'}, {reply: true, react: true, ephemeral: false})
         })
 
-        await React.message(message, 'burn')
-    }
+        await React.message(interaction, 'burn')
+    },
 }
-
-module.exports = BurnCommand

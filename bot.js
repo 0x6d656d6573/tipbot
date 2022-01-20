@@ -1,58 +1,75 @@
+// Require the necessary discord.js classes
 require('dotenv').config()
-const {AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler} = require('discord-akairo')
-const {Config, DB, Token}                                               = require('./utils')
+const fs                            = require('fs')
+const {Client, Collection, Intents} = require('discord.js')
+const {Token, Config, DB, React}    = require('./utils')
 
-class BotClient extends AkairoClient
-{
-    constructor()
-    {
-        super({
-            ownerID: Config.get('owner_ids')
-        })
+// Create a new client instance
+const client = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_PRESENCES
+    ],
+    // partials: ['GUILD_MESSAGES', 'GUILDS', 'GUILD_MESSAGE_REACTIONS', 'USER', 'GUILD_MEMBER'],
+})
 
-        /* Command handler */
-        this.commandHandler = new CommandHandler(this, {
-            directory      : './commands/',
-            prefix         : Config.get('prefix'),
-            defaultCooldown: Config.get('cooldown'),
-        })
-
-        /* Inhibitor handler */
-        this.inhibitorHandler = new InhibitorHandler(this, {
-            directory: './inhibitors/'
-        })
-        this.commandHandler.useInhibitorHandler(this.inhibitorHandler)
-
-        /* Listener handler */
-        this.listenerHandler = new ListenerHandler(this, {
-            directory: './listeners/'
-        })
-        this.listenerHandler.setEmitters({
-            commandHandler  : this.commandHandler,
-            inhibitorHandler: this.inhibitorHandler,
-            listenerHandler : this.listenerHandler,
-        })
-        this.commandHandler.useListenerHandler(this.listenerHandler)
-
-        /* Load handlers */
-        this.inhibitorHandler.loadAll()
-        this.listenerHandler.loadAll()
-        this.commandHandler.loadAll()
-    }
+client.commands    = new Collection()
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`)
+    // Set a new item in the Collection
+    // With the key as the command name and the value as the exported module
+    client.commands.set(command.data.name, command)
 }
 
-const client = new BotClient()
-client.login(process.env.TOKEN)
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isCommand()) return
 
-client.on('ready', () => {
+    const command = client.commands.get(interaction.commandName)
+
+    if (!command) return
+
+    try {
+        await command.execute(interaction)
+    } catch (error) {
+        console.error(error)
+        return await React.error(interaction, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`, true)
+    }
+})
+
+// Login to Discord with your client's token
+client.login(process.env.DISCORD_TOKEN).then(async () => {
+    console.log('Ready!')
+
     DB.syncDatabase()
 
-    getPrice()
-    setPresence()
+    // Guild: 855335818155917322
+    // Channel: 855335818155917325
+    // Message: 931488340543430696
+
+    // client.channels.fetch('855335818155917325').then(channel => {
+    //     channel.messages.fetch()
+    //     console.log(channel.name); // REMOVE
+    //
+    //     channel.messages.fetch('931488340543430696').then(message => {
+    //         console.log(message.content); // REMOVE
+    //
+    //         const collector = message.createReactionCollector()
+    //
+    //         collector.on('collect', (reaction, user) => {
+    //             console.log('foo'); // REMOVE
+    //             // console.log(`Collected ${reaction.emoji.name} from ${user.tag}`)
+    //         })
+    //     })
+    // })
+
+    await getPrice()
+    await setPresence()
     setInterval(getPrice, 60000)
     setInterval(setPresence, 5000)
 })
 
+// Set price presence
 let priceUsd = 0
 let priceOne = 0
 let presence = 'usd'
@@ -60,11 +77,11 @@ let presence = 'usd'
 async function setPresence()
 {
     if (presence === 'usd') {
-        await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} at ${priceOne} ONE`, type: 3}})
+        await client.user.setPresence({activities: [{name: `${Config.get('token.symbol')} at ${priceOne} ONE`, type: 3}]})
 
         presence = 'one'
     } else {
-        await client.user.setPresence({activity: {name: `${Config.get('token.symbol')} at $${priceUsd}`, type: 3}})
+        await client.user.setPresence({activities: [{name: `${Config.get('token.symbol')} at $${priceUsd}`, type: 3}]})
 
         presence = 'usd'
     }
@@ -79,52 +96,3 @@ async function getPrice()
     priceUsd = parseFloat(tokenPrice.usd).toFixed(3)
     priceOne = parseFloat(priceInOne).toFixed(3)
 }
-
-// client.on("guildMemberAdd", async (member) => {
-//     const intOne              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
-//     const intTwo              = Math.floor(Math.random() * (5 - 1 + 1) + 1)
-//     const answer              = parseInt(intOne) + parseInt(intTwo)
-//     const verificationChannel = client.channels.cache.get(Config.get('channels.verification'))
-
-//     const embed = client.util.embed()
-//         .setColor(Config.get('colors.primary'))
-//         .setTitle(`Welcome to Freyala!`)
-//         .setDescription(`Hi <@${member.user.id}>! Please answer the following question to gain access to the server.`)
-//         .setImage(`http://placehold.it/500x100/374151/FFFFFF?text=${intOne}%2B${intTwo}=%3F`)
-
-//     const msg = await verificationChannel.send(embed)
-
-//     const filter = function (response) {
-//         return response.author.id === member.user.id && parseInt(response.content) === answer
-//     }
-
-//     msg.channel.awaitMessages(filter, {max: 1, time: 300000, errors: ['time']})
-//         .then(async collected => {
-//             const role = member.guild.roles.cache.find(role => role.name === 'Freyfolk')
-//             await member.roles.add(role)
-
-//             const embed = client.util.embed()
-//                 .setColor(Config.get('colors.primary'))
-//                 .setTitle(`Thank you ${member.user.username}!`)
-//                 .setDescription(`You are now officially one of us! Introduce yourself to the other Freyfolk and have an amazing time.`)
-//             await member.user.send(embed)
-
-//             for (response of collected) {
-//                 console.log(response[0]); // REMOVE
-//                 response.delete()
-//             }
-
-//             await msg.delete()
-//         })
-//         .catch(async () => {
-//             const embed = client.util.embed()
-//                 .setColor(Config.get('colors.error'))
-//                 .setTitle(`You were kicked!`)
-//                 .setDescription(`Because a correct answer was not given or not given on time, you have been kicked from the Freyala server.`)
-//             await member.user.send(embed)
-
-//             await member.kick('Kicked by Sir reginald')
-
-//             await msg.delete()
-//         })
-// })

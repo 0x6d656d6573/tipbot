@@ -1,137 +1,125 @@
-const {Command}                                     = require('discord-akairo')
-const table                                         = require('text-table')
-const {Config, Helpers, React, Wallet, Transaction} = require('../utils')
+const {SlashCommandBuilder}                    = require('@discordjs/builders')
+const {Wallet, React, Config, DB, Transaction} = require("../utils")
+const {MessageEmbed}                           = require("discord.js")
 
-class RainCommand extends Command
-{
-    constructor()
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(`rain`)
+        .setDescription(`Distribute a tip amongst the last 20 active members!`)
+        .addNumberOption(option => option.setRequired(true).setName('amount').setDescription(`Enter the amount to tip`))
+        .addStringOption(option => option.setRequired(true).setName('type').setDescription(`Select the rain type`).addChoices([
+            ["Active - Split your tip amongst the last active 10 messages", "last"],
+            ["Random - Split your tip amongst 10 random wallet owner in this channel", "random"],
+            ["Storm - Split your tip amongst all wallet holders", "storm"]
+        ]))
+        .addStringOption(option => option.setRequired(false).setName('token').setDescription(`Change the token`).addChoices([
+            ["COINKx", "coinkx"]
+        ])),
+
+    async execute(interaction)
     {
-        super('rain', {
-            aliases  : ['rain', 'ailapotmaus', 'cat'],
-            channel  : 'guild',
-            ratelimit: 1,
-            args     : [
-                {
-                    id       : 'amount',
-                    type     : 'number',
-                    unordered: true,
-                    default  : 0
-                },
-                {
-                    id       : 'token',
-                    type     : Config.get('alternative_tokens'),
-                    unordered: true
-                }
-            ]
-        })
-    }
+        // Defer reply
+        await interaction.deferReply({ephemeral: false})
 
-    async exec(message, args)
-    {
-        await React.processing(message)
+        // Options
+        const amount = interaction.options.getNumber('amount')
+        const type   = interaction.options.getString('type')
+        const token  = interaction.options.getString('token') ?? 'xya'
 
-        const alias = await Helpers.getAlias(message)
-
-        if (!await Wallet.check(this, message, message.author.id)) {
-            return
+        // Checks
+        if (!await Wallet.check(interaction)) {
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
         }
 
-        let amount = args.amount
-        if (alias === 'cat') {
-            amount = 5
-
-            const greetingsArray = await Config.get(`response.cat`)
-            const emojiArray     = ['🌞', '☀️', '🌻', '🌅', '🔆']
-            let greeting         = greetingsArray[Math.floor(Math.random() * greetingsArray.length)]
-            let emoji            = emojiArray[Math.floor(Math.random() * emojiArray.length)]
-            greeting             = greeting.replace('%emoji%', emoji)
-            await message.channel.send(greeting)
-        }
-        const totalAmount = amount
-
-        if (alias !== 'cat') {
-            if (amount === 0) {
-                await React.error(this, message, `Tip amount incorrect`, `The tip amount is wrongly formatted or missing`)
-                return
-            }
-            if (amount < 0.01) {
-                await React.error(this, message, `Tip amount incorrect`, `The tip amount is too low`)
-
-                return
-            }
+        if (amount === 0) {
+            return await React.error(interaction, `Incorrect amount`, `The tip amount should be larger than 0`)
         }
 
-        let recipients          = []
-        let recipientsUsernames = []
-        await message.channel.messages.fetch({limit: 20})
-            .then(async function (lastMessages) {
-                for (let [id, lastMessage] of lastMessages) {
-                    let add = true
-
-                    if (lastMessage.author.id === message.author.id) {
-                        add = false
-                    }
-
-                    await Wallet.address(lastMessage.author.id).then(recipientAddress => {
-                        if (recipientAddress === 0 || recipientAddress === '0' || recipientAddress === null || recipientAddress === 'null' || recipientAddress === false || recipientAddress === 'false' || recipientAddress === undefined || recipientAddress === 'undefined') {
-                            add = false
-                        }
-                    })
-
-                    if (lastMessage.author.bot) {
-                        add = false
-                    }
-
-                    if (add && !recipients.includes(lastMessage.author.id)) {
-                        recipients.push(lastMessage.author.id)
-                        recipientsUsernames.push(lastMessage.author.username)
-                    }
-                }
-            })
-
-        if (recipients.length === 0) {
-            await React.error(this, message, `Sorry`, `I couldn't find any users to rain on. Please try again when the chat is a bit more active`)
-            await message.channel.send(`Wake up people! @${message.author.username} is trying to rain, but nobody is here!`)
-
-            return
+        if (amount < 0.01) {
+            return await React.error(interaction, `Incorrect amount`, `The tip amount is too low`)
         }
 
-        const wallet  = await Wallet.get(this, message, message.author.id)
-        const token   = args.token ?? Config.get('token.default')
+        const wallet  = await Wallet.get(interaction, interaction.user.id)
         const balance = await Wallet.balance(wallet, token)
+        const from    = wallet.address
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            await React.error(this, message, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
-            return
+            return await React.error(interaction, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
         }
 
-        const from = wallet.address
-        amount     = (amount / recipients.length)
+        // Get all wallet owners
+        let wallets = await DB.wallets.findAll({
+            attributes: ['user']
+        })
+        wallets     = wallets.filter(wallet => wallet.user !== process.env.BOT_WALLET_ADDRESS).map(wallet => wallet.user)
 
-        let recipientRows = []
-        for (let i = 0; i < recipientsUsernames.length; i++) {
-            recipientRows.push([
-                `@${recipientsUsernames[i]}`
-            ])
+        let members = []
+
+        // Tip last 10 active members
+        if (type === 'active') {
+            const messages = await interaction.channel.messages.fetch()
+
+            let members = []
+            await Promise.all(messages.map(async message => {
+                // No duplicates
+                if (members.includes(message.author.id)) {
+                    return false
+                }
+
+                // No bots
+                if (message.author.bot) {
+                    return false
+                }
+
+                // Definitely not yourself
+                if (message.author.id === interaction.user.id) {
+                    return false
+                }
+
+                // Wallet owners only
+                if (!wallets.includes(message.author.id)) {
+                    const embed = new MessageEmbed()
+                        .setColor(Config.get('colors.primary'))
+                        .setThumbnail(Config.get('token.thumbnail'))
+                        .setTitle(`You've missed the rain ☂️`)
+                        .setDescription(`@${interaction.user.username} rained in <#${interaction.channel.id}>. Unfortunately you missed the rain because you have not set up your tipping wallet yet. If you want to catch the next rain, please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
+                    await message.author.send({embeds: [embed]})
+
+                    return false
+                }
+
+                // Push if the message survived
+                members.push(message.author.id)
+            }))
+
+            // We only need max 10
+            members = members.slice(0, 10)
         }
 
-        const embed = this.client.util.embed()
-            .setColor(Config.get('colors.primary'))
-            .setTitle(`You rained ${amount} ${Config.get(`tokens.${token}.symbol`)} on each of these users`)
-            .setDescription('```' + table(recipientRows) + '```')
-
-        await message.author.send(embed)
-
-        for (let i = 0; i < recipients.length; i++) {
-            const to = await Wallet.recipientAddress(this, message, recipients[i])
-
-            await Transaction.addToQueue(this, message, from, to, amount, token, recipients[i])
+        // Tip 10 random wallet owners in this channel
+        if (type === 'random') {
+            let members = await interaction.channel.members
+            members     = members.filter(member => {
+                wallets.includes(member.user.id.toString()) && member.user.id !== interaction.user.id
+            }).map(member => member.user.id)
         }
 
-        await Transaction.runQueue(this, message, message.author.id, false, true)
+        // Tip all wallet owners
+        if (type === 'storm') {
+            members = wallets.filter(wallet => wallet !== interaction.user.id)
+        }
 
-        await React.message(message, 'tip', totalAmount)
-    }
+        // Make transaction
+        const splitAmount = (amount / members.length)
+
+        for (let i = 0; i < members.length; i++) {
+            const to = await Wallet.recipientAddress(interaction, members[i])
+
+            await Transaction.addToQueue(interaction, from, to, splitAmount, token, members[i])
+        }
+
+        await Transaction.runQueue(interaction, interaction.user.id, {transactionType: 'rain'}, {reply: true, react: true, ephemeral: false})
+
+        await React.message(interaction, 'tip', amount)
+    },
 }
-
-module.exports = RainCommand

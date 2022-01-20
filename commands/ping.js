@@ -1,39 +1,12 @@
-const {Command}       = require('discord-akairo')
-const {Config, React} = require('../utils')
+const {SlashCommandBuilder} = require('@discordjs/builders')
 
-class PingCommand extends Command
-{
-    constructor()
-    {
-        super('ping', {
-            aliases  : ['ping', 'marco', 'marko', 'tick', 'yin', 'yang', 'ding'],
-            ratelimit: 1,
-        })
-    }
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(`ping`)
+        .setDescription(`Replies with Pong!`),
 
-    async exec(message)
+    async execute(interaction)
     {
-        switch (message.content.replace(Config.get('prefix'), '')) {
-            case 'marco' :
-            case 'marko' :
-                await message.reply(`Polo!`)
-                break
-            case 'tick' :
-                await message.reply(`Tock!`)
-                break
-            case 'yin' :
-            case 'yang' :
-                await message.reply(`Yang!`)
-                break
-            case 'ding' :
-                await message.reply(`Dong!`)
-                break
-            case 'ping' :
-            default:
-                await message.reply(`Pong!`)
-                break
-        }
-    }
+        await interaction.reply({content: 'Pong!', ephemeral: true})
+    },
 }
-
-module.exports = PingCommand

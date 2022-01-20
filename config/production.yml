@@ -15,24 +15,27 @@ token:
   network_explorer: "https://explorer.harmony.one/#"
   rpc_url: "https://api.fuzz.fi"
   viper_pair_id: "0x1485a496f816f940c510d634e48f8c66b78dc99e"
+  thumbnail: "https://gateway.pinata.cloud/ipfs/QmTkCj1JBRqXE9Jp1B3irqggQRzEvgxWTnyM19wLovaFGD"
 alternative_tokens:
-  - yin
-  - yang
-  - coink
+  - coinkx
 tokens:
   xya:
     contract_address: "0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4"
     symbol: "XYA"
     decimals: 18
+    thumbnail: "https://gateway.pinata.cloud/ipfs/QmTkCj1JBRqXE9Jp1B3irqggQRzEvgxWTnyM19wLovaFGD"
   yin:
     contract_address: "0xE59AA7f9e91B4Cc6C25D3542CEcb851e0316138c"
     symbol: "YIN"
     decimals: 18
+    thumbnail: "https://gateway.pinata.cloud/ipfs/QmT4z7jrZMFQAGxd99J4RCfQJAgKnT1vzZuoNMRo3Ggupn"
   yang:
     contract_address: "0x340042552D19211795dbe55d84FA2E63bc49B890"
     symbol: "YANG"
     decimals: 18
-  coink:
+    thumbnail: "https://gateway.pinata.cloud/ipfs/QmQ3KTPSsqfTgMP735o3hPijsF7pmgR9uxv7G6dd243cS9"
+  coinkx:
     contract_address: "0x7ca9C1D0bb11F1b7C31ee5538D7a75aAF2d8E2FC"
     symbol: "COINKx"
     decimals: 18
+    thumbnail: "https://gateway.pinata.cloud/ipfs/QmTkCj1JBRqXE9Jp1B3irqggQRzEvgxWTnyM19wLovaFGD"

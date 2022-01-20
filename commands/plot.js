@@ -1,36 +1,31 @@
-const {Command}       = require('discord-akairo')
-const {Config, React} = require('../utils')
-const artifact        = require('../artifacts/plot.json')
-const {ChainType}     = require("@harmony-js/utils")
-const {Harmony}       = require("@harmony-js/core")
+const {SlashCommandBuilder} = require('@discordjs/builders')
+const {Config, React}       = require('../utils')
+const artifact              = require('../artifacts/plot.json')
+const {ChainType}           = require("@harmony-js/utils")
+const {Harmony}             = require("@harmony-js/core")
+const {MessageEmbed}        = require("discord.js")
 
-class PlotCommand extends Command
-{
-    constructor()
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName(`plot`)
+        .setDescription(`Also bought some plots? show them off using this command!`)
+        .addStringOption(option => option.setRequired(true).setName('token').setDescription(`Select a token`).addChoices([
+            ["XYA", "xya"],
+            ["YIN", "yin"],
+            ["YANG", "yang"]
+        ]))
+        .addNumberOption(option => option.setRequired(true).setName('number').setDescription(`Enter the plot number`)),
+
+    async execute(interaction)
     {
-        super('plot', {
-            aliases  : ['plot'],
-            ratelimit: 1,
-            args     : [
-                {
-                    id     : 'token',
-                    type   : ['xya', 'yin', 'yang'],
-                    default: 'xya'
-                },
-                {
-                    id       : 'id',
-                    type     : 'number',
-                    default  : 1,
-                    unordered: true
-                },
-            ]
-        })
-    }
+        // Defer reply
+        await interaction.deferReply({ephemeral: false});
 
-    async exec(message, args)
-    {
-        await React.processing(message)
+        // Options
+        const number = interaction.options.getNumber('number')
+        const token  = interaction.options.getString('token')
 
+        // Gather data
         const addresses = {
             'xya' : '0x66173da60415857fc1d50fb1d502060ad09d1bf2',
             'yin' : '0x40ad4aef3a74c57d0c4829de97184d909bebc09f',
@@ -67,6 +62,7 @@ class PlotCommand extends Command
             'Yira Citadel (YIN)'
         ]
 
+
         const hmy      = new Harmony(
             Config.get('token.rpc_url'),
             {
@@ -74,24 +70,19 @@ class PlotCommand extends Command
                 chainId  : Config.get('chain_id'),
             },
         )
-        const contract = hmy.contracts.createContract(artifact.abi, addresses[args.token])
-        const plot     = await contract.methods.plots(args.id).call()
-        const owner    = await contract.methods.ownerOf(args.id).call()
+        const contract = hmy.contracts.createContract(artifact.abi, addresses[token])
+        const plot     = await contract.methods.plots(number).call()
+        const owner    = await contract.methods.ownerOf(number).call()
 
         if (plot[0] === '0x0000000000000000000000000000000000000000') {
-            await React.error(this, message, `Plot not found`, `The plot ID is wrongly formatted or does not exist`)
-
-            return
+            return await React.error(interaction, `Plot not found`, `The plot number is wrongly formatted or does not exist`, true)
         }
 
-        // const logo = args.token === 'xya' ? 'logo' : args.token
-
-        const embed = this.client.util.embed()
+        // Send embed
+        const embed = new MessageEmbed()
             .setColor(Config.get('colors.primary'))
-            .setTitle(`Plot #${args.id}`)
-            // .attachFiles(`images/${logo}.png`)
-            // .setThumbnail(`attachment://${logo}.png`)
-            // .setImage('https://world.freyala.com/images/map/worldmap.png')
+            .setThumbnail(Config.get(`tokens.${token}.thumbnail`))
+            .setTitle(`Plot #${number}`)
             .addFields(
                 {name: `Neighbourhood`, value: neighbourhoods[plot[5]], inline: true},
                 {name: `Chest`, value: `${(plot[3] / Math.pow(10, Config.get(`token.decimals`))).toFixed(2)} XYA`, inline: true},
@@ -102,9 +93,6 @@ class PlotCommand extends Command
             )
             .addField(`Owner`, `${owner.substr(0, 6)}...${owner.substr(-6, 6)}`)
 
-        await message.channel.send(embed)
-        await React.done(message)
-    }
+        await interaction.editReply({embeds: [embed], ephemeral: false})
+    },
 }
-
-module.exports = PlotCommand

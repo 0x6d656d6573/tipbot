@@ -59,7 +59,6 @@ module.exports = {
         if (type === 'active') {
             const messages = await interaction.channel.messages.fetch()
 
-            let members = []
             await Promise.all(messages.map(async message => {
                 // No duplicates
                 if (members.includes(message.author.id)) {
@@ -113,7 +112,10 @@ module.exports = {
         }
 
         if (members.length === 0) {
-            return await React.error(interaction, `Nobody to rain on`, `I'm sorry but I could not find any members to rain on`, true)
+            await React.error(interaction, `Sorry`, `I couldn't find any users to rain on. Please try again when the chat is a bit more active`, true)
+            await interaction.channel.send(`Wake up people! @${interaction.user.username} is trying to rain, but nobody is here!`)
+
+            return
         }
 
         // Make transaction

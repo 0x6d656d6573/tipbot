@@ -8,7 +8,7 @@ module.exports = {
         .setDescription(`Distribute a tip amongst the last 20 active members!`)
         .addNumberOption(option => option.setRequired(true).setName('amount').setDescription(`Enter the amount to tip`))
         .addStringOption(option => option.setRequired(true).setName('type').setDescription(`Select the rain type`).addChoices([
-            ["Active - Split your tip amongst the last active 10 messages", "last"],
+            ["Active - Split your tip amongst the last active 10 messages", "active"],
             ["Random - Split your tip amongst 10 random wallet owner in this channel", "random"],
             ["Storm - Split your tip amongst all wallet holders", "storm"]
         ]))
@@ -54,7 +54,7 @@ module.exports = {
         wallets     = wallets.filter(wallet => wallet.user !== process.env.BOT_WALLET_ADDRESS).map(wallet => wallet.user)
 
         let members = []
-        
+
         // Tip last 10 active members
         if (type === 'active') {
             const messages = await interaction.channel.messages.fetch()

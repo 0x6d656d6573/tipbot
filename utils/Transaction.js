@@ -21,17 +21,21 @@ const {MessageEmbed} = require("discord.js")
  * @param amount
  * @param token
  * @param recipient
+ * @param rainTotalAmount
+ * @param rainTotalRecipients
  * @return {Promise<void>}
  */
-exports.addToQueue = async function (interaction, from, to, amount, token, recipient = null) {
+exports.addToQueue = async function (interaction, from, to, amount, token, recipient = null, rainTotalAmount = null, rainTotalRecipients = null) {
     await DB.transactions.create({
-        message  : interaction.id,
-        author   : interaction.user.id,
-        recipient: recipient,
-        from     : from,
-        to       : to,
-        amount   : amount,
-        token    : token,
+        message            : interaction.id,
+        author             : interaction.user.id,
+        recipient          : recipient,
+        from               : from,
+        to                 : to,
+        amount             : amount,
+        rainTotalAmount    : rainTotalAmount,
+        rainTotalRecipients: rainTotalRecipients,
+        token              : token,
     }).catch(async error => {
         Log.error(error)
         await React.error(interaction, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`)
@@ -63,7 +67,6 @@ exports.runQueue = async function (interaction, author, options, notification) {
     const lastNonce          = await signer.getTransactionCount()
 
     for (let i = 0; i < queue.length; i++) {
-        console.log(`Transaction #${i}`); // REMOVE
         const contract           = new ethers.Contract(Config.get(`tokens.${queue[i].token}.contract_address`), artifact.abi, provider).connect(signer)
         transactionOptions.nonce = '0x' + (parseInt(lastNonce) + i).toString(16)
 
@@ -72,6 +75,8 @@ exports.runQueue = async function (interaction, author, options, notification) {
             const tx = await contract.transfer(queue[i].to, ethers.utils.parseEther(queue[i].amount.toString()), transactionOptions)
 
             await tx.wait(1)
+
+            console.log(`Transaction #${i + 1}`)
 
             // Remove from transaction queue
             DB.transactions.destroy({
@@ -98,30 +103,39 @@ exports.runQueue = async function (interaction, author, options, notification) {
             // Notifications
             if (notification.reply) {
                 const recipient                = await interaction.client.users.cache.get(queue[i].recipient)
-                let replyContent               = ``
+                let replyTitle                 = ``
+                let replyDescription           = null
                 let recipientNotificationTitle = ``
 
                 switch (options.transactionType) {
                     case 'tip' :
-                        replyContent               = `💵 Tipped <@${recipient.id}> ${queue[i].amount} ${Config.get('token.symbol')}`
-                        recipientNotificationTitle = `You got tipped!`
+                        replyDescription = `💵 Tipped <@${recipient.id}> ${queue[i].amount} ${Config.get('token.symbol')}`
                         break
                     case 'rain' :
-                        replyContent               = `💵 Rained ${queue[i].amount} ${Config.get('token.symbol')}`
-                        recipientNotificationTitle = `You caught the rain!`
+                        replyTitle       = `☂️ Raining ${queue[i].rainTotalAmount} ${Config.get('token.symbol')}!`
+                        replyDescription = `Rained ${queue[i].amount} ${Config.get('token.symbol')} on ${i + 1}/${queue[i].rainTotalRecipients} members`
                         break
                     case 'burn' :
-                        replyContent = `🔥 Burned ${queue[i].amount} ${Config.get('token.symbol')}`
+                        replyDescription = `🔥 Burned ${queue[i].amount} ${Config.get('token.symbol')}`
                         break
                     case 'send' :
-                        replyContent = `💵 Sent ${queue[i].amount} ${Config.get('token.symbol')} to ${queue[i].to}`
+                        replyDescription = `💵 Sent ${queue[i].amount} ${Config.get('token.symbol')} to ${queue[i].to}`
                         break
                 }
 
-                const reply = await interaction.editReply({content: replyContent, ephemeral: notification.ephemeral})
+                const embed = new MessageEmbed()
+                    .setColor(Config.get('colors.primary'))
+                if (replyTitle) {
+                    embed.setTitle(replyTitle)
+                }
+                if (replyDescription) {
+                    embed.setDescription(replyDescription)
+                }
+
+                const reply = await interaction.editReply({embeds: [embed], ephemeral: notification.ephemeral})
 
                 if (options.transactionType === 'tip' || options.transactionType === 'rain') {
-                    if (typeof recipient !== 'undefined' ) {
+                    if (typeof recipient !== 'undefined') {
                         const embed = new MessageEmbed()
                             .setColor(Config.get('colors.primary'))
                             .setTitle(recipientNotificationTitle)

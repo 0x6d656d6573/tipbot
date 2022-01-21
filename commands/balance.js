@@ -15,7 +15,7 @@ module.exports = {
 
         // Checks
         if (!await Wallet.check(interaction)) {
-            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`, true)
         }
 
         // Get balances and create table rows

@@ -11,6 +11,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
  * Sync database
  */
 exports.syncDatabase = function () {
+    this.transactions.truncate()
     this.wallets.sync()
     this.transactions.sync()
     this.tipRanks.sync()
@@ -37,35 +38,43 @@ exports.wallets = sequelize.define('wallets', {
 
 /* Transactions */
 exports.transactions = sequelize.define('transactions', {
-    message   : {
+    message            : {
         type     : Sequelize.STRING,
         allowNull: false,
     },
-    author    : {
+    author             : {
         type     : Sequelize.STRING,
         allowNull: false,
     },
-    recipient : {
+    recipient          : {
         type     : Sequelize.STRING,
         allowNull: true,
     },
-    from      : {
+    from               : {
         type     : Sequelize.STRING,
         allowNull: false,
     },
-    to        : {
+    to                 : {
         type     : Sequelize.STRING,
         allowNull: false,
     },
-    amount    : {
+    amount             : {
         type     : Sequelize.FLOAT,
         allowNull: false,
     },
-    token    : {
+    rainTotalAmount    : {
+        type     : Sequelize.FLOAT,
+        allowNull: true,
+    },
+    rainTotalRecipients: {
+        type     : Sequelize.INTEGER,
+        allowNull: true,
+    },
+    token              : {
         type     : Sequelize.STRING,
         allowNull: false,
     },
-    processing: {
+    processing         : {
         type     : Sequelize.BOOLEAN,
         allowNull: true,
         default  : false,

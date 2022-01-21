@@ -1,5 +1,5 @@
-const {SlashCommandBuilder}                = require('@discordjs/builders')
-const {Config, React, Wallet, Transaction} = require('../utils')
+const {SlashCommandBuilder}                    = require('@discordjs/builders')
+const {Config, React, Wallet, Transaction, DB} = require('../utils')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,15 +17,20 @@ module.exports = {
 
         // Checks
         if (!await Wallet.check(interaction)) {
-            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`, true)
+        }
+
+        const processing = await DB.transactions.count({where: {author: interaction.user.id, processing: true}}) > 0
+        if (processing) {
+            return await React.error(interaction, `Transactions in progress`, `Please wait for your current queue to be processed`, true)
         }
 
         if (amount === 0) {
-            return await React.error(interaction, `Incorrect amount`, `The tip amount should be larger than 0`)
+            return await React.error(interaction, `Incorrect amount`, `The tip amount should be larger than 0`, true)
         }
 
         if (amount < 0.01) {
-            return await React.error(interaction, `Incorrect amount`, `The tip amount is too low`)
+            return await React.error(interaction, `Incorrect amount`, `The tip amount is too low`, true)
         }
 
         const wallet  = await Wallet.get(interaction, interaction.user.id)
@@ -34,7 +39,7 @@ module.exports = {
         const to      = '0x000000000000000000000000000000000000dead'
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            return await React.error(interaction, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`token.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`token.symbol`)}. Or try again with a lower amount`)
+            return await React.error(interaction, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`token.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`token.symbol`)}. Or try again with a lower amount`, true)
         }
 
         Transaction.addToQueue(interaction, from, to, amount, Config.get(`token.default`)).then(() => {

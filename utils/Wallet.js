@@ -20,7 +20,7 @@ exports.check = async function (interaction) {
     const wallet = await DB.wallets.findOne({where: {user: interaction.user.id}})
 
     if (wallet == null) {
-        await React.error(interaction, `You do not have a ${Config.get('token.symbol')} Tip Bot wallet yet`, `Please run the \`${Config.get('prefix')}deposit\` command to create a new wallet.`)
+        await React.error(interaction, `You do not have a ${Config.get('token.symbol')} Tip Bot wallet yet`, `Please run the \`${Config.get('prefix')}deposit\` command to create a new wallet.`, true)
 
         return false
     } else {

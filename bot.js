@@ -1,16 +1,17 @@
 // Require the necessary discord.js classes
 require('dotenv').config()
-const fs                            = require('fs')
-const {Client, Collection, Intents} = require('discord.js')
-const {Token, Config, DB, React}    = require('./utils')
+const fs                                          = require('fs')
+const {Client, Collection, Intents, MessageEmbed} = require('discord.js')
+const {Token, Config, DB, React}                  = require('./utils')
 
 // Create a new client instance
 const client = new Client({
-    intents: [
+    intents : [
         Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_PRESENCES
+        Intents.FLAGS.GUILD_PRESENCES,
+        Intents.FLAGS.GUILD_MEMBERS
     ],
-    partials: ['GUILD_MESSAGES', 'GUILDS', 'GUILD_MESSAGE_REACTIONS', 'USER', 'GUILD_MEMBER'],
+    partials: ['GUILD_MESSAGES', 'GUILDS', 'GUILD_MESSAGE_REACTIONS', 'USER', 'GUILD_MEMBER', 'GUILD_MEMBERS'],
 })
 
 client.commands    = new Collection()
@@ -36,6 +37,26 @@ client.on('interactionCreate', async interaction => {
         return await React.error(interaction, `An error has occurred`, `Please contact ${Config.get('error_reporting_users')}`, true)
     }
 })
+
+// Greet new members
+client.on('guildMemberAdd', member => {
+    client.channels.fetch(Config.get('channels.general')).then(channel => {
+        channel.send(`Hi there <@${member.id}>, Welcome to Freyala! May I recommend visiting our City Tour Guide: https://docs.freyala.com/freyala`)
+    })
+});
+
+// Greet new members
+client.on('guildMemberAdd', member => {
+    client.channels.fetch(Config.get('channels.general')).then(async channel => {
+        const embed = new MessageEmbed()
+            .setColor(Config.get('colors.primary'))
+            .setThumbnail(Config.get('token.thumbnail'))
+            .setTitle(`Hi there <@${member.id}>, Welcome to Freyala!`)
+            .setDescription(`May I recommend visiting our [City Tour Guide](https://docs.freyala.com/freyala)`)
+
+        await channel.send({embeds: [embed]})
+    })
+});
 
 // Login to Discord with your client's token
 client.login(process.env.DISCORD_TOKEN).then(async () => {

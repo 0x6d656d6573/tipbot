@@ -28,15 +28,20 @@ module.exports = {
 
         // Checks
         if (!await Wallet.check(interaction)) {
-            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
+            return await React.error(interaction, `No wallet`, `You have to tipping wallet yet. Please use the \`${Config.get('prefix')}deposit\` to create a new wallet`, true)
+        }
+
+        const processing = await DB.transactions.count({where: {author: interaction.user.id, processing: true}}) > 0
+        if (processing) {
+            return await React.error(interaction, `Transactions in progress`, `Please wait for your current queue to be processed`, true)
         }
 
         if (amount === 0) {
-            return await React.error(interaction, `Incorrect amount`, `The tip amount should be larger than 0`)
+            return await React.error(interaction, `Incorrect amount`, `The tip amount should be larger than 0`, true)
         }
 
         if (amount < 0.01) {
-            return await React.error(interaction, `Incorrect amount`, `The tip amount is too low`)
+            return await React.error(interaction, `Incorrect amount`, `The tip amount is too low`, true)
         }
 
         const wallet  = await Wallet.get(interaction, interaction.user.id)
@@ -44,7 +49,7 @@ module.exports = {
         const from    = wallet.address
 
         if (parseFloat(amount + 0.001) > parseFloat(balance)) {
-            return await React.error(interaction, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`)
+            return await React.error(interaction, `Insufficient funds`, `The amount exceeds your balance + safety margin (0.001 ${Config.get(`tokens.${token}.symbol`)}). Use the \`${Config.get('prefix')}deposit\` command to get your wallet address to send some more ${Config.get(`tokens.${token}.symbol`)}. Or try again with a lower amount`, true)
         }
 
         // Get all wallet owners
@@ -97,9 +102,9 @@ module.exports = {
 
         // Tip 10 random wallet owners in this channel
         if (type === 'random') {
-            let members = await interaction.channel.members
-            members     = members.filter(member => {
-                wallets.includes(member.user.id.toString()) && member.user.id !== interaction.user.id
+            members = await interaction.channel.members
+            members = members.filter(member => {
+                return wallets.includes(member.user.id.toString()) && member.user.id !== interaction.user.id
             }).map(member => member.user.id)
 
             // We only need max 10
@@ -124,7 +129,7 @@ module.exports = {
         for (let i = 0; i < members.length; i++) {
             const to = await Wallet.recipientAddress(interaction, members[i])
 
-            await Transaction.addToQueue(interaction, from, to, splitAmount, token, members[i])
+            await Transaction.addToQueue(interaction, from, to, splitAmount, token, members[i], amount, members.length)
         }
 
         await Transaction.runQueue(interaction, interaction.user.id, {transactionType: 'rain'}, {reply: true, react: true, ephemeral: false})

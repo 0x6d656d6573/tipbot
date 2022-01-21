@@ -1,4 +1,4 @@
-const {SlashCommandBuilder}                           = require('@discordjs/builders')
+const {SlashCommandBuilder, time}                     = require('@discordjs/builders')
 const {MessageEmbed, MessageActionRow, MessageButton} = require("discord.js")
 const {Config, Transaction, Wallet, React}            = require("../utils")
 
@@ -54,7 +54,7 @@ module.exports = {
         const collector = interaction.channel.createMessageComponentCollector()
 
         collector.on('collect', async i => {
-            if (i.customId === `claimed_${timestamp}`) {
+            if (i.customId === `claim_${timestamp}`) {
                 const claimedEmbed = new MessageEmbed()
                     .setTitle(`@${interaction.user.username} sent a gift of ${amount} ${Config.get('token.symbol')}`)
                     .setDescription(`Be the first to click the button below and claim this gift!`)

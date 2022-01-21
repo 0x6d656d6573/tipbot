@@ -45,19 +45,6 @@ client.on('guildMemberAdd', member => {
     })
 });
 
-// Greet new members
-client.on('guildMemberAdd', member => {
-    client.channels.fetch(Config.get('channels.general')).then(async channel => {
-        const embed = new MessageEmbed()
-            .setColor(Config.get('colors.primary'))
-            .setThumbnail(Config.get('token.thumbnail'))
-            .setTitle(`Hi there <@${member.id}>, Welcome to Freyala!`)
-            .setDescription(`May I recommend visiting our [City Tour Guide](https://docs.freyala.com/freyala)`)
-
-        await channel.send({embeds: [embed]})
-    })
-});
-
 // Login to Discord with your client's token
 client.login(process.env.DISCORD_TOKEN).then(async () => {
     console.log('Ready!')

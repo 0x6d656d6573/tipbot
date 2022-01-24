@@ -24,6 +24,7 @@
     "sequelize": "^6.13.0",
     "simple-node-logger": "^18.12.24",
     "text-table": "^0.2.0",
-    "tslib": "^2.2.0"
+    "tslib": "^2.2.0",
+    "twitter-api-v2": "^1.9.1"
   }
 }

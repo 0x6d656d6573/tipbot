@@ -1468,6 +1468,11 @@
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
   "version" "2.3.1"
 
+"twitter-api-v2@^1.9.1":
+  "integrity" "sha512-AZj7nO49MOjS/0kxbHZe947qmhoInnQ+orFEc2ACtgfqFjZezX0CbIQyxtg0wUiTGHnh9yjAC+4cNm+ifXjRlw=="
+  "resolved" "https://registry.npmjs.org/twitter-api-v2/-/twitter-api-v2-1.9.1.tgz"
+  "version" "1.9.1"
+
 "type@^1.0.1":
   "integrity" "sha512-+5nt5AAniqsCnu2cEQQdpzCAh33kVx8n0VoFidKpB1dVVLAN/F+bgVOqOJqOnEnrhp222clB5p3vUlD+1QAnfg=="
   "resolved" "https://registry.npmjs.org/type/-/type-1.2.0.tgz"

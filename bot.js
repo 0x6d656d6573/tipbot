@@ -4,6 +4,8 @@ const fs                                          = require('fs')
 const {Client, Collection, Intents, MessageEmbed} = require('discord.js')
 const {Token, Config, DB, React}                  = require('./utils')
 
+const {ETwitterStreamEvent, TweetStream, TwitterApi, ETwitterApiError} = require('twitter-api-v2')
+
 // Create a new client instance
 const client = new Client({
     intents : [
@@ -43,7 +45,7 @@ client.on('guildMemberAdd', member => {
     client.channels.fetch(Config.get('channels.general')).then(channel => {
         channel.send(`Hi there <@${member.id}>, Welcome to Freyala! May I recommend visiting our City Tour Guide: https://docs.freyala.com/freyala`)
     })
-});
+})
 
 // Login to Discord with your client's token
 client.login(process.env.DISCORD_TOKEN).then(async () => {
@@ -71,11 +73,57 @@ client.login(process.env.DISCORD_TOKEN).then(async () => {
     //     })
     // })
 
+    await twitterFeed(client)
+
     await getPrice()
     await setPresence()
     setInterval(getPrice, 60000)
     setInterval(setPresence, 5000)
 })
+
+// Start Twitter stream
+async function twitterFeed(client)
+{
+    const channel       = await client.channels.cache.get(process.env.TWITTER_CHANNEL)
+    const twitterClient = new TwitterApi(process.env.TWITTER_BEARER_TOKEN)
+
+    // Get and delete old rules if needed
+    const rules = await twitterClient.v2.streamRules()
+    if (rules.data?.length) {
+        await twitterClient.v2.updateStreamRules({
+            delete: {ids: rules.data.map(rule => rule.id)},
+        })
+    }
+
+    // Add our rules
+    await twitterClient.v2.updateStreamRules({
+        add: [{value: `from:${process.env.TWITTER_HANDLE}`}],
+    })
+
+    const rules2 = await twitterClient.v2.streamRules()
+    console.log(rules2.data.map(rule => rule))
+
+    const stream = await twitterClient.v2.searchStream({
+        'tweet.fields': ['author_id', 'attachments'],
+        'media.fields': ['duration_ms', 'height', 'media_key', 'preview_image_url', 'public_metrics', 'type', 'url', 'width', 'alt_text'],
+        'expansions'  : ['attachments.media_keys'],
+    })
+
+    // Enable auto reconnect
+    stream.autoReconnect = true
+
+    stream.on(ETwitterStreamEvent.Data, async tweet => {
+        const embed = new MessageEmbed()
+            .setColor(Config.get('colors.primary'))
+            .setThumbnail(Config.get('token.thumbnail'))
+            .setDescription(tweet.data.text)
+            if (tweet.includes?.media[0].url) {
+                embed.setImage(tweet.includes.media[0].url)
+            }
+
+        await channel.send({content: `@everyone XYA placed a new tweet!`, embeds: [embed]})
+    })
+}
 
 // Set price presence
 let priceUsd = 0

@@ -12,7 +12,7 @@ token:
   symbol: "XYA"
   decimals: 18
   network_explorer: "https://explorer.harmony.one/#"
-  rpc_url: "https://api.fuzz.fi"
+  rpc_url: "https://rpc.gainzstation.one/"
   viper_pair_id: "0x1485a496f816f940c510d634e48f8c66b78dc99e"
   thumbnail: "https://gateway.pinata.cloud/ipfs/QmTkCj1JBRqXE9Jp1B3irqggQRzEvgxWTnyM19wLovaFGD"
 alternative_tokens:

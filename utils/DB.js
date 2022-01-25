@@ -16,6 +16,7 @@ exports.syncDatabase = function () {
     this.transactions.sync()
     this.tipRanks.sync()
     this.burnRanks.sync()
+    this.reminders.sync()
 }
 
 /* Wallets */
@@ -101,6 +102,26 @@ exports.burnRanks = sequelize.define('burn_ranks', {
     },
     amount  : {
         type     : Sequelize.FLOAT,
+        allowNull: false,
+    },
+})
+
+/* Reminders */
+exports.reminders = sequelize.define('reminders', {
+    user: {
+        type     : Sequelize.STRING,
+        allowNull: false,
+    },
+    channel: {
+        type     : Sequelize.STRING,
+        allowNull: false,
+    },
+    timestamp  : {
+        type     : Sequelize.INTEGER,
+        allowNull: false,
+    },
+    message  : {
+        type     : Sequelize.STRING,
         allowNull: false,
     },
 })

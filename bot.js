@@ -5,6 +5,10 @@ const {Client, Collection, Intents, MessageEmbed} = require('discord.js')
 const {Token, Config, DB, React}                  = require('./utils')
 
 const {ETwitterStreamEvent, TweetStream, TwitterApi, ETwitterApiError} = require('twitter-api-v2')
+const moment                                                           = require("moment")
+const {Op}                                                             = require("sequelize")
+const Log                                                              = require("./utils/Log")
+const {long}                                                           = require("git-rev-sync")
 
 // Create a new client instance
 const client = new Client({
@@ -74,9 +78,10 @@ client.login(process.env.DISCORD_TOKEN).then(async () => {
     // })
 
     await twitterFeed(client)
-
+    await sendReminders()
     await getPrice()
     await setPresence()
+    setInterval(sendReminders, 30000)
     setInterval(getPrice, 60000)
     setInterval(setPresence, 5000)
 })
@@ -123,6 +128,24 @@ async function twitterFeed(client)
 
         await channel.send({content: `@everyone XYA placed a new tweet!`, embeds: [embed]})
     })
+}
+
+// Send reminders
+async function sendReminders()
+{
+    const reminders = await DB.reminders.findAll({where: {timestamp: {[Op.lt]: moment().unix()}}})
+
+    for (let i = 0; i < reminders.length; i++) {
+        const embed = new MessageEmbed()
+            .setColor(Config.get('colors.primary'))
+            .setThumbnail(Config.get('token.thumbnail'))
+            .setTitle(`Let me remind you of`)
+            .setDescription(reminders[i].message)
+
+        await client.users.cache.get(reminders[i].user).send({embeds: [embed]})
+
+        await DB.reminders.destroy({where: {id: reminders[i].id}})
+    }
 }
 
 // Set price presence

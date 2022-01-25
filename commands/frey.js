@@ -93,7 +93,7 @@ module.exports = {
         const nftKeyInfo     = await nftKeyContract.getTokenListing(freyArtifact.address, id)
         const nftKeyPrice    = parseFloat(ethers.utils.formatUnits(nftKeyInfo[1])).toFixed(2)
         const nftKeyListed   = parseFloat(nftKeyPrice) > 0
-        if (nftKeyListed) { 
+        if (nftKeyListed) {
             nftkeyRows.push([nftKeyPrice, 'ONE'])
         }
 

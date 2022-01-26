@@ -5,6 +5,12 @@ imports:
 channels:
   general: '933635381256138776'
 
+# Gas
+gas:
+  amount: 0.1
+  max_balance: 0.01
+  time_out: 31556926
+
 # Token
 token:
   default: "xya"

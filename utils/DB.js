@@ -17,6 +17,7 @@ exports.syncDatabase = function () {
     this.tipRanks.sync()
     this.burnRanks.sync()
     this.reminders.sync()
+    this.gas.sync()
 }
 
 /* Wallets */
@@ -122,6 +123,18 @@ exports.reminders = sequelize.define('reminders', {
     },
     message  : {
         type     : Sequelize.STRING,
+        allowNull: false,
+    },
+})
+
+/* Gas transactions */
+exports.gas = sequelize.define('gas', {
+    user: {
+        type     : Sequelize.STRING,
+        allowNull: false,
+    },
+    timestamp  : {
+        type     : Sequelize.INTEGER,
         allowNull: false,
     },
 })

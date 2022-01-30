@@ -10,7 +10,7 @@ module.exports = {
         .addStringOption(option => option.setRequired(true).setName('type').setDescription(`Select the rain type`).addChoices([
             ["Active - Split your tip amongst the last active 10 messages", "active"],
             ["Random - Split your tip amongst 10 random wallet owner in this channel", "random"],
-            ["Storm - Split your tip amongst all wallet holders", "storm"]
+            // ["Storm - Split your tip amongst all wallet holders", "storm"]
         ]))
         .addStringOption(option => option.setRequired(false).setName('token').setDescription(`Change the token`).addChoices([
             ["COINKx", "coinkx"]
@@ -61,40 +61,56 @@ module.exports = {
         let members = []
 
         // Tip last 10 active members
+        let coveredMembers = []
         if (type === 'active') {
             const messages = await interaction.channel.messages.fetch()
 
             await Promise.all(messages.map(async message => {
-                // No duplicates
-                if (members.includes(message.author.id)) {
-                    return false
-                }
+                await message.reactions.resolve('☂️')?.users.fetch().then(async userList => {
+                    // No covered members
+                    if (userList.filter(user => user.id === interaction.user.id).size) {
+                        console.log(1) // REMOVE
+                        coveredMembers.push(message.author.id)
+                    }
 
-                // No bots
-                if (message.author.bot) {
-                    return false
-                }
+                    // No command interactions
+                    if (message.type === 'APPLICATION_COMMAND') {
+                        return false
+                    }
 
-                // Definitely not yourself
-                if (message.author.id === interaction.user.id) {
-                    return false
-                }
+                    // No duplicates
+                    if (members.includes(message.author.id)) {
+                        return false
+                    }
 
-                // Wallet owners only
-                if (!wallets.includes(message.author.id)) {
-                    const embed = new MessageEmbed()
-                        .setColor(Config.get('colors.primary'))
-                        .setThumbnail(Config.get('token.thumbnail'))
-                        .setTitle(`You've missed the rain ☂️`)
-                        .setDescription(`@${interaction.user.username} rained in <#${interaction.channel.id}>. Unfortunately you missed the rain because you have not set up your tipping wallet yet. If you want to catch the next rain, please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
-                    await message.author.send({embeds: [embed]})
+                    // No bots
+                    if (message.author.bot) {
+                        return false
+                    }
 
-                    return false
-                }
+                    // Definitely not yourself
+                    if (message.author.id === interaction.user.id) {
+                        return false
+                    }
 
-                // Push if the message survived
-                members.push(message.author.id)
+                    // Wallet owners only
+                    if (!wallets.includes(message.author.id)) {
+                        const embed = new MessageEmbed()
+                            .setColor(Config.get('colors.primary'))
+                            .setThumbnail(Config.get('token.thumbnail'))
+                            .setTitle(`You've missed the rain ☂️`)
+                            .setDescription(`@${interaction.user.username} rained in <#${interaction.channel.id}>. Unfortunately you missed the rain because you have not set up your tipping wallet yet. If you want to catch the next rain, please use the \`${Config.get('prefix')}deposit\` to create a new wallet`)
+                        await message.author.send({embeds: [embed]})
+
+                        return false
+                    }
+
+                    // Push if the message survived
+                    members.push(message.author.id)
+                })
             }))
+
+            console.log('baz') // REMOVE
 
             // We only need max 10
             members = members.slice(0, 10)
@@ -122,6 +138,10 @@ module.exports = {
 
             return
         }
+
+        console.log(coveredMembers) // REMOVE
+        console.log(members) // REMOVE
+        return
 
         // Make transaction
         const splitAmount = (amount / members.length)

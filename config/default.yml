@@ -1,8 +1,8 @@
 # General
 prefix: "!f"
-error_reporting_users: "@Gydo or @Tailchakra"
+error_reporting_users: "@Grail Harder"
 owner_ids:
-  - "490122972124938240"
+  - "935081461910994975"
 blacklist: [ ]
 cooldown: 20000
 
@@ -14,14 +14,14 @@ colors:
 
 # Price embed
 price_embed:
-  title: "Freyala | XYA"
-  chart_link: "https://www.freyala.com/chart"
-  url: "https://www.freyala.com/chart"
+  title: "HolyGrail | HLY"
+  chart_link: "https://dexscreener.com/harmony/0x3e478ed607f79a50f286a5a6ce52a049897291b2"
+  url: "https://holygrail.one"
   footer: "Source: CoinGecko"
 
 # Embed
 embed:
-  thumbnail: "https://world.freyala.com/images/XYA.png"
+  thumbnail: "https://holygrail.one/hly.png"
 
 # Sea creatures
 sea_creatures:
@@ -91,11 +91,11 @@ response:
     - Well, if you so desire.
     - Hm, as you wish.
     - Weren’t there better options for this, %title%?
-    - Was this XYA ill-received, perchance?
+    - Was this HLY ill-received, perchance?
     - …I wish I could have gotten that...
     - A bit wasteful, if you ask me.
     - You do know the supply is limited, %title%?
-    - XYA burns with the brightest shimmer. Beautiful.
+    - HLY burns with the brightest shimmer. Beautiful.
   stats:
     - Hmpf, someone must have taken Luderion donations…
     - The riches of some people, incredible.
@@ -118,7 +118,7 @@ response:
     - I heard someone bought big!
     - Someone must have sold.
     - Do you think someone sold?
-    - As volatile as XYA itself, isn’t it?
+    - As volatile as HLY itself, isn’t it?
     - The auction house is wild today!
     - My body is ready.
     - Like ebb and flow.
@@ -133,8 +133,8 @@ response:
     - You have secured victory.
     - You are deserving of your title, my liege.
   cat:
-    - Hail fellow Freyfolk
-    - Good day %emoji% people of Freyala
+    - Hail fellow Grail Seekers
+    - Good day %emoji% people of Holy Grail
     - What ho! how fare thee %emoji% people?
     - Good morrow %emoji% people!
     - Well met %emoji% people!

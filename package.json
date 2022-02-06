@@ -1,7 +1,7 @@
 {
-    "name": "xya-discord-bot",
+    "name": "holy-discord-bot",
     "version": "1.0.0",
-    "description": "Discord bot for Freyala",
+    "description": "Discord bot for Holy Grail",
     "main": "bot.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"

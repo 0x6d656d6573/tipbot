@@ -3,21 +3,23 @@ imports:
 
 # Discord
 channels:
-  trivia: '855335818155917325'
-  verification: '919301734218747924'
+  trivia: '935081666563670069' #general channel (discord)
+  verification: '935719500987396156' #verify channel (discord)
 
 # Token
 token:
-  default: "regi"
-  contract_address: "0xD3f5650b4bE6f791B07cfdc8D6D3449abfefa4F4"
-  symbol: "REGI"
+  default: "hly"
+  contract_address: "0x8D760497554eecC3B9036fb0364156ef2F0D02BC"
+  symbol: "HLY"
   decimals: 18
-  network_explorer: "https://explorer.pops.one/#"
-  rpc_url: "https://api.s0.b.hmny.io"
-  viper_pair_id: "0x1485a496f816f940c510d634e48f8c66b78dc99e"
+  network_explorer: "https://explorer.harmony.one/#"
+  rpc_url: "https://api.fuzz.fi"
+  viper_pair_id: "0x3e478ED607F79A50f286A5A6ce52A049897291B2"
 alternative_tokens: [ ]
 tokens:
-  regi:
-    contract_address: "0xD3f5650b4bE6f791B07cfdc8D6D3449abfefa4F4"
-    symbol: "REGI"
+  hly:
+    contract_address: "0x8D760497554eecC3B9036fb0364156ef2F0D02BC"
+    symbol: "HLY"
     decimals: 18
+
+    

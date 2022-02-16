@@ -1,547 +1,473 @@
 {
-    "address": "0x861ef0CaB3ab4a1372E7eDa936668C8967F70110",
-    "oneAddress": "one1sc00pj4n4d9pxuh8ak5nve5v39nlwqgszjzzn2",
-    "abi": [
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_stakingTaxRate",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_unstakingTaxRate",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_dailyROI",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_registrationTax",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_minimumStakeValue",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "stakeholder",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "totalTax",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "_referrer",
-                    "type": "address"
-                }
-            ],
-            "name": "OnRegisterAndStake",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "sender",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "tax",
-                    "type": "uint256"
-                }
-            ],
-            "name": "OnStake",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "sender",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "tax",
-                    "type": "uint256"
-                }
-            ],
-            "name": "OnUnstake",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "sender",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "OnWithdrawal",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "_from",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "_to",
-                    "type": "address"
-                }
-            ],
-            "name": "OwnershipTransferred",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "active",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_stakeholder",
-                    "type": "address"
-                }
-            ],
-            "name": "calculateEarnings",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "changeActiveStatus",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "dailyROI",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "freyala",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "minimumStakeValue",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "referralCount",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "referralRewards",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_referrer",
-                    "type": "address"
-                }
-            ],
-            "name": "registerAndStake",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "registered",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "registrationTax",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "rewardPool",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "claimable",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_dailyROI",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setDailyROI",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_minimumStakeValue",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setMinimumStakeValue",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_registrationTax",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setRegistrationTax",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_stakingTaxRate",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setStakingTaxRate",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_unstakingTaxRate",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setUnstakingTaxRate",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "stake",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "stakeRewards",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "stakes",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "stakingTaxRate",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "totalStaked",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_newOwner",
-                    "type": "address"
-                }
-            ],
-            "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "unstake",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "unstakingTaxRate",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "withdrawEarnings",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "success",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        }
-    ]
+  "address": "0xebbdc5c850dbb0b0894fe13b0f76a7c7ac431e78",
+  "oneAddress": "one1aw7utjzsmwctpz20uyas7a48c7kyx8ncnkh050",
+  "abi": [
+  {
+      "inputs": [
+          {
+              "name": "_hly",
+              "type": "address",
+              "internalType": "contract HLY"
+          },
+          {
+              "name": "_hlyPerSecond",
+              "internalType": "uint256",
+              "type": "uint256"
+          },
+          {
+              "name": "_startTime",
+              "type": "uint256",
+              "internalType": "uint256"
+          },
+          {
+              "name": "_endTime",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "type": "constructor",
+      "stateMutability": "nonpayable"
+  },
+  {
+      "name": "Deposit",
+      "type": "event",
+      "anonymous": false,
+      "inputs": [
+          {
+              "internalType": "address",
+              "indexed": true,
+              "name": "user",
+              "type": "address"
+          },
+          {
+              "internalType": "uint256",
+              "indexed": true,
+              "name": "pid",
+              "type": "uint256"
+          },
+          {
+              "name": "amount",
+              "internalType": "uint256",
+              "indexed": false,
+              "type": "uint256"
+          }
+      ]
+  },
+  {
+      "name": "EmergencyWithdraw",
+      "type": "event",
+      "inputs": [
+          {
+              "name": "user",
+              "internalType": "address",
+              "indexed": true,
+              "type": "address"
+          },
+          {
+              "name": "pid",
+              "type": "uint256",
+              "indexed": true,
+              "internalType": "uint256"
+          },
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "amount",
+              "indexed": false
+          }
+      ],
+      "anonymous": false
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "internalType": "address",
+              "type": "address",
+              "indexed": true,
+              "name": "previousOwner"
+          },
+          {
+              "internalType": "address",
+              "type": "address",
+              "name": "newOwner",
+              "indexed": true
+          }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "type": "event",
+      "inputs": [
+          {
+              "type": "address",
+              "indexed": true,
+              "name": "user",
+              "internalType": "address"
+          },
+          {
+              "name": "pid",
+              "indexed": true,
+              "internalType": "uint256",
+              "type": "uint256"
+          },
+          {
+              "name": "amount",
+              "indexed": false,
+              "internalType": "uint256",
+              "type": "uint256"
+          }
+      ],
+      "name": "Withdraw"
+  },
+  {
+      "name": "MaxAllocPoint",
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "type": "function",
+      "inputs": []
+  },
+  {
+      "stateMutability": "view",
+      "inputs": [],
+      "name": "endTime",
+      "type": "function",
+      "outputs": [
+          {
+              "name": "",
+              "internalType": "uint256",
+              "type": "uint256"
+          }
+      ]
+  },
+  {
+      "type": "function",
+      "stateMutability": "view",
+      "name": "hly",
+      "inputs": [],
+      "outputs": [
+          {
+              "name": "",
+              "type": "address",
+              "internalType": "contract HLY"
+          }
+      ]
+  },
+  {
+      "type": "function",
+      "name": "hlyPerSecond",
+      "inputs": [],
+      "outputs": [
+          {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "stateMutability": "view"
+  },
+  {
+      "inputs": [],
+      "type": "function",
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "type": "address",
+              "name": "",
+              "internalType": "address"
+          }
+      ],
+      "name": "owner"
+  },
+  {
+      "name": "poolInfo",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          }
+      ],
+      "type": "function",
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "name": "lpToken",
+              "internalType": "contract IERC20",
+              "type": "address"
+          },
+          {
+              "name": "allocPoint",
+              "type": "uint256",
+              "internalType": "uint256"
+          },
+          {
+              "name": "lastRewardTime",
+              "type": "uint256",
+              "internalType": "uint256"
+          },
+          {
+              "type": "uint256",
+              "name": "accHLYPerShare",
+              "internalType": "uint256"
+          }
+      ]
+  },
+  {
+      "inputs": [],
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "name": "renounceOwnership"
+  },
+  {
+      "name": "startTime",
+      "type": "function",
+      "outputs": [
+          {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "inputs": []
+  },
+  {
+      "stateMutability": "view",
+      "name": "totalAllocPoint",
+      "outputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          }
+      ],
+      "inputs": [],
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "name": "newOwner",
+              "internalType": "address",
+              "type": "address"
+          }
+      ],
+      "outputs": [],
+      "name": "transferOwnership",
+      "type": "function",
+      "stateMutability": "nonpayable"
+  },
+  {
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "rewardDebt",
+              "type": "uint256"
+          }
+      ],
+      "name": "userInfo",
+      "type": "function",
+      "inputs": [
+          {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+          },
+          {
+              "name": "",
+              "type": "address",
+              "internalType": "address"
+          }
+      ]
+  },
+  {
+      "inputs": [],
+      "outputs": [
+          {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "type": "function",
+      "stateMutability": "view",
+      "name": "poolLength"
+  },
+  {
+      "name": "add",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_allocPoint",
+              "internalType": "uint256"
+          },
+          {
+              "name": "_lpToken",
+              "internalType": "contract IERC20",
+              "type": "address"
+          }
+      ],
+      "type": "function",
+      "outputs": [],
+      "stateMutability": "nonpayable"
+  },
+  {
+      "outputs": [],
+      "name": "set",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_pid",
+              "internalType": "uint256"
+          },
+          {
+              "name": "_allocPoint",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "type": "function",
+      "stateMutability": "nonpayable"
+  },
+  {
+      "outputs": [
+          {
+              "name": "",
+              "internalType": "uint256",
+              "type": "uint256"
+          }
+      ],
+      "type": "function",
+      "stateMutability": "view",
+      "name": "getMultiplier",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_from",
+              "internalType": "uint256"
+          },
+          {
+              "type": "uint256",
+              "name": "_to",
+              "internalType": "uint256"
+          }
+      ]
+  },
+  {
+      "type": "function",
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "_pid",
+              "type": "uint256"
+          },
+          {
+              "name": "_user",
+              "type": "address",
+              "internalType": "address"
+          }
+      ],
+      "outputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          }
+      ],
+      "name": "pendingHLY",
+      "stateMutability": "view"
+  },
+  {
+      "outputs": [],
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "name": "massUpdatePools",
+      "inputs": []
+  },
+  {
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "name": "updatePool",
+      "inputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "_pid"
+          }
+      ],
+      "type": "function"
+  },
+  {
+      "name": "deposit",
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "_pid",
+              "type": "uint256"
+          },
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "_amount"
+          }
+      ],
+      "outputs": []
+  },
+  {
+      "name": "withdraw",
+      "stateMutability": "nonpayable",
+      "inputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "_pid"
+          },
+          {
+              "name": "_amount",
+              "internalType": "uint256",
+              "type": "uint256"
+          }
+      ],
+      "outputs": [],
+      "type": "function"
+  },
+  {
+      "outputs": [],
+      "type": "function",
+      "name": "harvestAll",
+      "stateMutability": "nonpayable",
+      "inputs": []
+  },
+  {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_pid",
+              "internalType": "uint256"
+          }
+      ],
+      "outputs": [],
+      "name": "emergencyWithdraw"
+  }
+  ]
 }

@@ -42,7 +42,9 @@ class BotClient extends AkairoClient
 }
 
 const client = new BotClient()
-client.login(process.env.TOKEN)
+const BOT_TOKEN = process.env.TOKEN
+// console.log(BOT_TOKEN)
+client.login(BOT_TOKEN)
 
 client.on('ready', () => {
     console.log('Ready!'); // REMOVE

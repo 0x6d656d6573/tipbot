@@ -4,19 +4,31 @@ version: '3.1'
 services:
 
   db:
+    container_name: tipbot-db
     image: mariadb
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "${MARIADB_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+    env_file:
+      - .env
+    volumes: 
+      - db-data:${MARIADB_DATA_DIR}"
+      - ~/code/holy-grail-one/apps/tipbot/mariadb/config:/etc/mysql
+      - ~/code/holy-grail-one/apps/tipbot/mariadb/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tipbot
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+    networks:
+      - tipbot
 
   node:
-    image: "node:8"
+    container_name: tipbot-app
+    image: "node:16.13"
     user: "node"
     working_dir: /home/node/app
     environment:
@@ -26,3 +38,13 @@ services:
     expose:
       - "8081"
     command: "npm start"
+    env_file:
+      - .env
+    networks:
+      - tipbot
+
+volumes:
+  db-data:
+
+networks:
+  tipbot:
